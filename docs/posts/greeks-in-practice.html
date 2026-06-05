@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What Delta, Vega, Gamma, and Theta actually mean — Rashmi Rama Sushil</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav-inner">
+    <a href="../index.html" class="site-logo">Rashmi <span>Rama Sushil</span></a>
+    <button class="nav-toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../about.html">About</a></li>
+      <li><a href="../finance.html" class="active">Finance &amp; Markets</a></li>
+      <li><a href="../for-students.html">For Students</a></li>
+      <li><a href="../projects.html">Projects</a></li>
+    </ul>
+  </nav>
+</header>
+
+<article>
+  <div class="post-header">
+    <span class="category-badge badge-finance">Finance &amp; Markets</span>
+    <h1>What Delta, Vega, Gamma, and Theta actually mean when you're managing a live portfolio</h1>
+    <div class="post-meta-block">
+      <span>Rashmi Rama Sushil</span>
+      <span class="sep">·</span>
+      <span>June 2026</span>
+      <span class="sep">·</span>
+      <span>7 min read</span>
+    </div>
+  </div>
+
+  <div class="post-body">
+    <p>The Greeks — Delta, Vega, Gamma, Theta — appear in almost every quantitative finance course and interview prep guide. They're usually explained with formulas and diagrams. That's fine for passing an exam. But if you're managing or analysing a live derivatives book, you need to understand them as measures of behaviour, not just outputs of a pricing model.</p>
+
+    <p>Here's how I think about each one in practice.</p>
+
+    <h2>Delta: your directional exposure</h2>
+
+    <p>Delta measures how much the value of your position changes when the underlying price moves by one unit. A Delta of 0.6 on a call option means if the underlying moves up by $1, your option gains approximately $0.60 — holding everything else constant.</p>
+
+    <p>In a portfolio context, you're not looking at individual Delta values. You're looking at the aggregate Delta of your book — your net directional exposure to the underlying. A book that's Delta-neutral has been structured so that small moves in the underlying don't change the portfolio value much. Traders who want to be broadly directional-neutral in the short term manage to a Delta target close to zero.</p>
+
+    <p>What Delta doesn't tell you: how that exposure changes as the market moves. A Delta of zero today might become a Delta of 0.3 tomorrow if the underlying moves significantly. That's what Gamma is for.</p>
+
+    <h2>Gamma: how fast your Delta is changing</h2>
+
+    <p>Gamma measures the rate of change of Delta with respect to the underlying price. High positive Gamma means that as the market moves in your favour, your Delta increases — your position gets more profitable faster than a simple linear relationship would suggest. This is the convexity that options buyers are often willing to pay a premium for.</p>
+
+    <p>Negative Gamma (typical for sellers of options) means your Delta moves against you as the market moves. If you've sold options and the market makes a large move in either direction, your Delta shifts in a way that hurts you — you end up being effectively long when prices fall, effectively short when prices rise.</p>
+
+    <p>This is why Gamma is particularly important near option expiry, when the relationship between price and Delta can change very rapidly. A position that looks well-managed can become dangerously exposed in the final days before expiry if it carries significant Gamma. In practice, Gamma risk near expiry is one of the most common sources of unexpected P&amp;L.</p>
+
+    <h2>Vega: your exposure to volatility</h2>
+
+    <p>Vega measures how much your position value changes when implied volatility moves by one percentage point. Options are worth more when markets are uncertain — volatility is the core input that drives their value beyond intrinsic worth.</p>
+
+    <p>If you're long options, you have positive Vega — you benefit when vol rises. If you've sold options, you're short vol — rising volatility hurts you.</p>
+
+    <p>In commodity markets, volatility events are often sudden and large — supply disruptions, geopolitical events, extreme weather. A book that looks well-structured in a low-volatility environment can look very different when vol spikes from 20% to 45% overnight. I've seen EU power vol move dramatically on unplanned outages and cold weather events; LME metals spike on supply news from a single mine. Vega management is not optional in these markets.</p>
+
+    <p>One subtlety worth understanding: Vega is not uniform across strikes and expiries. A book that looks Vega-neutral in aggregate might have significant Vega concentration at specific strikes or in specific expiry dates. Aggregate Vega hides structure — you need to look at the full Vega profile, not just the net number.</p>
+
+    <h2>Theta: the cost of holding options over time</h2>
+
+    <p>Theta is the daily decay in the value of an option as time passes, all else equal. Options have a finite life — as expiry approaches, the time value component of their price erodes.</p>
+
+    <p>If you've bought options, Theta works against you every day — you're paying a continuous cost to hold the position. If you've sold options, Theta works in your favour — time decay accrues to the seller.</p>
+
+    <p>This is the fundamental trade-off in options: buyers have positive Gamma (convexity) but negative Theta (daily cost); sellers have negative Gamma but positive Theta (daily income). Which side is better depends entirely on whether the market actually moves by more or less than the vol implied in the option price. If realised vol exceeds implied vol, buyers win. If realised vol is lower than implied, sellers win.</p>
+
+    <h2>Reading the Greeks together</h2>
+
+    <p>You never look at one Greek in isolation. A position might have acceptable Delta but concerning Gamma into an expiry. A book might look Vega-neutral in aggregate but have hidden Vega concentrations in specific tenors or strikes. The skill in risk management is reading these numbers together and understanding what they collectively say about how the book will behave under different market scenarios.</p>
+
+    <p>When I'm reviewing a risk report, I'm not just reading down a list of numbers — I'm building a picture of what the book is exposed to. What happens if spot moves 5% in either direction? What happens if vol jumps 10 points? What expires this week and how does the Gamma profile change at expiry? Those are the questions that matter.</p>
+
+    <p>If there's one thing I've learned from monitoring derivatives risk daily, it's that the Greeks are most useful not as individual numbers but as a story about how your portfolio is positioned relative to what the market might do next. Learning to read that story fluently takes time — but it's the core skill in this kind of work.</p>
+  </div>
+</article>
+
+<nav class="post-nav">
+  <a href="commodity-derivatives.html">← Three years in commodity derivatives</a>
+  <a href="iit-to-morgan-stanley.html" class="next">From IIT Madras to Morgan Stanley →</a>
+</nav>
+
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="../about.html">About</a>
+    <a href="../finance.html">Finance &amp; Markets</a>
+    <a href="../for-students.html">For Students</a>
+    <a href="../projects.html">Projects</a>
+    <a href="https://www.linkedin.com/in/rashmi-rama-sushil" target="_blank">LinkedIn</a>
+  </div>
+  <p>© 2026 Rashmi Rama Sushil &nbsp;·&nbsp; Senior Associate, Trading Risk Management, Morgan Stanley</p>
+</footer>
+</body>
+</html>

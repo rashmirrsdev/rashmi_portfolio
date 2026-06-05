@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Three years monitoring a live commodity derivatives book — Rashmi Rama Sushil</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav-inner">
+    <a href="../index.html" class="site-logo">Rashmi <span>Rama Sushil</span></a>
+    <button class="nav-toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../about.html">About</a></li>
+      <li><a href="../finance.html" class="active">Finance &amp; Markets</a></li>
+      <li><a href="../for-students.html">For Students</a></li>
+      <li><a href="../projects.html">Projects</a></li>
+    </ul>
+  </nav>
+</header>
+
+<article>
+  <div class="post-header">
+    <span class="category-badge badge-finance">Finance &amp; Markets</span>
+    <h1>Three years monitoring a live commodity derivatives book: what I actually learned</h1>
+    <div class="post-meta-block">
+      <span>Rashmi Rama Sushil</span>
+      <span class="sep">·</span>
+      <span>June 2026</span>
+      <span class="sep">·</span>
+      <span>7 min read</span>
+    </div>
+  </div>
+
+  <div class="post-body">
+    <p>When I joined Morgan Stanley's trading risk team in mid-2023, I had a strong quantitative background from IIT Madras — machine learning, dataset analysis, mathematical modelling — but I had never seen a live derivatives book up close.</p>
+
+    <p>Three years later, I monitor one every day. Here's what that experience actually taught me.</p>
+
+    <h2>The market doesn't care about your model</h2>
+
+    <p>The first thing you learn when you're watching a live book is that the clean, well-behaved assumptions inside your models hold right up until the moment they don't. A crude oil futures position that looked perfectly hedged on paper suddenly has basis risk because the specific grade you're tracking decoupled from the benchmark. EU power prices spike 40% overnight because of a cold snap in Germany. LME copper gaps down at open because of macro news out of China at 3am.</p>
+
+    <p>You learn to separate what the model says from what the market is doing — and to understand why they diverge. The model is a tool for structuring your thinking, not a substitute for it.</p>
+
+    <h2>Commodity markets are genuinely different from equities</h2>
+
+    <p>If your intuition about markets comes from equities, commodity derivatives will surprise you. The seasonality patterns are real and significant: natural gas prices behave differently in summer and winter, agricultural markets follow harvest cycles, power markets have intraday shapes driven by consumption patterns. There is no "risk-free rate" equivalent for physical commodities — storage costs, transport costs, and supply chain bottlenecks are part of the pricing.</p>
+
+    <p>Understanding why a position is moving requires understanding the underlying physical market, not just the financial instrument. A Vega move in EU power is not just a vol event — it reflects what traders expect about future supply, demand, and weather. The financial and the physical are never fully separable.</p>
+
+    <h2>Greeks are a language, not an answer</h2>
+
+    <p>Delta, Vega, Gamma, Theta — in textbooks these are numbers you calculate. In a live book they're a language you use to communicate risk. When you're explaining to a senior trader why their portfolio P&amp;L dropped 2% on a day when spot prices barely moved, you're not reporting numbers — you're telling a story about how vol moved, how gamma worked against you near expiry, how the curve shape changed.</p>
+
+    <p>Getting fluent in that language — being able to read a risk report and immediately understand what it's telling you — takes time and repetition. You get it by doing it daily, not by studying it in isolation. The first time you correctly predict which part of the book is going to move before you run the numbers is when you know you've started to develop real intuition.</p>
+
+    <h2>The value of having context</h2>
+
+    <p>The most useful skill I've developed is being able to look at a market move and quickly form a hypothesis about what drove it. Was that vol spike in EU power caused by an unplanned nuclear outage in France? Is that crude sell-off macro-driven or specific to the front-month contract? Has agricultural vol moved because of a weather event in Brazil, or is it following broader commodity sentiment?</p>
+
+    <p>Having a mental model of the commodity complex — who the key players are, what the supply-demand dynamics look like, which macro variables matter most for each market — makes risk monitoring meaningful rather than mechanical. You build that context slowly, through daily Bloomberg monitoring, through reading trade publications, through asking questions when you see something you don't understand.</p>
+
+    <h2>P&amp;L attribution is harder than it looks</h2>
+
+    <p>One of the first things you learn in a risk role is that P&amp;L doesn't explain itself. The number at the end of the day is the output — your job is to understand the inputs. Delta P&amp;L from directional moves, Vega P&amp;L from vol changes, Gamma P&amp;L from convexity, Theta decay from time — breaking these apart and reconciling them to the actual number requires precision and practice.</p>
+
+    <p>When the attribution doesn't reconcile, it's usually a sign that something moved that you didn't model or didn't expect. Those unexplained residuals are often where the most interesting risk lives.</p>
+
+    <h2>What I'd tell someone starting in the same role</h2>
+
+    <p>Read the market narrative every morning before you look at the positions. Know why prices moved before you try to explain why your P&amp;L moved. The attribution follows from understanding the market, not the other way around.</p>
+
+    <p>The quantitative skills are important — they're what let you build the tools and run the models. But the intuition for what the market is doing is what makes you genuinely useful. And that intuition is built through daily, active engagement with the market — not through any course or textbook.</p>
+  </div>
+</article>
+
+<nav class="post-nav">
+  <a href="../finance.html">← All Finance posts</a>
+  <a href="greeks-in-practice.html" class="next">What the Greeks actually mean in a live portfolio →</a>
+</nav>
+
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="../about.html">About</a>
+    <a href="../finance.html">Finance &amp; Markets</a>
+    <a href="../for-students.html">For Students</a>
+    <a href="../projects.html">Projects</a>
+    <a href="https://www.linkedin.com/in/rashmi-rama-sushil" target="_blank">LinkedIn</a>
+  </div>
+  <p>© 2026 Rashmi Rama Sushil &nbsp;·&nbsp; Senior Associate, Trading Risk Management, Morgan Stanley</p>
+</footer>
+</body>
+</html>
