@@ -480,6 +480,7 @@ a:hover { text-decoration: underline; }
 @media (max-width: 768px) {
   html { font-size: 16px; }
 
+  /* Nav — hamburger */
   .nav-toggle { display: block; }
   .nav-links {
     display: none;
@@ -490,15 +491,96 @@ a:hover { text-decoration: underline; }
     padding: 12px 0 18px;
     border-top: 1px solid rgba(255,255,255,.1);
     gap: 0;
+    z-index: 200;
+    box-shadow: 0 8px 24px rgba(0,0,0,.25);
   }
   .nav-links.open { display: flex; }
-  .nav-links a { padding: 10px 24px; border-radius: 0; }
+  .nav-links a { padding: 13px 24px; border-radius: 0; font-size: 1rem; }
   .site-header { position: relative; }
 
-  .hero h1 { font-size: 1.8rem; }
-  .posts-grid { grid-template-columns: 1fr; }
-  .about-grid { grid-template-columns: 1fr; }
+  /* Hero */
+  .hero { padding: 48px 20px 44px; }
+  .hero h1 { font-size: 1.75rem; }
+  .hero p  { font-size: .95rem; }
+  .hero-tags { gap: 8px; }
+  .hero-tag  { font-size: .75rem; padding: 4px 10px; }
+
+  /* Page headers */
+  .page-header { padding: 32px 20px 28px; }
+  .page-header h1 { font-size: 1.55rem; }
+
+  /* Post cards — single column */
+  .posts-grid { grid-template-columns: 1fr; gap: 16px; }
+  .post-card  { padding: 20px 18px; }
+
+  /* Home sections */
+  .home-sections { padding: 32px 0 48px; }
+
+  /* Post header & body */
+  .post-header { padding: 32px 20px 24px; }
+  .post-header h1 { font-size: 1.45rem; line-height: 1.3; }
+  .post-body { padding: 8px 20px 48px; }
+  .post-body h2 { font-size: 1.2rem; }
+
+  /* Post nav — stack on very small screens */
+  .post-nav { flex-direction: column; gap: 12px; padding: 20px 20px 40px; }
+  .post-nav a { max-width: 100%; }
+  .post-nav .next { text-align: left; }
+
+  /* About */
+  .about-grid { grid-template-columns: 1fr; gap: 28px; padding: 32px 0 48px; }
   .about-sidebar { position: static; }
-  .post-header h1 { font-size: 1.65rem; }
+
+  /* Projects */
+  .project-card { padding: 20px 18px; }
   .project-card-header { flex-direction: column; gap: 8px; }
+
+  /* Students page */
+  .students-intro { padding: 28px 20px; }
+  .series-list    { padding: 8px 20px 48px; }
+  .series-item    { gap: 14px; padding: 16px 0; }
+  .series-text h3 { font-size: .95rem; }
+  .series-text p  { font-size: .82rem; }
+
+  /* Footer */
+  .footer-links { gap: 14px; }
+  .site-footer  { padding: 24px 20px; }
+}
+
+/* ─── Small phone (≤ 420px) ──────────────────────────────────────────────── */
+@media (max-width: 420px) {
+  .hero h1 { font-size: 1.5rem; }
+  .post-header h1 { font-size: 1.3rem; }
+  .site-logo { font-size: .9rem; }
+
+  /* Stat bars in interactive posts — 2 cols */
+  .stat-bar,
+  .highlight-bar { grid-template-columns: 1fr 1fr !important; }
+
+  /* Commodity grid — 2 cols */
+  .commodity-grid { grid-template-columns: 1fr 1fr !important; }
+
+  /* Greek cards — 2 cols */
+  .greek-grid { grid-template-columns: 1fr 1fr !important; }
+
+  /* BS calculator — single column sliders + 3-col output */
+  .sliders-grid     { grid-template-columns: 1fr !important; }
+  .greeks-output    { grid-template-columns: repeat(3,1fr) !important; }
+
+  /* Charts — single column */
+  .charts-row { grid-template-columns: 1fr !important; }
+
+  /* Transfer + lesson grids — single column */
+  .transfer-grid,
+  .lesson-grid { grid-template-columns: 1fr !important; }
+
+  /* Skills compare — stack */
+  .skills-compare { grid-template-columns: 1fr !important; }
+
+  /* Trade-off table — allow horizontal scroll */
+  .tradeoff-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tradeoff { min-width: 480px; }
+
+  /* Inputs — prevent iOS zoom (min 16px) */
+  input[type=range] { font-size: 16px; }
 }

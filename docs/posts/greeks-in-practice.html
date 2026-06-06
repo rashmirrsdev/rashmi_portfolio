@@ -295,14 +295,14 @@
     <h2>The fundamental trade-off: buyers vs sellers</h2>
     <p>Every options position sits on one side of this table. Which side is better depends entirely on whether realised vol exceeds implied vol.</p>
 
-    <table class="tradeoff">
+    <div class="tradeoff-wrap"><table class="tradeoff">
       <tr><th></th><th>Option Buyer (Long)</th><th>Option Seller (Short)</th></tr>
       <tr><td><strong>Delta</strong></td><td>Positive (call) / Negative (put)</td><td>Opposite of buyer</td></tr>
       <tr><td><strong>Gamma</strong></td><td class="positive">+ Positive (convexity)</td><td class="negative">− Negative</td></tr>
       <tr><td><strong>Vega</strong></td><td class="positive">+ Benefits from vol rise</td><td class="negative">− Hurt by vol rise</td></tr>
       <tr><td><strong>Theta</strong></td><td class="negative">− Pays daily decay</td><td class="positive">+ Earns daily decay</td></tr>
       <tr><td><strong>Wins when…</strong></td><td>Realised vol &gt; Implied vol</td><td>Realised vol &lt; Implied vol</td></tr>
-    </table>
+    </table></div>
 
     <div class="callout">
       <strong>In practice:</strong> You never look at one Greek in isolation. A book might look Vega-neutral in aggregate but hide concentration at specific strikes or expiries. The skill is reading them together — as a story about how the portfolio is positioned relative to what the market might do next.
@@ -322,7 +322,7 @@
     <a href="../finance.html">Finance &amp; Markets</a>
     <a href="../for-students.html">For Students</a>
     <a href="../projects.html">Projects</a>
-    <a href="https://www.linkedin.com/in/rashmi-rama-sushil" target="_blank">LinkedIn</a>
+    <a href="https://www.linkedin.com/in/rrsk/" target="_blank">LinkedIn</a>
   </div>
   <p>© 2026 Rashmi Rama Sushil · Senior Associate, Trading Risk Management, Morgan Stanley</p>
 </footer>
