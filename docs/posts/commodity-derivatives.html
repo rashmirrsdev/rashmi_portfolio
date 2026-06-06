@@ -3,8 +3,135 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Three years monitoring a live commodity derivatives book — Rashmi Rama Sushil</title>
+  <title>Three years in commodity derivatives — Rashmi Rama Sushil</title>
   <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* ── Stat bar ── */
+    .stat-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      background: var(--navy);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 36px 0;
+    }
+    .stat-item {
+      padding: 22px 18px;
+      text-align: center;
+      border-right: 1px solid rgba(255,255,255,.12);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #c8a96b;
+      font-family: Georgia, serif;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: .75rem;
+      color: rgba(255,255,255,.7);
+      margin-top: 6px;
+      line-height: 1.3;
+    }
+
+    /* ── Commodity grid ── */
+    .commodity-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin: 28px 0 36px;
+    }
+    .commodity-tile {
+      border-radius: 10px;
+      padding: 18px 12px;
+      text-align: center;
+    }
+    .commodity-tile .icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .commodity-tile h4 { font-size: .82rem; font-weight: 700; margin-bottom: 4px; }
+    .commodity-tile p  { font-size: .72rem; line-height: 1.4; opacity: .85; }
+    .tile-oil   { background: #1a2744; color: #a0b4d6; }
+    .tile-power { background: #1a3a2a; color: #7ecfa4; }
+    .tile-gas   { background: #2a1a3a; color: #b09adc; }
+    .tile-metal { background: #3a2a10; color: #d4a654; }
+    .tile-agri  { background: #1a2e1a; color: #88c888; }
+
+    /* ── Callout box ── */
+    .callout {
+      background: #eef2f8;
+      border-left: 4px solid var(--navy);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      margin: 24px 0;
+      font-size: .95rem;
+      color: #333;
+    }
+    .callout strong { color: var(--navy); }
+
+    /* ── Lesson cards ── */
+    .lesson-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 28px 0;
+    }
+    .lesson-card {
+      border: 1px solid #e2e4e8;
+      border-radius: 10px;
+      padding: 20px 18px;
+      background: #fff;
+    }
+    .lesson-card .lesson-num {
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--navy);
+      opacity: .6;
+      margin-bottom: 8px;
+    }
+    .lesson-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .lesson-card p {
+      font-size: .875rem;
+      color: #555;
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    /* ── Chart section ── */
+    .chart-section {
+      background: #f7f8fa;
+      border-radius: 12px;
+      padding: 28px 24px;
+      margin: 32px 0;
+    }
+    .chart-section h3 {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .chart-section p {
+      font-size: .82rem;
+      color: #666;
+      margin-bottom: 20px;
+    }
+    canvas { max-height: 280px; }
+
+    @media (max-width: 640px) {
+      .stat-bar { grid-template-columns: repeat(2,1fr); }
+      .commodity-grid { grid-template-columns: repeat(2,1fr); }
+      .lesson-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
@@ -33,56 +160,109 @@
       <span class="sep">·</span>
       <span>June 2026</span>
       <span class="sep">·</span>
-      <span>7 min read</span>
+      <span>Senior Associate · Morgan Stanley</span>
     </div>
   </div>
 
   <div class="post-body">
-    <p>When I joined Morgan Stanley's trading risk team in mid-2023, I had a strong quantitative background from IIT Madras — machine learning, dataset analysis, mathematical modelling — but I had never seen a live derivatives book up close.</p>
 
-    <p>Three years later, I monitor one every day. Here's what that experience actually taught me.</p>
+    <!-- Stat bar -->
+    <div class="stat-bar">
+      <div class="stat-item">
+        <div class="stat-num" data-target="3">0</div>
+        <div class="stat-label">Years daily<br>monitoring</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" data-target="20">0</div>
+        <div class="stat-label">Instruments<br>tracked daily</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">5</div>
+        <div class="stat-label">Global<br>desks covered</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Asset<br>classes</div>
+      </div>
+    </div>
 
-    <h2>The market doesn't care about your model</h2>
+    <p>When I joined Morgan Stanley's trading risk team in mid-2023, I had a strong quantitative background from IIT Madras but had never seen a live derivatives book up close. Three years later, I monitor one every day. Here's what that experience actually taught me.</p>
 
-    <p>The first thing you learn when you're watching a live book is that the clean, well-behaved assumptions inside your models hold right up until the moment they don't. A crude oil futures position that looked perfectly hedged on paper suddenly has basis risk because the specific grade you're tracking decoupled from the benchmark. EU power prices spike 40% overnight because of a cold snap in Germany. LME copper gaps down at open because of macro news out of China at 3am.</p>
+    <!-- Commodity complex -->
+    <h2>The portfolio I monitor</h2>
+    <p>One of the most diverse commodity derivatives books in the firm — spanning four asset classes across global markets:</p>
 
-    <p>You learn to separate what the model says from what the market is doing — and to understand why they diverge. The model is a tool for structuring your thinking, not a substitute for it.</p>
+    <div class="commodity-grid">
+      <div class="commodity-tile tile-oil">
+        <div class="icon">🛢️</div>
+        <h4>Crude Oil</h4>
+        <p>Brent, WTI, spreads, futures &amp; options</p>
+      </div>
+      <div class="commodity-tile tile-power">
+        <div class="icon">⚡</div>
+        <h4>EU Power</h4>
+        <p>EEX baseload, peak, forward curves</p>
+      </div>
+      <div class="commodity-tile tile-gas">
+        <div class="icon">🔥</div>
+        <h4>Natural Gas</h4>
+        <p>TTF, NBP, seasonal spreads</p>
+      </div>
+      <div class="commodity-tile tile-metal">
+        <div class="icon">🏗️</div>
+        <h4>LME Metals</h4>
+        <p>Copper, aluminium, zinc, nickel</p>
+      </div>
+      <div class="commodity-tile tile-agri">
+        <div class="icon">🌾</div>
+        <h4>Agricultural</h4>
+        <p>Wheat, corn, soy — harvest-cycle driven</p>
+      </div>
+    </div>
 
-    <h2>Commodity markets are genuinely different from equities</h2>
+    <!-- Vol chart -->
+    <div class="chart-section">
+      <h3>Typical implied volatility ranges by commodity class</h3>
+      <p>Commodity vol is structurally higher than equities — and spikes much faster. Each class has its own vol regime driven by different physical market factors.</p>
+      <canvas id="volChart"></canvas>
+    </div>
 
-    <p>If your intuition about markets comes from equities, commodity derivatives will surprise you. The seasonality patterns are real and significant: natural gas prices behave differently in summer and winter, agricultural markets follow harvest cycles, power markets have intraday shapes driven by consumption patterns. There is no "risk-free rate" equivalent for physical commodities — storage costs, transport costs, and supply chain bottlenecks are part of the pricing.</p>
+    <!-- Lessons -->
+    <h2>What three years actually taught me</h2>
 
-    <p>Understanding why a position is moving requires understanding the underlying physical market, not just the financial instrument. A Vega move in EU power is not just a vol event — it reflects what traders expect about future supply, demand, and weather. The financial and the physical are never fully separable.</p>
+    <div class="lesson-grid">
+      <div class="lesson-card">
+        <div class="lesson-num">Lesson 01</div>
+        <h3>The market doesn't care about your model</h3>
+        <p>Clean assumptions hold right until they don't. EU power spikes 40% overnight on a cold snap. LME copper gaps down on macro news at 3am. You learn to separate what the model says from what the market is doing — and why they diverge.</p>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-num">Lesson 02</div>
+        <h3>Commodities are driven by physical markets</h3>
+        <p>There's no risk-free rate equivalent for physical commodities. Storage costs, transport, and supply chain bottlenecks are in the price. Understanding why a position moves requires understanding the underlying physical market, not just the instrument.</p>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-num">Lesson 03</div>
+        <h3>Greeks are a language, not a number</h3>
+        <p>When explaining to a trader why P&amp;L dropped 2% on a flat spot day, you're not reporting Delta — you're telling a story about how vol moved, how gamma worked near expiry, how the curve shifted. Getting fluent takes daily repetition.</p>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-num">Lesson 04</div>
+        <h3>P&amp;L attribution is harder than it looks</h3>
+        <p>The number at end of day is just the output. Delta P&amp;L, Vega P&amp;L, Gamma P&amp;L, Theta — breaking these apart and reconciling them to the actual number requires precision. Unexplained residuals are where the most interesting risk lives.</p>
+      </div>
+    </div>
 
-    <h2>Greeks are a language, not an answer</h2>
+    <div class="callout">
+      <strong>The one thing I'd tell someone starting:</strong> Read the market narrative every morning before you look at the positions. Know why prices moved before you try to explain why your P&amp;L moved. The attribution follows from understanding the market — not the other way around.
+    </div>
 
-    <p>Delta, Vega, Gamma, Theta — in textbooks these are numbers you calculate. In a live book they're a language you use to communicate risk. When you're explaining to a senior trader why their portfolio P&amp;L dropped 2% on a day when spot prices barely moved, you're not reporting numbers — you're telling a story about how vol moved, how gamma worked against you near expiry, how the curve shape changed.</p>
-
-    <p>Getting fluent in that language — being able to read a risk report and immediately understand what it's telling you — takes time and repetition. You get it by doing it daily, not by studying it in isolation. The first time you correctly predict which part of the book is going to move before you run the numbers is when you know you've started to develop real intuition.</p>
-
-    <h2>The value of having context</h2>
-
-    <p>The most useful skill I've developed is being able to look at a market move and quickly form a hypothesis about what drove it. Was that vol spike in EU power caused by an unplanned nuclear outage in France? Is that crude sell-off macro-driven or specific to the front-month contract? Has agricultural vol moved because of a weather event in Brazil, or is it following broader commodity sentiment?</p>
-
-    <p>Having a mental model of the commodity complex — who the key players are, what the supply-demand dynamics look like, which macro variables matter most for each market — makes risk monitoring meaningful rather than mechanical. You build that context slowly, through daily Bloomberg monitoring, through reading trade publications, through asking questions when you see something you don't understand.</p>
-
-    <h2>P&amp;L attribution is harder than it looks</h2>
-
-    <p>One of the first things you learn in a risk role is that P&amp;L doesn't explain itself. The number at the end of the day is the output — your job is to understand the inputs. Delta P&amp;L from directional moves, Vega P&amp;L from vol changes, Gamma P&amp;L from convexity, Theta decay from time — breaking these apart and reconciling them to the actual number requires precision and practice.</p>
-
-    <p>When the attribution doesn't reconcile, it's usually a sign that something moved that you didn't model or didn't expect. Those unexplained residuals are often where the most interesting risk lives.</p>
-
-    <h2>What I'd tell someone starting in the same role</h2>
-
-    <p>Read the market narrative every morning before you look at the positions. Know why prices moved before you try to explain why your P&amp;L moved. The attribution follows from understanding the market, not the other way around.</p>
-
-    <p>The quantitative skills are important — they're what let you build the tools and run the models. But the intuition for what the market is doing is what makes you genuinely useful. And that intuition is built through daily, active engagement with the market — not through any course or textbook.</p>
   </div>
 </article>
 
 <nav class="post-nav">
   <a href="../finance.html">← All Finance posts</a>
-  <a href="greeks-in-practice.html" class="next">What the Greeks actually mean in a live portfolio →</a>
+  <a href="greeks-in-practice.html" class="next">What the Greeks actually mean →</a>
 </nav>
 
 <footer class="site-footer">
@@ -93,7 +273,67 @@
     <a href="../projects.html">Projects</a>
     <a href="https://www.linkedin.com/in/rashmi-rama-sushil" target="_blank">LinkedIn</a>
   </div>
-  <p>© 2026 Rashmi Rama Sushil &nbsp;·&nbsp; Senior Associate, Trading Risk Management, Morgan Stanley</p>
+  <p>© 2026 Rashmi Rama Sushil · Senior Associate, Trading Risk Management, Morgan Stanley</p>
 </footer>
+
+<script>
+// Animated counters
+document.querySelectorAll('.stat-num[data-target]').forEach(el => {
+  const target = +el.dataset.target;
+  let current = 0;
+  const step = Math.ceil(target / 30);
+  const timer = setInterval(() => {
+    current = Math.min(current + step, target);
+    el.textContent = current + (target >= 20 ? '+' : '');
+    if (current >= target) clearInterval(timer);
+  }, 40);
+});
+
+// Vol chart
+const ctx = document.getElementById('volChart').getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['EU Power', 'Natural Gas', 'Agricultural', 'LME Metals', 'Crude Oil', 'Equities (S&P)'],
+    datasets: [
+      {
+        label: 'Typical low vol',
+        data: [20, 25, 15, 12, 18, 12],
+        backgroundColor: 'rgba(13,43,85,0.5)',
+        borderColor: 'rgba(13,43,85,0.8)',
+        borderWidth: 1,
+        borderRadius: 4,
+      },
+      {
+        label: 'Spike vol (tail events)',
+        data: [180, 140, 60, 55, 80, 45],
+        backgroundColor: 'rgba(200,100,0,0.55)',
+        borderColor: 'rgba(200,100,0,0.8)',
+        borderWidth: 1,
+        borderRadius: 4,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top' },
+      tooltip: {
+        callbacks: {
+          label: ctx => `${ctx.dataset.label}: ~${ctx.raw}%`
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: { display: true, text: 'Implied Vol (%)' },
+        grid: { color: 'rgba(0,0,0,.06)' }
+      },
+      x: { grid: { display: false } }
+    }
+  }
+});
+</script>
 </body>
 </html>

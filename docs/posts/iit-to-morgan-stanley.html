@@ -5,6 +5,145 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>From IIT Madras to Morgan Stanley — Rashmi Rama Sushil</title>
   <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    /* ── Stat highlight bar ── */
+    .highlight-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 32px 0;
+    }
+    .highlight-card {
+      border-radius: 10px;
+      padding: 20px 14px;
+      text-align: center;
+    }
+    .h-num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      font-family: Georgia, serif;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .h-label { font-size: .75rem; line-height: 1.35; }
+    .hc-1 { background: #eef2f8; color: #0D2B55; }
+    .hc-2 { background: #e8f5ec; color: #1e6b50; }
+    .hc-3 { background: #f5f0e8; color: #6b4a1e; }
+    .hc-4 { background: #f0eef8; color: #3a1e6b; }
+
+    /* ── Timeline ── */
+    .timeline { position: relative; margin: 36px 0; padding-left: 28px; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 8px; top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, #0D2B55, #1e6b50);
+    }
+    .tl-item { position: relative; margin-bottom: 32px; }
+    .tl-dot {
+      position: absolute;
+      left: -24px;
+      top: 4px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 2px currentColor;
+    }
+    .tl-item:nth-child(1) .tl-dot { color: #1e6b50; background: #1e6b50; }
+    .tl-item:nth-child(2) .tl-dot { color: #0D2B55; background: #0D2B55; }
+    .tl-item:nth-child(3) .tl-dot { color: #0D2B55; background: #6b9ad4; }
+    .tl-item:nth-child(4) .tl-dot { color: #b8860b; background: #b8860b; }
+    .tl-item:nth-child(5) .tl-dot { color: #1e6b50; background: #1e6b50; }
+    .tl-date {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 4px;
+    }
+    .tl-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+    }
+    .tl-body { font-size: .875rem; color: #555; line-height: 1.55; }
+
+    /* ── Skills before/after ── */
+    .skills-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid #e2e4e8;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 24px 0 32px;
+    }
+    .skills-col { padding: 0; }
+    .skills-col-header {
+      padding: 12px 18px;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .skills-col:first-child .skills-col-header { background: #f7f8fa; color: #666; }
+    .skills-col:last-child  .skills-col-header { background: #0D2B55; color: #c8a96b; }
+    .skill-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px;
+      border-top: 1px solid #e2e4e8;
+      font-size: .875rem;
+    }
+    .skill-item .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .skills-col:first-child .dot { background: #ccc; }
+    .skills-col:last-child  .dot { background: #1e6b50; }
+    .skills-col:last-child  .skill-item { color: #1a1a1a; font-weight: 500; }
+
+    /* ── Callout ── */
+    .callout {
+      background: #eef2f8;
+      border-left: 4px solid var(--navy);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      margin: 24px 0;
+      font-size: .92rem;
+      color: #333;
+    }
+    .callout strong { color: var(--navy); }
+
+    /* ── Transfer grid ── */
+    .transfer-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 14px;
+      margin: 20px 0 28px;
+    }
+    .transfer-card {
+      border: 1px solid #e2e4e8;
+      border-radius: 10px;
+      padding: 16px 14px;
+      background: #fff;
+    }
+    .transfer-card .tc-icon { font-size: 1.4rem; margin-bottom: 8px; }
+    .transfer-card h4 { font-size: .85rem; font-weight: 700; color: #0D2B55; margin-bottom: 5px; }
+    .transfer-card p  { font-size: .8rem; color: #555; line-height: 1.45; margin: 0; }
+
+    @media (max-width: 640px) {
+      .highlight-bar { grid-template-columns: repeat(2,1fr); }
+      .skills-compare { grid-template-columns: 1fr; }
+      .transfer-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
@@ -33,54 +172,120 @@
       <span class="sep">·</span>
       <span>June 2026</span>
       <span class="sep">·</span>
-      <span>6 min read</span>
+      <span>Senior Associate · Morgan Stanley</span>
     </div>
   </div>
 
   <div class="post-body">
-    <p>When I was finishing my MS Research at IIT Madras in 2023, I knew I wanted to move into finance — specifically into something analytical, something that used the quantitative skills I'd built during my research, but applied to markets and real capital rather than academic problems.</p>
 
-    <p>What I didn't know was exactly what that path would look like, how to position a research background for finance roles, or what the day-to-day work of a risk or analytics role actually involved. This post is what I would have wanted to read then.</p>
+    <p>I came from a research background with no finance experience. Here's the honest account of what the transition involved, what transferred directly, and what had to be built from scratch.</p>
 
-    <h2>The background I came with</h2>
+    <!-- Highlight bar -->
+    <div class="highlight-bar">
+      <div class="highlight-card hc-1">
+        <div class="h-num">9.56</div>
+        <div class="h-label">IIT Madras CGPA<br>(out of 10)</div>
+      </div>
+      <div class="highlight-card hc-2">
+        <div class="h-num">4</div>
+        <div class="h-label">Peer-reviewed<br>publications</div>
+      </div>
+      <div class="highlight-card hc-3">
+        <div class="h-num">98.3%</div>
+        <div class="h-label">GATE 2020<br>percentile</div>
+      </div>
+      <div class="highlight-card hc-4">
+        <div class="h-num">18mo</div>
+        <div class="h-label">To first<br>promotion</div>
+      </div>
+    </div>
 
-    <p>My MS Research was in Engineering Design, with a focus on machine learning methods for large dataset analysis and visualisation. I published four papers during my time there — in Springer journals and at international conferences in the US and Japan — and spent time teaching a class of 80+ students as a TA. The CGPA was 9.56/10, which I worked hard for, but the more valuable outcome was learning how to break down a complex problem, structure an approach, and communicate findings to different audiences.</p>
+    <!-- Timeline -->
+    <h2>The journey</h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Sep 2020 — Jun 2023</div>
+        <div class="tl-title">MS Research · IIT Madras</div>
+        <div class="tl-body">Engineering Design. CGPA 9.56/10. ML research on large-scale dataset analysis. 4 publications. ASME essay competition winner. Teaching assistant for 80+ students.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Dec 2022</div>
+        <div class="tl-title">Campus placement — 3 offers in one day</div>
+        <div class="tl-body">Bajaj, JP Morgan &amp; Chase, and Morgan Stanley all offered on Day 1. Accepted Morgan Stanley for the quant/analytical angle and the exposure to live markets. Full story in the <a href="../for-students.html">For Students</a> section.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Jul 2023 — Dec 2024</div>
+        <div class="tl-title">Associate · Trading Risk Management · Morgan Stanley</div>
+        <div class="tl-body">Built 30+ risk reporting tools monitoring $50M–$300M notional across 5 global commodity desks. Developed derivatives analytics (Greeks, P&amp;L attribution). 40% reduction in manual workload through Python automation.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Jan 2025 — Present</div>
+        <div class="tl-title">Senior Associate · Trading Risk Management · Morgan Stanley</div>
+        <div class="tl-body">Leads P&amp;L and risk review forums with Director/MD-level stakeholders. Monitors 20+ instruments daily via Bloomberg across oil, EU power, gas, LME metals, and agricultural markets. Drives analytical tool development.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Building now</div>
+        <div class="tl-title">Quant finance projects + CFA</div>
+        <div class="tl-body">Portfolio analytics, commodity market analytics, P&amp;L attribution tool, derivatives pricer. CFA Level 1 complete. Targeting an analytical quant or portfolio analytics role next.</div>
+      </div>
+    </div>
 
-    <p>What I didn't have was any finance background. No CFA, no financial modelling courses, no internships in the sector. I knew Python and statistics. I didn't know what Delta was.</p>
+    <!-- What transferred -->
+    <h2>What actually transferred from research to finance</h2>
 
-    <h2>Why trading risk management</h2>
+    <div class="transfer-grid">
+      <div class="transfer-card">
+        <div class="tc-icon">🧠</div>
+        <h4>Problem structuring</h4>
+        <p>Breaking down a complex, ambiguous problem into tractable parts. Same skill whether you're writing a paper or explaining a P&amp;L move to an MD.</p>
+      </div>
+      <div class="transfer-card">
+        <div class="tc-icon">🐍</div>
+        <h4>Python &amp; data skills</h4>
+        <p>Immediately useful. Building tools from scratch — not just using existing ones — made a real difference early. Research had made this second nature.</p>
+      </div>
+      <div class="transfer-card">
+        <div class="tc-icon">📊</div>
+        <h4>Communicating quantitative findings</h4>
+        <p>Presenting findings to non-technical audiences is a core research skill. In finance, it's presenting risk narratives to traders and senior stakeholders.</p>
+      </div>
+    </div>
 
-    <p>I joined Morgan Stanley's Trading Risk Management team as an Associate in July 2023. The role appealed because it sat at the intersection of quantitative analysis and live markets — you're not just building models in isolation, you're monitoring a real derivatives book with real capital at risk, explaining P&amp;L movements to traders and senior management, and building tools that the team depends on daily.</p>
+    <!-- Skills before/after -->
+    <h2>Skills: before vs. after</h2>
 
-    <p>The onboarding was steep. The portfolio I joined covered commodity derivatives — crude oil, EU power and natural gas, LME metals, agricultural products — across hundreds of different instruments globally. I had to learn the market structure, the instrument types, the risk framework, and the reporting infrastructure simultaneously.</p>
+    <div class="skills-compare">
+      <div class="skills-col">
+        <div class="skills-col-header">Joining Morgan Stanley (Jul 2023)</div>
+        <div class="skill-item"><span class="dot"></span>Python, ML, statistics</div>
+        <div class="skill-item"><span class="dot"></span>Research &amp; academic writing</div>
+        <div class="skill-item"><span class="dot"></span>Data analysis &amp; visualisation</div>
+        <div class="skill-item"><span class="dot"></span>No finance background</div>
+        <div class="skill-item"><span class="dot"></span>No Bloomberg experience</div>
+        <div class="skill-item"><span class="dot"></span>No derivatives knowledge</div>
+      </div>
+      <div class="skills-col">
+        <div class="skills-col-header">Now (Senior Associate, 2026)</div>
+        <div class="skill-item"><span class="dot"></span>Python · SQL · Power BI · Excel</div>
+        <div class="skill-item"><span class="dot"></span>Bloomberg Terminal (daily, 3 years)</div>
+        <div class="skill-item"><span class="dot"></span>Derivatives analytics &amp; Greeks</div>
+        <div class="skill-item"><span class="dot"></span>P&amp;L attribution &amp; risk sensitivities</div>
+        <div class="skill-item"><span class="dot"></span>Commodity market expertise</div>
+        <div class="skill-item"><span class="dot"></span>CFA Level 1</div>
+      </div>
+    </div>
 
-    <h2>What made the transition work</h2>
+    <div class="callout">
+      <strong>If you have a strong quantitative background and are considering finance:</strong> the analytical skills transfer. The finance knowledge is learnable. What matters is the ability to think rigorously, build things that work, and communicate findings clearly. The domain catches up — the foundation doesn't.
+    </div>
 
-    <p>The research skills transferred more directly than I expected. Structuring a problem, knowing which variables matter and which are noise, communicating quantitative findings clearly to non-technical stakeholders — these are the same skills whether you're writing a paper or presenting a risk briefing to an MD. The vocabulary is different, but the underlying discipline is the same.</p>
+    <p>The full placement journey — preparation, interviews, Day 0 — is documented in the <a href="../for-students.html">For Students</a> section. If you'd like to connect, find me on <a href="https://www.linkedin.com/in/rashmi-rama-sushil" target="_blank">LinkedIn</a>.</p>
 
-    <p>Python was immediately useful. The team works in Python for analytics and automation, and being able to build tools from scratch — not just use existing ones — made a real difference early on. Within the first few months I was building and extending reporting tools that the team ran daily.</p>
-
-    <p>What I had to build from scratch was the market knowledge. That came from daily Bloomberg monitoring, from reading everything I could about commodity markets, and from paying close attention to why things moved when they moved. You develop a feel for the commodity complex through repeated observation — there's no shortcut. After three years, that intuition is one of the most valuable things I have.</p>
-
-    <h2>What was harder than expected</h2>
-
-    <p>The pace of a front-office environment is different from research. In research, you work on a problem until you've solved it properly — time horizons are weeks or months. In a trading environment, you need to understand why the P&amp;L moved today, produce accurate analysis under time pressure, and communicate it clearly to people who are busy and need the point fast. That adjustment took a few months.</p>
-
-    <p>Finance also has more inherited complexity than academic work — legacy systems, non-obvious conventions, institutional knowledge that lives in colleagues rather than documentation. Navigating that requires patience and a lot of asking questions.</p>
-
-    <h2>Where I am now</h2>
-
-    <p>I was promoted to Senior Associate in January 2025. The scope of work has expanded — I now lead the P&amp;L and risk review forums with Director and MD-level leadership, and I've built and operationalised the reporting infrastructure the team runs on. I also hold CFA Level 1, which I completed alongside work.</p>
-
-    <p>What's next for me is a move into a more explicitly analytical role — portfolio analytics, quantitative research, or risk modelling — where the work involves not just monitoring and reporting risk but actively modelling and interpreting it. That's the direction I'm building toward, and the projects I'm working on (see the <a href="../projects.html">Projects page</a>) are part of that preparation.</p>
-
-    <h2>If you're at a similar stage</h2>
-
-    <p>If you have a strong quantitative background — research, engineering, applied mathematics — and you're considering a move into finance, the most important thing to know is that the analytical skills transfer. The finance knowledge is learnable. What matters is the ability to think rigorously about complex problems, communicate quantitative findings clearly, and build things that actually work.</p>
-
-    <p>The placement journey that led to this role is documented in the <a href="../for-students.html">For Students</a> section of this site — seven posts covering preparation, mindset, company-specific prep, and what Day 0 actually felt like. If you're going through the same process, that might be useful reading.</p>
-
-    <p>Feel free to connect on <a href="https://www.linkedin.com/in/rashmi-rama-sushil" target="_blank">LinkedIn</a> if you want to talk about any of this.</p>
   </div>
 </article>
 
@@ -97,7 +302,26 @@
     <a href="../projects.html">Projects</a>
     <a href="https://www.linkedin.com/in/rashmi-rama-sushil" target="_blank">LinkedIn</a>
   </div>
-  <p>© 2026 Rashmi Rama Sushil &nbsp;·&nbsp; Senior Associate, Trading Risk Management, Morgan Stanley</p>
+  <p>© 2026 Rashmi Rama Sushil · Senior Associate, Trading Risk Management, Morgan Stanley</p>
 </footer>
+
+<script>
+// Animate stat counters
+document.querySelectorAll('.h-num').forEach(el => {
+  const text = el.textContent.trim();
+  const num = parseFloat(text);
+  if (isNaN(num)) return;
+  const suffix = text.replace(num.toString(), '');
+  let current = 0;
+  const steps = 40;
+  const increment = num / steps;
+  const timer = setInterval(() => {
+    current = Math.min(current + increment, num);
+    const display = Number.isInteger(num) ? Math.round(current) : current.toFixed(text.includes('.') ? 2 : 0);
+    el.textContent = display + suffix;
+    if (current >= num) { el.textContent = text; clearInterval(timer); }
+  }, 35);
+});
+</script>
 </body>
 </html>

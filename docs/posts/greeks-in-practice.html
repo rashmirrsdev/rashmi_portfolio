@@ -3,8 +3,170 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>What Delta, Vega, Gamma, and Theta actually mean — Rashmi Rama Sushil</title>
+  <title>What the Greeks actually mean — Rashmi Rama Sushil</title>
   <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* ── Greek cards ── */
+    .greek-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin: 28px 0;
+    }
+    .greek-card {
+      border-radius: 10px;
+      padding: 20px 16px;
+      text-align: center;
+    }
+    .greek-symbol {
+      font-size: 2.2rem;
+      font-family: Georgia, serif;
+      font-weight: bold;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .greek-name  { font-size: .78rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 10px; }
+    .greek-one   { font-size: .82rem; line-height: 1.45; }
+    .card-delta  { background: #e8eef7; color: #0D2B55; }
+    .card-gamma  { background: #e8f5ec; color: #1e6b50; }
+    .card-vega   { background: #f5e8f0; color: #6b1e4a; }
+    .card-theta  { background: #f5f0e8; color: #6b4a1e; }
+
+    /* ── BS Calculator ── */
+    .calculator {
+      background: #0D2B55;
+      border-radius: 14px;
+      padding: 28px 24px;
+      margin: 32px 0;
+      color: #fff;
+    }
+    .calculator h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #c8a96b;
+      margin-bottom: 4px;
+    }
+    .calculator .calc-sub {
+      font-size: .8rem;
+      color: rgba(255,255,255,.6);
+      margin-bottom: 22px;
+    }
+    .sliders-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px 28px;
+      margin-bottom: 24px;
+    }
+    .slider-row label {
+      display: flex;
+      justify-content: space-between;
+      font-size: .8rem;
+      color: rgba(255,255,255,.75);
+      margin-bottom: 6px;
+    }
+    .slider-row label span { color: #c8a96b; font-weight: 700; }
+    input[type=range] {
+      width: 100%;
+      accent-color: #c8a96b;
+      height: 4px;
+      cursor: pointer;
+    }
+    .greeks-output {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+    .output-box {
+      background: rgba(255,255,255,.08);
+      border-radius: 8px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+    .output-box .out-label {
+      font-size: .7rem;
+      color: rgba(255,255,255,.55);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .output-box .out-val {
+      font-size: 1.3rem;
+      font-weight: 800;
+      font-family: Georgia, serif;
+    }
+    .out-price { color: #c8a96b; }
+    .out-delta { color: #7ecfa4; }
+    .out-gamma { color: #a0c8ff; }
+    .out-vega  { color: #f0a0d0; }
+    .out-theta { color: #f0d090; }
+
+    /* ── Chart section ── */
+    .chart-section {
+      background: #f7f8fa;
+      border-radius: 12px;
+      padding: 24px 20px;
+      margin: 28px 0;
+    }
+    .chart-section h3 {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .chart-section p {
+      font-size: .8rem;
+      color: #666;
+      margin-bottom: 18px;
+    }
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    canvas { max-height: 220px; }
+
+    /* ── Callout ── */
+    .callout {
+      background: #eef2f8;
+      border-left: 4px solid var(--navy);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      margin: 24px 0;
+      font-size: .92rem;
+      color: #333;
+    }
+    .callout strong { color: var(--navy); }
+
+    /* ── Trade-off table ── */
+    .tradeoff {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0 28px;
+      font-size: .875rem;
+    }
+    .tradeoff th {
+      background: var(--navy);
+      color: #fff;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .tradeoff td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #e2e4e8;
+    }
+    .tradeoff tr:nth-child(even) td { background: #f7f8fa; }
+    .positive { color: #1e6b50; font-weight: 700; }
+    .negative { color: #8b1a1a; font-weight: 700; }
+
+    @media (max-width: 640px) {
+      .greek-grid { grid-template-columns: repeat(2, 1fr); }
+      .sliders-grid { grid-template-columns: 1fr; }
+      .greeks-output { grid-template-columns: repeat(3, 1fr); }
+      .charts-row { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
@@ -33,56 +195,119 @@
       <span class="sep">·</span>
       <span>June 2026</span>
       <span class="sep">·</span>
-      <span>7 min read</span>
+      <span>Interactive</span>
     </div>
   </div>
 
   <div class="post-body">
-    <p>The Greeks — Delta, Vega, Gamma, Theta — appear in almost every quantitative finance course and interview prep guide. They're usually explained with formulas and diagrams. That's fine for passing an exam. But if you're managing or analysing a live derivatives book, you need to understand them as measures of behaviour, not just outputs of a pricing model.</p>
 
-    <p>Here's how I think about each one in practice.</p>
+    <p>The Greeks appear in every quant finance course. Here's how I actually think about each one when monitoring a live derivatives book — not as formulas to calculate, but as a <strong>language for communicating risk</strong>.</p>
 
-    <h2>Delta: your directional exposure</h2>
+    <!-- Greek summary cards -->
+    <div class="greek-grid">
+      <div class="greek-card card-delta">
+        <div class="greek-symbol">Δ</div>
+        <div class="greek-name">Delta</div>
+        <div class="greek-one">Your directional exposure. How much your position gains/loses per $1 move in the underlying.</div>
+      </div>
+      <div class="greek-card card-gamma">
+        <div class="greek-symbol">Γ</div>
+        <div class="greek-name">Gamma</div>
+        <div class="greek-one">How fast your Delta changes. High Gamma = your exposure accelerates as the market moves.</div>
+      </div>
+      <div class="greek-card card-vega">
+        <div class="greek-symbol">V</div>
+        <div class="greek-name">Vega</div>
+        <div class="greek-one">Your sensitivity to implied volatility. Long options = positive Vega. Vol spikes hurt option sellers.</div>
+      </div>
+      <div class="greek-card card-theta">
+        <div class="greek-symbol">Θ</div>
+        <div class="greek-name">Theta</div>
+        <div class="greek-one">Daily time decay. Options lose value as expiry approaches. Sellers collect it. Buyers pay it.</div>
+      </div>
+    </div>
 
-    <p>Delta measures how much the value of your position changes when the underlying price moves by one unit. A Delta of 0.6 on a call option means if the underlying moves up by $1, your option gains approximately $0.60 — holding everything else constant.</p>
+    <!-- Live calculator -->
+    <div class="calculator">
+      <h3>Live Black-Scholes Calculator</h3>
+      <p class="calc-sub">Move the sliders — option price and Greeks update in real time. Call option.</p>
 
-    <p>In a portfolio context, you're not looking at individual Delta values. You're looking at the aggregate Delta of your book — your net directional exposure to the underlying. A book that's Delta-neutral has been structured so that small moves in the underlying don't change the portfolio value much. Traders who want to be broadly directional-neutral in the short term manage to a Delta target close to zero.</p>
+      <div class="sliders-grid">
+        <div class="slider-row">
+          <label>Spot price (S) <span id="sVal">$100</span></label>
+          <input type="range" id="S" min="60" max="140" value="100" step="1">
+        </div>
+        <div class="slider-row">
+          <label>Strike price (K) <span id="kVal">$100</span></label>
+          <input type="range" id="K" min="60" max="140" value="100" step="1">
+        </div>
+        <div class="slider-row">
+          <label>Time to expiry <span id="tVal">90 days</span></label>
+          <input type="range" id="T" min="1" max="365" value="90" step="1">
+        </div>
+        <div class="slider-row">
+          <label>Implied vol (σ) <span id="vVal">25%</span></label>
+          <input type="range" id="V" min="5" max="100" value="25" step="1">
+        </div>
+      </div>
 
-    <p>What Delta doesn't tell you: how that exposure changes as the market moves. A Delta of zero today might become a Delta of 0.3 tomorrow if the underlying moves significantly. That's what Gamma is for.</p>
+      <div class="greeks-output">
+        <div class="output-box">
+          <div class="out-label">Price</div>
+          <div class="out-val out-price" id="outPrice">—</div>
+        </div>
+        <div class="output-box">
+          <div class="out-label">Delta Δ</div>
+          <div class="out-val out-delta" id="outDelta">—</div>
+        </div>
+        <div class="output-box">
+          <div class="out-label">Gamma Γ</div>
+          <div class="out-val out-gamma" id="outGamma">—</div>
+        </div>
+        <div class="output-box">
+          <div class="out-label">Vega</div>
+          <div class="out-val out-vega" id="outVega">—</div>
+        </div>
+        <div class="output-box">
+          <div class="out-label">Theta Θ /day</div>
+          <div class="out-val out-theta" id="outTheta">—</div>
+        </div>
+      </div>
+    </div>
 
-    <h2>Gamma: how fast your Delta is changing</h2>
+    <!-- Charts -->
+    <div class="chart-section">
+      <div class="charts-row">
+        <div>
+          <h3>Delta across spot prices</h3>
+          <p>How Delta changes as spot moves relative to strike. ATM = ~0.5</p>
+          <canvas id="deltaChart"></canvas>
+        </div>
+        <div>
+          <h3>Theta decay over time</h3>
+          <p>Time value erodes faster as expiry approaches — the "hockey stick" effect</p>
+          <canvas id="thetaChart"></canvas>
+        </div>
+      </div>
+    </div>
 
-    <p>Gamma measures the rate of change of Delta with respect to the underlying price. High positive Gamma means that as the market moves in your favour, your Delta increases — your position gets more profitable faster than a simple linear relationship would suggest. This is the convexity that options buyers are often willing to pay a premium for.</p>
+    <!-- Trade-off table -->
+    <h2>The fundamental trade-off: buyers vs sellers</h2>
+    <p>Every options position sits on one side of this table. Which side is better depends entirely on whether realised vol exceeds implied vol.</p>
 
-    <p>Negative Gamma (typical for sellers of options) means your Delta moves against you as the market moves. If you've sold options and the market makes a large move in either direction, your Delta shifts in a way that hurts you — you end up being effectively long when prices fall, effectively short when prices rise.</p>
+    <table class="tradeoff">
+      <tr><th></th><th>Option Buyer (Long)</th><th>Option Seller (Short)</th></tr>
+      <tr><td><strong>Delta</strong></td><td>Positive (call) / Negative (put)</td><td>Opposite of buyer</td></tr>
+      <tr><td><strong>Gamma</strong></td><td class="positive">+ Positive (convexity)</td><td class="negative">− Negative</td></tr>
+      <tr><td><strong>Vega</strong></td><td class="positive">+ Benefits from vol rise</td><td class="negative">− Hurt by vol rise</td></tr>
+      <tr><td><strong>Theta</strong></td><td class="negative">− Pays daily decay</td><td class="positive">+ Earns daily decay</td></tr>
+      <tr><td><strong>Wins when…</strong></td><td>Realised vol &gt; Implied vol</td><td>Realised vol &lt; Implied vol</td></tr>
+    </table>
 
-    <p>This is why Gamma is particularly important near option expiry, when the relationship between price and Delta can change very rapidly. A position that looks well-managed can become dangerously exposed in the final days before expiry if it carries significant Gamma. In practice, Gamma risk near expiry is one of the most common sources of unexpected P&amp;L.</p>
+    <div class="callout">
+      <strong>In practice:</strong> You never look at one Greek in isolation. A book might look Vega-neutral in aggregate but hide concentration at specific strikes or expiries. The skill is reading them together — as a story about how the portfolio is positioned relative to what the market might do next.
+    </div>
 
-    <h2>Vega: your exposure to volatility</h2>
-
-    <p>Vega measures how much your position value changes when implied volatility moves by one percentage point. Options are worth more when markets are uncertain — volatility is the core input that drives their value beyond intrinsic worth.</p>
-
-    <p>If you're long options, you have positive Vega — you benefit when vol rises. If you've sold options, you're short vol — rising volatility hurts you.</p>
-
-    <p>In commodity markets, volatility events are often sudden and large — supply disruptions, geopolitical events, extreme weather. A book that looks well-structured in a low-volatility environment can look very different when vol spikes from 20% to 45% overnight. I've seen EU power vol move dramatically on unplanned outages and cold weather events; LME metals spike on supply news from a single mine. Vega management is not optional in these markets.</p>
-
-    <p>One subtlety worth understanding: Vega is not uniform across strikes and expiries. A book that looks Vega-neutral in aggregate might have significant Vega concentration at specific strikes or in specific expiry dates. Aggregate Vega hides structure — you need to look at the full Vega profile, not just the net number.</p>
-
-    <h2>Theta: the cost of holding options over time</h2>
-
-    <p>Theta is the daily decay in the value of an option as time passes, all else equal. Options have a finite life — as expiry approaches, the time value component of their price erodes.</p>
-
-    <p>If you've bought options, Theta works against you every day — you're paying a continuous cost to hold the position. If you've sold options, Theta works in your favour — time decay accrues to the seller.</p>
-
-    <p>This is the fundamental trade-off in options: buyers have positive Gamma (convexity) but negative Theta (daily cost); sellers have negative Gamma but positive Theta (daily income). Which side is better depends entirely on whether the market actually moves by more or less than the vol implied in the option price. If realised vol exceeds implied vol, buyers win. If realised vol is lower than implied, sellers win.</p>
-
-    <h2>Reading the Greeks together</h2>
-
-    <p>You never look at one Greek in isolation. A position might have acceptable Delta but concerning Gamma into an expiry. A book might look Vega-neutral in aggregate but have hidden Vega concentrations in specific tenors or strikes. The skill in risk management is reading these numbers together and understanding what they collectively say about how the book will behave under different market scenarios.</p>
-
-    <p>When I'm reviewing a risk report, I'm not just reading down a list of numbers — I'm building a picture of what the book is exposed to. What happens if spot moves 5% in either direction? What happens if vol jumps 10 points? What expires this week and how does the Gamma profile change at expiry? Those are the questions that matter.</p>
-
-    <p>If there's one thing I've learned from monitoring derivatives risk daily, it's that the Greeks are most useful not as individual numbers but as a story about how your portfolio is positioned relative to what the market might do next. Learning to read that story fluently takes time — but it's the core skill in this kind of work.</p>
   </div>
 </article>
 
@@ -99,7 +324,132 @@
     <a href="../projects.html">Projects</a>
     <a href="https://www.linkedin.com/in/rashmi-rama-sushil" target="_blank">LinkedIn</a>
   </div>
-  <p>© 2026 Rashmi Rama Sushil &nbsp;·&nbsp; Senior Associate, Trading Risk Management, Morgan Stanley</p>
+  <p>© 2026 Rashmi Rama Sushil · Senior Associate, Trading Risk Management, Morgan Stanley</p>
 </footer>
+
+<script>
+/* ── Black-Scholes implementation ── */
+function cdf(x) {
+  const a1=0.254829592, a2=-0.284496736, a3=1.421413741, a4=-1.453152027, a5=1.061405429, p=0.3275911;
+  const sign = x < 0 ? -1 : 1;
+  x = Math.abs(x) / Math.sqrt(2);
+  const t = 1 / (1 + p * x);
+  const y = 1 - (((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+  return 0.5 * (1 + sign * y);
+}
+function pdf(x) { return Math.exp(-0.5*x*x) / Math.sqrt(2*Math.PI); }
+
+function bs(S, K, T, v, r=0.04) {
+  const t = T / 365;
+  if (t <= 0) return { price: Math.max(S-K,0), delta: S>K?1:0, gamma:0, vega:0, theta:0 };
+  const sqT = Math.sqrt(t);
+  const d1 = (Math.log(S/K) + (r + 0.5*v*v)*t) / (v*sqT);
+  const d2 = d1 - v*sqT;
+  const price = S*cdf(d1) - K*Math.exp(-r*t)*cdf(d2);
+  const delta = cdf(d1);
+  const gamma = pdf(d1) / (S*v*sqT);
+  const vega  = S*pdf(d1)*sqT / 100;        // per 1% vol move
+  const theta = (-(S*pdf(d1)*v)/(2*sqT) - r*K*Math.exp(-r*t)*cdf(d2)) / 365;
+  return { price, delta, gamma, vega, theta };
+}
+
+function getInputs() {
+  return {
+    S: +document.getElementById('S').value,
+    K: +document.getElementById('K').value,
+    T: +document.getElementById('T').value,
+    v: +document.getElementById('V').value / 100
+  };
+}
+
+function updateCalc() {
+  const { S, K, T, v } = getInputs();
+  document.getElementById('sVal').textContent = `$${S}`;
+  document.getElementById('kVal').textContent = `$${K}`;
+  document.getElementById('tVal').textContent = `${T} days`;
+  document.getElementById('vVal').textContent = `${Math.round(v*100)}%`;
+
+  const g = bs(S, K, T, v);
+  document.getElementById('outPrice').textContent = `$${g.price.toFixed(2)}`;
+  document.getElementById('outDelta').textContent = g.delta.toFixed(3);
+  document.getElementById('outGamma').textContent = g.gamma.toFixed(4);
+  document.getElementById('outVega').textContent  = `$${g.vega.toFixed(3)}`;
+  document.getElementById('outTheta').textContent = `$${g.theta.toFixed(3)}`;
+
+  updateDeltaChart();
+}
+
+['S','K','T','V'].forEach(id => document.getElementById(id).addEventListener('input', updateCalc));
+
+/* ── Delta chart ── */
+const deltaCtx = document.getElementById('deltaChart').getContext('2d');
+let deltaChart;
+function updateDeltaChart() {
+  const { K, T, v } = getInputs();
+  const spots = Array.from({length:41}, (_,i) => 60 + i*2);
+  const deltas = spots.map(s => bs(s, K, T, v).delta);
+  if (deltaChart) {
+    deltaChart.data.labels = spots.map(s=>`$${s}`);
+    deltaChart.data.datasets[0].data = deltas;
+    deltaChart.update();
+  } else {
+    deltaChart = new Chart(deltaCtx, {
+      type: 'line',
+      data: {
+        labels: spots.map(s=>`$${s}`),
+        datasets: [{
+          label: 'Delta (Δ)',
+          data: deltas,
+          borderColor: '#1e6b50',
+          backgroundColor: 'rgba(30,107,80,.1)',
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { min:0, max:1, title:{display:true, text:'Delta'}, grid:{color:'rgba(0,0,0,.06)'} },
+          x: { ticks: { maxTicksLimit: 8 }, grid:{display:false} }
+        }
+      }
+    });
+  }
+}
+
+/* ── Theta decay chart ── */
+const thetaCtx = document.getElementById('thetaChart').getContext('2d');
+const days = Array.from({length:90}, (_,i) => 90-i);
+const thetas = days.map(d => bs(100, 100, d, 0.25).price);
+new Chart(thetaCtx, {
+  type: 'line',
+  data: {
+    labels: days.map(d => `${d}d`),
+    datasets: [{
+      label: 'ATM option value ($)',
+      data: thetas,
+      borderColor: '#b8860b',
+      backgroundColor: 'rgba(184,134,11,.12)',
+      borderWidth: 2,
+      pointRadius: 0,
+      fill: true,
+      tension: 0.3
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { title:{display:true, text:'Option Value ($)'}, grid:{color:'rgba(0,0,0,.06)'} },
+      x: { reverse: true, ticks:{maxTicksLimit:8}, grid:{display:false} }
+    }
+  }
+});
+
+updateCalc(); // initialise
+</script>
 </body>
 </html>
