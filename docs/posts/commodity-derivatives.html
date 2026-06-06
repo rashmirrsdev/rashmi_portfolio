@@ -131,6 +131,60 @@
       .commodity-grid { grid-template-columns: repeat(2,1fr); }
       .lesson-grid { grid-template-columns: 1fr; }
     }
+
+    /* ── Extended desk tile colors ── */
+    .tile-eugas { background: #1a2e3a; color: #7ecfa4; }
+    .tile-nagas { background: #0f1f35; color: #80b4d8; }
+
+    /* ── Structural differences section ── */
+    .diff-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 24px 0 28px;
+    }
+    .diff-card {
+      border: 1px solid #e2e4e8;
+      border-radius: 10px;
+      padding: 18px 16px;
+      background: #fff;
+    }
+    .diff-icon { font-size: 1.3rem; margin-bottom: 8px; }
+    .diff-card h4 { font-size: .88rem; font-weight: 700; color: #0D2B55; margin-bottom: 6px; }
+    .diff-card p { font-size: .82rem; color: #555; line-height: 1.5; margin: 0; }
+
+    /* ── Global flows section ── */
+    .flow-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 20px 0 16px; }
+    .flow-tab {
+      padding: 7px 16px;
+      border: 1px solid #d0d3d8;
+      border-radius: 20px;
+      background: #fff;
+      font-size: .82rem;
+      font-weight: 600;
+      color: #555;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+    .flow-tab.active, .flow-tab:hover { background: #0D2B55; color: #fff; border-color: #0D2B55; }
+    .flow-panel { display: none; }
+    .flow-panel.active { display: block; }
+    .flow-note { font-size: .78rem; color: #888; margin-bottom: 14px; font-style: italic; }
+    .chart-sublabel {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .flow-charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    canvas.flow-canvas { max-height: 190px; }
+
+    @media (max-width: 640px) {
+      .diff-grid { grid-template-columns: 1fr; }
+      .flow-charts-row { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -158,7 +212,7 @@
     <div class="post-meta-block">
       <span>Rashmi Rama Sushil</span>
       <span class="sep">·</span>
-      <span>June 2026</span>
+      <span>October 2025</span>
       <span class="sep">·</span>
       <span>Senior Associate · Morgan Stanley</span>
     </div>
@@ -181,50 +235,128 @@
         <div class="stat-label">Global<br>desks covered</div>
       </div>
       <div class="stat-item">
-        <div class="stat-num">4</div>
-        <div class="stat-label">Asset<br>classes</div>
+        <div class="stat-num">50+</div>
+        <div class="stat-label">Products &amp;<br>instruments</div>
       </div>
     </div>
 
     <p>When I joined Morgan Stanley's trading risk team in mid-2023, I had a strong quantitative background from IIT Madras but had never seen a live derivatives book up close. Three years later, I monitor one every day. Here's what that experience actually taught me.</p>
 
-    <!-- Commodity complex -->
-    <h2>The portfolio I monitor</h2>
-    <p>One of the most diverse commodity derivatives books in the firm — spanning four asset classes across global markets:</p>
+    <!-- Desk complex -->
+    <h2>The 5 desks I cover</h2>
+    <p>One of the most diverse commodity derivatives books in the firm — five global desks, each with its own instrument set, vol regime, and physical market dynamics:</p>
 
     <div class="commodity-grid">
       <div class="commodity-tile tile-oil">
         <div class="icon">🛢️</div>
-        <h4>Crude Oil</h4>
-        <p>Brent, WTI, spreads, futures &amp; options</p>
+        <h4>Oil &amp; Products</h4>
+        <p>Crude: Brent, WTI, Dubai, JCC · Products: RBOB, Naphtha, Jet, NGL, Gasoil · Crack spreads · Skew/smile vol markets</p>
       </div>
-      <div class="commodity-tile tile-power">
+      <div class="commodity-tile tile-eugas">
         <div class="icon">⚡</div>
-        <h4>EU Power</h4>
-        <p>EEX baseload, peak, forward curves</p>
-      </div>
-      <div class="commodity-tile tile-gas">
-        <div class="icon">🔥</div>
-        <h4>Natural Gas</h4>
-        <p>TTF, NBP, seasonal spreads</p>
+        <h4>European Power &amp; Gas</h4>
+        <p>EEX baseload &amp; peak power · TTF, NBP gas · Forward curves · Seasonal spreads</p>
       </div>
       <div class="commodity-tile tile-metal">
         <div class="icon">🏗️</div>
-        <h4>LME Metals</h4>
-        <p>Copper, aluminium, zinc, nickel</p>
+        <h4>Precious, Base Metals &amp; Bulks</h4>
+        <p>Gold, Silver, Platinum, Palladium · Copper, Aluminium, Nickel, Zinc (LME/CME) · Iron ore, Coking coal</p>
+      </div>
+      <div class="commodity-tile tile-nagas">
+        <div class="icon">🔌</div>
+        <h4>North American Power &amp; Gas</h4>
+        <p>NYMEX Henry Hub gas · Regional power markets · Basis &amp; spread trades</p>
       </div>
       <div class="commodity-tile tile-agri">
         <div class="icon">🌾</div>
         <h4>Agricultural</h4>
-        <p>Wheat, corn, soy — harvest-cycle driven</p>
+        <p>Wheat, corn, soy · Harvest-cycle &amp; weather driven · CBOT/CME markets</p>
       </div>
     </div>
 
-    <!-- Vol chart -->
+    <!-- How commodities differ from equities -->
+    <h2>How commodity markets are structurally different from equities</h2>
+    <p>Before you can interpret what's happening in a commodity book, you need to understand why commodity markets behave the way they do. Many intuitions built on equities simply don't transfer.</p>
+
+    <div class="diff-grid">
+      <div class="diff-card">
+        <div class="diff-icon">📦</div>
+        <h4>Physical delivery anchors the price</h4>
+        <p>Equity prices can go wherever sentiment takes them. Commodity prices are constrained by physical reality — storage has cost, pipelines have capacity limits, and you cannot create more crude oil on demand. Price cannot stay arbitrarily far from physical cost for long.</p>
+      </div>
+      <div class="diff-card">
+        <div class="diff-icon">📅</div>
+        <h4>Seasonality is structural, not cyclical</h4>
+        <p>EU natural gas prices have systematic winter premia baked into the forward curve every year — not because of macro cycles, but because cold weather drives physical demand. Agricultural prices follow planting and harvest calendars. This is physical reality, not sentiment.</p>
+      </div>
+      <div class="diff-card">
+        <div class="diff-icon">🏭</div>
+        <h4>Concentrated supply, fragmented demand</h4>
+        <p>OPEC+ controls ~40% of global crude supply. Chile and Peru together produce ~40% of global copper. A mine strike, a weather event in the US Midwest, or a geopolitical shock can cut supply 10–20% with no easy near-term substitute — something equity markets simply don't face.</p>
+      </div>
+      <div class="diff-card">
+        <div class="diff-icon">📈</div>
+        <h4>The futures curve shape tells you more than spot</h4>
+        <p>Steep backwardation means the physical market is tight and spot demand is high. Contango means storage is cheap and the market is oversupplied. In March 2020, crude flipped from backwardation to super-contango in weeks as storage filled. Equities have no equivalent structural signal.</p>
+      </div>
+    </div>
+
     <div class="chart-section">
-      <h3>Typical implied volatility ranges by commodity class</h3>
-      <p>Commodity vol is structurally higher than equities — and spikes much faster. Each class has its own vol regime driven by different physical market factors.</p>
+      <h3>Implied volatility: commodities vs equities</h3>
+      <p>Commodity vol is structurally higher than equities and spikes much faster. EU power can move from 30% to 180%+ vol on a single cold snap. Agricultural vol can double in a week on a USDA crop report. Each desk has its own distinct vol regime driven by physical supply/demand factors — not just macro sentiment.</p>
       <canvas id="volChart"></canvas>
+    </div>
+
+    <!-- Global flows -->
+    <h2>Global commodity flows: who produces, who consumes</h2>
+    <p>Understanding who the major producers and consumers are for each commodity is foundational to interpreting price moves. When a major producer disrupts supply or a key importer's demand shifts, you feel it in the book quickly — and you need to know which positions are exposed before the market moves.</p>
+
+    <div class="flow-tabs">
+      <button class="flow-tab active" onclick="showFlow('oil', this)">Crude Oil</button>
+      <button class="flow-tab" onclick="showFlow('gas', this)">LNG / Gas</button>
+      <button class="flow-tab" onclick="showFlow('copper', this)">Copper</button>
+      <button class="flow-tab" onclick="showFlow('iron', this)">Iron Ore</button>
+      <button class="flow-tab" onclick="showFlow('wheat', this)">Wheat</button>
+    </div>
+
+    <div class="flow-panel active" id="flow-oil">
+      <p class="flow-note">Crude oil — approximate 2023 trade flows (mb/d). OPEC+ controls ~40% of global supply; any coordinated cut moves Brent within hours of the announcement.</p>
+      <div class="flow-charts-row">
+        <div><div class="chart-sublabel">Top exporters</div><canvas id="oil-exp" class="flow-canvas"></canvas></div>
+        <div><div class="chart-sublabel">Top importers</div><canvas id="oil-imp" class="flow-canvas"></canvas></div>
+      </div>
+    </div>
+
+    <div class="flow-panel" id="flow-gas">
+      <p class="flow-note">LNG / natural gas — approximate 2023 export volumes (bcm). USA overtook Qatar as the world's largest LNG exporter in 2023. EU demand shifted sharply following Russian supply cuts post-2022.</p>
+      <div class="flow-charts-row">
+        <div><div class="chart-sublabel">Top exporters</div><canvas id="gas-exp" class="flow-canvas"></canvas></div>
+        <div><div class="chart-sublabel">Top importers</div><canvas id="gas-imp" class="flow-canvas"></canvas></div>
+      </div>
+    </div>
+
+    <div class="flow-panel" id="flow-copper">
+      <p class="flow-note">Copper — 2023 mine production (Mt). China consumes ~55% of global copper output. Any supply disruption in Chile or Peru moves LME spot immediately.</p>
+      <div class="flow-charts-row">
+        <div><div class="chart-sublabel">Top producers</div><canvas id="copper-exp" class="flow-canvas"></canvas></div>
+        <div><div class="chart-sublabel">Top consumers</div><canvas id="copper-imp" class="flow-canvas"></canvas></div>
+      </div>
+    </div>
+
+    <div class="flow-panel" id="flow-iron">
+      <p class="flow-note">Iron ore — 2023 export volumes (Mt). Australia and Brazil supply ~80% of globally traded iron ore. China imports ~70% of global seaborne supply — its construction sector sets the price.</p>
+      <div class="flow-charts-row">
+        <div><div class="chart-sublabel">Top exporters</div><canvas id="iron-exp" class="flow-canvas"></canvas></div>
+        <div><div class="chart-sublabel">Top importers</div><canvas id="iron-imp" class="flow-canvas"></canvas></div>
+      </div>
+    </div>
+
+    <div class="flow-panel" id="flow-wheat">
+      <p class="flow-note">Wheat — 2023 export estimates (Mt). Russia emerged as the world's largest wheat exporter post-2022. MENA and Asia-Pacific are the most import-dependent regions.</p>
+      <div class="flow-charts-row">
+        <div><div class="chart-sublabel">Top exporters</div><canvas id="wheat-exp" class="flow-canvas"></canvas></div>
+        <div><div class="chart-sublabel">Top importers</div><canvas id="wheat-imp" class="flow-canvas"></canvas></div>
+      </div>
     </div>
 
     <!-- Lessons -->
@@ -234,7 +366,7 @@
       <div class="lesson-card">
         <div class="lesson-num">Lesson 01</div>
         <h3>The market doesn't care about your model</h3>
-        <p>Clean assumptions hold right until they don't. EU power spikes 40% overnight on a cold snap. LME copper gaps down on macro news at 3am. You learn to separate what the model says from what the market is doing — and why they diverge.</p>
+        <p>Specific assumptions break — sometimes overnight. <strong>Mean reversion:</strong> commodity prices can stay far from historical averages for months during structural supply shocks (EU gas in 2022 is the textbook case). <strong>Correlation:</strong> Brent-WTI spreads that held tight for years can decouple in hours on a pipeline disruption. <strong>Seasonality:</strong> La Niña breaks agricultural seasonal patterns that were consistent for a decade. <strong>Term structure:</strong> a book in backwardation for months can flip to super-contango in a week as physical storage fills up. The model is a starting point, not an answer — and the market reminds you of that regularly.</p>
       </div>
       <div class="lesson-card">
         <div class="lesson-num">Lesson 02</div>
@@ -297,7 +429,7 @@ new Chart(ctx, {
     labels: ['EU Power', 'Natural Gas', 'Agricultural', 'LME Metals', 'Crude Oil', 'Equities (S&P)'],
     datasets: [
       {
-        label: 'Typical low vol',
+        label: 'Typical vol range',
         data: [20, 25, 15, 12, 18, 12],
         backgroundColor: 'rgba(13,43,85,0.5)',
         borderColor: 'rgba(13,43,85,0.8)',
@@ -318,22 +450,81 @@ new Chart(ctx, {
     responsive: true,
     plugins: {
       legend: { position: 'top' },
-      tooltip: {
-        callbacks: {
-          label: ctx => `${ctx.dataset.label}: ~${ctx.raw}%`
-        }
-      }
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ~${ctx.raw}%` } }
     },
     scales: {
-      y: {
-        beginAtZero: true,
-        title: { display: true, text: 'Implied Vol (%)' },
-        grid: { color: 'rgba(0,0,0,.06)' }
-      },
+      y: { beginAtZero: true, title: { display: true, text: 'Implied Vol (%)' }, grid: { color: 'rgba(0,0,0,.06)' } },
       x: { grid: { display: false } }
     }
   }
 });
+
+// ── Global commodity flows ──
+const flowData = {
+  oil: {
+    exp: { labels: ['Saudi Arabia', 'Russia', 'UAE', 'Iraq', 'Canada'], data: [7.5, 5.0, 3.5, 3.3, 3.0], unit: 'mb/d' },
+    imp: { labels: ['China', 'USA', 'India', 'Japan', 'S. Korea'], data: [11.0, 8.5, 4.6, 3.2, 2.9], unit: 'mb/d' }
+  },
+  gas: {
+    exp: { labels: ['USA', 'Qatar', 'Australia', 'Norway', 'Russia'], data: [80, 65, 55, 35, 15], unit: 'bcm' },
+    imp: { labels: ['EU (total)', 'Japan', 'China', 'S. Korea', 'India'], data: [100, 85, 75, 45, 25], unit: 'bcm' }
+  },
+  copper: {
+    exp: { labels: ['Chile', 'DRC', 'Peru', 'China', 'Australia'], data: [5.7, 2.9, 2.8, 1.9, 0.9], unit: 'Mt' },
+    imp: { labels: ['China', 'Europe', 'USA', 'Japan', 'S. Korea'], data: [14.0, 3.2, 2.3, 1.1, 0.8], unit: 'Mt' }
+  },
+  iron: {
+    exp: { labels: ['Australia', 'Brazil', 'S. Africa', 'Canada', 'India'], data: [920, 410, 60, 55, 30], unit: 'Mt' },
+    imp: { labels: ['China', 'Japan', 'S. Korea', 'Europe', 'India'], data: [1150, 100, 65, 45, 35], unit: 'Mt' }
+  },
+  wheat: {
+    exp: { labels: ['Russia', 'EU', 'Australia', 'Canada', 'USA'], data: [45, 33, 26, 22, 18], unit: 'Mt' },
+    imp: { labels: ['Indonesia', 'Egypt', 'Turkey', 'Philippines', 'Brazil'], data: [10, 9.5, 9.0, 8.0, 7.0], unit: 'Mt' }
+  }
+};
+
+const flowInited = {};
+
+function makeFlowChart(id, data, color) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  new Chart(canvas.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: data.labels,
+      datasets: [{ data: data.data, backgroundColor: color, borderRadius: 4 }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => `${ctx.raw} ${data.unit}` } }
+      },
+      scales: {
+        x: { beginAtZero: true, grid: { color: 'rgba(0,0,0,.06)' } },
+        y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+}
+
+function showFlow(id, btn) {
+  document.querySelectorAll('.flow-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.flow-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('flow-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (!flowInited[id]) {
+    makeFlowChart(id + '-exp', flowData[id].exp, 'rgba(13,43,85,0.72)');
+    makeFlowChart(id + '-imp', flowData[id].imp, 'rgba(184,134,11,0.72)');
+    flowInited[id] = true;
+  }
+}
+
+// Render first tab immediately
+makeFlowChart('oil-exp', flowData.oil.exp, 'rgba(13,43,85,0.72)');
+makeFlowChart('oil-imp', flowData.oil.imp, 'rgba(184,134,11,0.72)');
+flowInited['oil'] = true;
 </script>
 </body>
 </html>
