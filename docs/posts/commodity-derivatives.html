@@ -10,7 +10,7 @@
     /* ── Stat bar ── */
     .stat-bar {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 0;
       background: var(--navy);
       border-radius: 12px;
@@ -127,7 +127,7 @@
     canvas { max-height: 280px; }
 
     @media (max-width: 640px) {
-      .stat-bar { grid-template-columns: repeat(2,1fr); }
+      .stat-bar { grid-template-columns: 1fr; }
       .commodity-grid { grid-template-columns: repeat(2,1fr); }
       .lesson-grid { grid-template-columns: 1fr; }
     }
@@ -233,10 +233,6 @@
       <div class="stat-item">
         <div class="stat-num">5</div>
         <div class="stat-label">Global<br>desks covered</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">50+</div>
-        <div class="stat-label">Products &amp;<br>instruments</div>
       </div>
     </div>
 
