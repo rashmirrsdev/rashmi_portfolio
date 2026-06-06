@@ -166,6 +166,74 @@
       .greeks-output { grid-template-columns: repeat(3, 1fr); }
       .charts-row { grid-template-columns: 1fr; }
     }
+
+    /* ── Commodity example cards ── */
+    .example-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 24px 0 32px;
+    }
+    .example-card {
+      border-left: 3px solid var(--navy);
+      background: #f7f9fc;
+      border-radius: 0 10px 10px 0;
+      padding: 16px 18px;
+    }
+    .ex-greek {
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--navy);
+      opacity: .7;
+      margin-bottom: 6px;
+    }
+    .example-card h4 { font-size: .92rem; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; }
+    .example-card p { font-size: .82rem; color: #555; line-height: 1.52; margin: 0; }
+
+    /* ── Vol surface cards ── */
+    .vol-concept-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 24px 0 28px;
+    }
+    .vol-card {
+      border: 1px solid #e2e4e8;
+      border-radius: 10px;
+      padding: 18px 16px;
+      background: #fff;
+    }
+    .vol-tag {
+      display: inline-block;
+      background: #0D2B55;
+      color: #c8a96b;
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+    .vol-card h4 { font-size: .9rem; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; }
+    .vol-card p { font-size: .82rem; color: #555; line-height: 1.5; margin: 0; }
+    .vol-formula {
+      display: inline-block;
+      background: #eef2f8;
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-family: monospace;
+      font-size: .8rem;
+      color: #0D2B55;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 640px) {
+      .example-grid { grid-template-columns: 1fr; }
+      .vol-concept-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -224,6 +292,33 @@
         <div class="greek-symbol">Θ</div>
         <div class="greek-name">Theta</div>
         <div class="greek-one">Daily time decay. Options lose value as expiry approaches. Sellers collect it. Buyers pay it.</div>
+      </div>
+    </div>
+
+    <!-- Greeks through a commodity lens -->
+    <h2>Greeks through a commodity lens</h2>
+    <p>The formulas are the same whether you're pricing an equity option or a crude oil call. The magnitudes aren't. Here's what each Greek looks like when you're monitoring live commodity positions.</p>
+
+    <div class="example-grid">
+      <div class="example-card">
+        <div class="ex-greek">Delta — Directional exposure</div>
+        <h4>Brent crude call, Delta 0.55</h4>
+        <p>Brent spot is $82. You're long calls on 10,000 barrels with Delta 0.55 — your position behaves like you're long 5,500 barrels of physical crude. An OPEC surprise cut is announced before the London open; Brent gaps up $4. Your delta position gains ~$22,000 before the market even settles. In equity markets, a $4 intraday gap on a single news event would be exceptional. In oil, it's a normal morning.</p>
+      </div>
+      <div class="example-card">
+        <div class="ex-greek">Gamma — Exposure acceleration</div>
+        <h4>LME copper calls, 3 days to expiry</h4>
+        <p>An ATM copper call with 3 days to expiry has very high Gamma — small spot moves create large delta changes. A Chilean mine strike is reported; LME copper gaps up 3%. Your Delta jumps from 0.50 to 0.78 within hours. That's 28 Delta gained on a single news event. Near-expiry commodity options can have explosive Gamma precisely because supply shocks arrive without warning and can move spot violently.</p>
+      </div>
+      <div class="example-card">
+        <div class="ex-greek">Vega — Vol sensitivity</div>
+        <h4>EU natural gas options, pre-winter</h4>
+        <p>September, implied vol on TTF options at 50%. You're long Vega. The first extended cold snap is forecast for mid-November — implied vol spikes to 95% within a week, even before spot moves significantly. Your Vega position profits from the vol expansion alone. In equity markets, vol rarely doubles in a week outside a systemic crisis. In EU gas, it can happen on a single weather forecast update.</p>
+      </div>
+      <div class="example-card">
+        <div class="ex-greek">Theta — Daily time decay</div>
+        <h4>Short EEX power straddle, 60% vol</h4>
+        <p>You've sold an ATM EEX power straddle at 60% implied vol — collecting meaningful daily Theta. For three weeks, the book earns steadily as spot stays quiet. Then an unexpected cold front arrives: spot spikes 40%, implied vol hits 120%. The Gamma loss overwhelms all the Theta collected. This is the classic short-vol trap in commodities — you earn consistently right up until the physical market moves against you.</p>
       </div>
     </div>
 
@@ -289,6 +384,43 @@
           <canvas id="thetaChart"></canvas>
         </div>
       </div>
+    </div>
+
+    <!-- Vol surface -->
+    <h2>Beyond the basics: the vol surface</h2>
+    <p>Black-Scholes assumes a single implied vol for all strikes and expiries. Real markets don't — they price different strikes at different implied vols, encoding the market's collective view of tail risks. This vol surface is where a lot of the interesting risk lives in commodity derivatives.</p>
+
+    <div class="vol-concept-grid">
+      <div class="vol-card">
+        <span class="vol-tag">Skew</span>
+        <h4>Implied vol varies across strikes</h4>
+        <p>If you plot implied vol against strike, you rarely get a flat line. In crude oil, OTM calls are typically more expensive than equidistant OTM puts — the market prices supply-shock upside risk more than demand-collapse downside. In equity markets, it's usually the opposite: OTM puts are more expensive (crash protection). The direction of the skew tells you what the market fears more.</p>
+        <div class="vol-formula">IV(OTM call) ≠ IV(ATM) ≠ IV(OTM put)</div>
+      </div>
+      <div class="vol-card">
+        <span class="vol-tag">Vol Smile</span>
+        <h4>Both wings elevated vs ATM</h4>
+        <p>A smile is when both OTM puts and OTM calls are more expensive than ATM options — making the vol curve U-shaped. Commodity smiles are wider than equities because physical markets can have violent moves in either direction. EU power in winter has a pronounced smile: a cold snap (extreme price spike) and a warm winter (demand collapse) are both genuine tail risks that the market prices into the wings.</p>
+        <div class="vol-formula">IV(OTM put) &gt; IV(ATM) and IV(OTM call) &gt; IV(ATM)</div>
+      </div>
+      <div class="vol-card">
+        <span class="vol-tag">Risk Reversal</span>
+        <h4>Measures the direction of the skew</h4>
+        <p>Risk reversal (RR) is the difference between the implied vol of 25-delta calls and 25-delta puts. Positive RR means calls are more expensive — the market fears upside more. Negative RR means puts are more expensive — downside risk dominates. Brent crude typically has positive RR: OPEC can cut supply sharply, but cannot easily reverse a demand collapse. The asymmetry of physical supply is priced into the call wing.</p>
+        <div class="vol-formula">RR = IV(25Δ call) − IV(25Δ put)</div>
+      </div>
+      <div class="vol-card">
+        <span class="vol-tag">Butterfly</span>
+        <h4>Measures the curvature of the smile</h4>
+        <p>The butterfly (fly) is the average of the two OTM wing vols minus ATM vol. High fly means the market expects fat tails — large moves are more likely than a normal distribution suggests. Commodity butterflies are structurally elevated: in natural gas, a single storage report or cold-weather forecast can cause a 20%+ spot move that would be a 5-sigma event in equities. That tail risk is explicitly priced into the wings of the smile.</p>
+        <div class="vol-formula">Fly = (IV(25Δ call) + IV(25Δ put)) / 2 − IV(ATM)</div>
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <h3>Stylised vol smiles: commodity vs equity</h3>
+      <p>How implied vol varies by moneyness across three markets. The shape encodes what risks the market is pricing. Commodity smiles are wider and often asymmetric — crude oil leans toward call skew (supply shock fear), EU gas has wide wings in both directions, equities lean toward put skew (crash protection).</p>
+      <canvas id="smileChart"></canvas>
     </div>
 
     <!-- Trade-off table -->
@@ -445,6 +577,56 @@ new Chart(thetaCtx, {
     scales: {
       y: { title:{display:true, text:'Option Value ($)'}, grid:{color:'rgba(0,0,0,.06)'} },
       x: { reverse: true, ticks:{maxTicksLimit:8}, grid:{display:false} }
+    }
+  }
+});
+
+/* ── Vol smile chart ── */
+const smileCtx = document.getElementById('smileChart').getContext('2d');
+new Chart(smileCtx, {
+  type: 'line',
+  data: {
+    labels: ['10Δ put', '25Δ put', 'ATM', '25Δ call', '10Δ call'],
+    datasets: [
+      {
+        label: 'Crude Oil (call skew)',
+        data: [30, 26, 20, 24, 29],
+        borderColor: '#1a2744',
+        backgroundColor: 'transparent',
+        borderWidth: 2.5,
+        pointRadius: 5,
+        tension: 0.4
+      },
+      {
+        label: 'EU Natural Gas (wide smile)',
+        data: [75, 58, 45, 60, 78],
+        borderColor: '#1e6b50',
+        backgroundColor: 'transparent',
+        borderWidth: 2.5,
+        pointRadius: 5,
+        tension: 0.4
+      },
+      {
+        label: 'Equities S&P 500 (put skew)',
+        data: [28, 22, 14, 12, 13],
+        borderColor: '#b8860b',
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        borderDash: [5, 4],
+        pointRadius: 5,
+        tension: 0.4
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top' },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw}% vol` } }
+    },
+    scales: {
+      y: { beginAtZero: false, title: { display: true, text: 'Implied Vol (%)' }, grid: { color: 'rgba(0,0,0,.06)' } },
+      x: { grid: { display: false } }
     }
   }
 });
