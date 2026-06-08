@@ -713,6 +713,27 @@ a:hover { text-decoration: underline; }
   .site-footer  { padding: 24px 20px; }
 }
 
+/* ─── Post wide images ───────────────────────────────────────────────────── */
+.post-img-wide {
+  margin: 32px 0;
+}
+.post-img-wide img {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  transition: opacity .15s;
+}
+.post-img-wide img:hover { opacity: .9; }
+.img-caption {
+  font-size: .82rem;
+  color: var(--text-muted);
+  margin-top: 10px;
+  line-height: 1.5;
+  font-style: italic;
+}
+.post-body ol { padding-left: 22px; }
+.post-body ol li { margin-bottom: 10px; }
+
 /* ─── Lightbox ───────────────────────────────────────────────────────────── */
 .lightbox {
   display: none;
