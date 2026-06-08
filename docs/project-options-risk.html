@@ -26,135 +26,129 @@
 
 <div class="project-detail-header">
   <a href="projects.html" class="back-link">← Back to Projects</a>
-  <h1>Options Risk Analytics Engine</h1>
-  <p>Black-Scholes pricing, full Greeks computation, VaR, and stress testing for multi-leg NSE/BSE options portfolios — built from first principles in Python.</p>
+  <h1>What Greeks tell you that position size doesn't</h1>
+  <p>A derivatives risk monitor for a 12-position NSE options book — built to answer a question I kept running into at work: which position is actually carrying the most risk?</p>
   <div class="project-detail-meta">
-    <a href="https://github.com/rashmirrsdev/options-risk-engine" target="_blank" class="btn-github">View on GitHub</a>
+    <a href="https://github.com/rashmirrsdev/options-risk-engine" target="_blank" class="btn-github">View code on GitHub</a>
     <span class="project-status status-done" style="margin-top:2px;">Completed · June 2026</span>
   </div>
 </div>
 
 <div class="project-body">
 
-  <h2>Motivation</h2>
+  <h2>What I wanted to understand</h2>
   <p>
-    At Morgan Stanley's Trading Risk Management desk I monitor options portfolios daily —
-    tracking Delta, Gamma, Vega, Theta across multi-leg positions and understanding how
-    the book behaves under market stress. That workflow lives in proprietary systems.
-    I built this project to replicate it from first principles: starting from the
-    Black-Scholes formula and building up to a complete risk monitoring tool.
+    At Morgan Stanley I monitor options portfolios every day. One of the things that becomes clear
+    quickly is that the size of a position — the notional, the number of contracts — tells you
+    almost nothing about how much risk it's actually carrying. A small notional position can
+    dominate your entire directional exposure. A large position can be nearly flat on your book
+    because it's close to neutral Delta.
   </p>
   <p>
-    The goal was to produce something interviewers could look at and immediately recognise
-    as the same analytics they use in production — not textbook exercises but a realistic
-    risk monitoring pipeline for an NSE/BSE options book.
+    I built this project to make that visible. I assembled a 12-position NSE options book across
+    NIFTY, Reliance, TCS, Infosys, and HDFC — a realistic mix of calls and puts at different
+    strikes and expiries — and ran the full risk analytics on it. The question I wanted answered:
+    if you only looked at position sizes, what would you miss?
   </p>
 
-  <h2>What It Does</h2>
-  <table class="module-table">
-    <thead>
-      <tr><th>Module</th><th>Capability</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>bsm.py</td><td>Black-Scholes-Merton pricing + all five Greeks per option</td></tr>
-      <tr><td>portfolio.py</td><td>Loads a portfolio CSV, scales Greeks by quantity × lot size, flags concentration risk</td></tr>
-      <tr><td>risk_metrics.py</td><td>Historical VaR, parametric (delta-normal) VaR, 10 named stress scenarios</td></tr>
-      <tr><td>report.py</td><td>4 charts: Greeks bar, stress waterfall, P&amp;L distribution, position heatmap</td></tr>
-    </tbody>
-  </table>
-
-  <h2>Methodology</h2>
-
-  <h3>Black-Scholes-Merton Pricing</h3>
-  <p>Every option is priced using the closed-form BSM formula. Given spot price <em>S</em>, strike <em>K</em>, time to expiry <em>T</em> (in years), risk-free rate <em>r</em>, and implied volatility <em>σ</em>:</p>
-  <div class="formula-box">
-d₁ = [ ln(S/K) + (r + σ²/2) · T ] / (σ · √T)<br>
-d₂ = d₁ − σ · √T<br><br>
-Call price = S · N(d₁) − K · e^(−rT) · N(d₂)<br>
-Put  price = K · e^(−rT) · N(−d₂) − S · N(−d₁)
-  </div>
-
-  <h3>The Five Greeks</h3>
-  <div class="formula-box">
-Delta (Δ)  = N(d₁)                          — sensitivity to underlying price<br>
-Gamma (Γ)  = N'(d₁) / (S · σ · √T)         — rate of change of Delta<br>
-Vega  (ν)  = S · N'(d₁) · √T  / 100        — per 1% change in implied vol<br>
-Theta (Θ)  = [−S·N'(d₁)·σ / 2√T − r·K·e^(−rT)·N(d₂)] / 365   — per calendar day<br>
-Rho   (ρ)  = K · T · e^(−rT) · N(d₂) / 100 — per 1% change in risk-free rate
-  </div>
-  <p>Each Greek is computed per contract and then scaled by <strong>quantity × lot size</strong> to give actual portfolio-level exposure in rupee terms.</p>
-
-  <h3>Value at Risk</h3>
-  <p>Two approaches are implemented and compared:</p>
-  <ul>
-    <li><strong>Historical VaR:</strong> 252-day simulated daily P&amp;L (delta approximation), 5th percentile = 95% VaR</li>
-    <li><strong>Parametric VaR:</strong> Delta × Spot × Daily Vol × z-score × √horizon. Faster but ignores non-linearity — treated as a lower bound.</li>
-  </ul>
-
-  <h3>Stress Scenarios</h3>
-  <p>Ten named shocks are applied using first-order approximation (Delta × ΔS + Vega × Δσ):</p>
-  <ul>
-    <li>Spot ±5%, Spot ±10%</li>
-    <li>Vol +20% (absolute), Vol −20%</li>
-    <li>Time decay: 1 day, 5 days</li>
-    <li>Combined: Spot −10% + Vol +30% (worst case), Spot +10% + Vol −20% (best case)</li>
-  </ul>
-
-  <h2>Output — Sample Portfolio (12 NSE Positions)</h2>
-
-  <div class="result-box">
-    <p><strong>Portfolio Greeks (net exposure):</strong><br>
-    Delta +1,679 · Gamma +19.6 · Vega +9,026 per 1% vol · Theta −3,131 per day</p>
-  </div>
+  <h2>The position size view hides the real exposure</h2>
+  <p>
+    The heatmap below shows each position's Greeks scaled to actual portfolio exposure. The colour
+    tells you where risk is concentrated — and it's not where the largest positions are.
+  </p>
 
   <div class="chart-grid">
-    <div class="chart-item">
-      <img src="img/projects/options-risk-engine/greeks_bar.png" alt="Portfolio Greeks bar chart" />
-      <div class="chart-caption">Net portfolio Greeks scaled to INR exposure. Positive Vega means the portfolio benefits from rising implied volatility.</div>
-    </div>
-    <div class="chart-item">
-      <img src="img/projects/options-risk-engine/stress_scenarios.png" alt="Stress scenario P&L" />
-      <div class="chart-caption">Estimated P&amp;L under 10 stress scenarios. The book is net long Delta — large upside moves benefit, downside hurts.</div>
-    </div>
-  </div>
-
-  <div class="chart-grid">
-    <div class="chart-item">
-      <img src="img/projects/options-risk-engine/var_distribution.png" alt="VaR distribution chart" />
-      <div class="chart-caption">Simulated daily P&amp;L distribution. 95% VaR: −INR 107,200 (historical), −INR 121,469 (parametric delta-normal).</div>
-    </div>
     <div class="chart-item">
       <img src="img/projects/options-risk-engine/greeks_heatmap.png" alt="Position-level Greeks heatmap" />
-      <div class="chart-caption">Per-position Greeks heatmap. Red = short exposure, green = long. HDFC 1700 Call flagged for Delta concentration (45% of portfolio Delta).</div>
+      <div class="chart-caption">Per-position Greeks heatmap. The HDFC 1700 Call — not the largest position by notional — carries 45% of the portfolio's total directional exposure (Delta).</div>
+    </div>
+    <div class="chart-item">
+      <img src="img/projects/options-risk-engine/greeks_bar.png" alt="Portfolio Greeks bar chart" />
+      <div class="chart-caption">Net portfolio Greeks aggregated across all 12 positions. Delta, Gamma, Vega, Theta — each tells a different story about what the portfolio is exposed to.</div>
     </div>
   </div>
 
-  <h2>Risk Flags</h2>
-  <p>Two automated checks run on every portfolio load:</p>
-  <ul>
-    <li><strong>Delta concentration:</strong> any position whose absolute Delta exceeds 20% of total portfolio Delta is flagged. In the sample book, HDFC 1700 Call holds 45% of portfolio Delta — a meaningful concentration.</li>
-    <li><strong>Gamma near expiry:</strong> positions with significant Gamma and fewer than 7 days to expiry are flagged for pin risk — spot can rapidly cross the strike, causing large Delta swings.</li>
-  </ul>
+  <p>
+    The HDFC 1700 Call held 45% of total portfolio Delta. If the market moved 1%, nearly half
+    the resulting P&amp;L move came from one name. That's a meaningful concentration — and it
+    would be completely invisible if you were looking at position sizes or notionals.
+  </p>
+  <p>
+    This is one of those things that sounds obvious once you hear it but takes some time working
+    with live books to really internalise. Derivatives positions interact with each other in ways
+    that raw notional can't capture.
+  </p>
 
-  <h2>How to Run</h2>
-  <div class="formula-box">
-git clone https://github.com/rashmirrsdev/options-risk-engine<br>
-cd options-risk-engine<br>
-pip install -r requirements.txt<br>
-python run_demo.py
-  </div>
-  <p>Charts are saved to <code>./output/</code>. The portfolio CSV is fully editable — swap in any NSE/BSE options positions.</p>
+  <h2>The cost of holding options that nobody talks about</h2>
+  <p>
+    The portfolio's net Theta is −3,131 per calendar day. That means the book loses that much
+    in value just from the clock ticking — no market move required, no news event, nothing.
+    Options are decaying assets, and Theta is what that decay looks like in rupees per day.
+  </p>
+  <p>
+    Most discussions of options risk focus on what happens when the spot price moves. Theta is
+    the silent background cost that's running whether the market moves or not. Over a 30-day
+    expiry cycle, this adds up to nearly INR 94,000 of time-value bleed — before you factor in
+    any market moves. Understanding where this cost sits across the portfolio matters a lot when
+    you're deciding which positions to hold through expiry.
+  </p>
 
-  <h2>Tech Stack</h2>
-  <div class="project-skills" style="margin-top: 4px;">
-    <span class="skill-tag">Python 3.9+</span>
-    <span class="skill-tag">NumPy</span>
-    <span class="skill-tag">Pandas</span>
-    <span class="skill-tag">SciPy</span>
-    <span class="skill-tag">Matplotlib</span>
-    <span class="skill-tag">Seaborn</span>
-    <span class="skill-tag">pytest (13 tests)</span>
+  <h2>What a market crash looks like before it happens</h2>
+  <p>
+    The stress test below simulates 10 named scenarios — spot moves of ±5% and ±10%, volatility
+    spikes, time decay, and combinations. NIFTY has seen −10% moves several times in the past
+    five years. This is what the portfolio would have looked like going into one of those days.
+  </p>
+
+  <div class="chart-grid">
+    <div class="chart-item">
+      <img src="img/projects/options-risk-engine/stress_scenarios.png" alt="Stress scenario P&L" />
+      <div class="chart-caption">Estimated P&amp;L under 10 stress scenarios. The book is net long Delta — a crash hurts. But the positive Vega partially offsets it: volatility spikes in a crash, which benefits the portfolio.</div>
+    </div>
+    <div class="chart-item">
+      <img src="img/projects/options-risk-engine/var_distribution.png" alt="VaR distribution chart" />
+      <div class="chart-caption">Simulated daily P&amp;L distribution. 95% VaR: −INR 107,200 (historical method) vs −INR 121,469 (parametric). The gap is what assuming normal returns costs you.</div>
+    </div>
   </div>
+
+  <p>
+    The stress test reveals something interesting: the worst-case scenario (−10% spot, +30% vol)
+    is less bad than a naive reading of the Delta would suggest. The reason: this portfolio has
+    positive Vega, meaning it benefits when implied volatility rises. A market crash typically
+    comes with a spike in implied vol — and the Vega gain partially cushions the Delta loss.
+    These two exposures are partially offsetting. Knowing that before the crash is the point.
+  </p>
+
+  <h2>The gap between two ways of measuring risk</h2>
+  <p>
+    Historical VaR (−107,200) and parametric VaR (−121,469) give different answers for the same
+    portfolio. The difference — about INR 14,000 — comes from an assumption: parametric VaR
+    assumes daily returns follow a normal distribution. They don't. Real market returns have fat
+    tails — extreme days happen more often than the normal distribution predicts.
+  </p>
+  <p>
+    The historical method doesn't make that assumption. It uses the actual distribution of
+    simulated P&amp;L. The parametric answer is faster to compute but consistently underestimates
+    tail risk. This difference matters most precisely when you need VaR to be accurate — in
+    volatile markets.
+  </p>
+
+  <h2>What building this taught me</h2>
+  <p>
+    The most valuable part wasn't the code — it was constructing a multi-leg book and watching
+    the Greeks interact. When you add a short put to a long call position, the Delta exposure
+    shifts in ways that aren't always intuitive. The Gamma profile changes near expiry.
+    The Vega exposure can flip sign depending on how you've structured strikes.
+  </p>
+  <p>
+    Working with these numbers in a system I built from first principles gave me a much more
+    concrete mental model of how derivatives books behave. The Greek framework is the language
+    that makes complex multi-position risk legible — and building the engine that produces those
+    numbers made that language more concrete for me.
+  </p>
+  <p style="margin-top: 24px;">
+    <a href="https://github.com/rashmirrsdev/options-risk-engine" target="_blank" class="btn-github">Full code and documentation on GitHub →</a>
+  </p>
 
 </div>
 
@@ -168,6 +162,30 @@ python run_demo.py
   </div>
   <p>© 2026 Rashmi Rama Sushil &nbsp;·&nbsp; Senior Associate, Trading Risk Management, Morgan Stanley</p>
 </footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <span class="lightbox-close" id="lightbox-close">&times;</span>
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<script>
+(function() {
+  var lb = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lightbox-img');
+  var lbClose = document.getElementById('lightbox-close');
+  document.querySelectorAll('.chart-item img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+      lb.classList.add('active');
+    });
+  });
+  lb.addEventListener('click', function() { lb.classList.remove('active'); });
+  lbClose.addEventListener('click', function(e) { e.stopPropagation(); lb.classList.remove('active'); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') lb.classList.remove('active'); });
+})();
+</script>
 
 </body>
 </html>

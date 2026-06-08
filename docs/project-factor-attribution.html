@@ -26,167 +26,147 @@
 
 <div class="project-detail-header">
   <a href="projects.html" class="back-link">← Back to Projects</a>
-  <h1>Factor Risk Attribution Engine</h1>
-  <p>Decomposes daily portfolio returns into systematic (market beta) and idiosyncratic components using rolling OLS regression — run on three years of live Nifty 50 data.</p>
+  <h1>How much of a portfolio's return is actually skill?</h1>
+  <p>Three years of Nifty 50 data. A 20-stock equal-weight portfolio. The question: how much came from picking the right stocks, and how much from just owning a rising market?</p>
   <div class="project-detail-meta">
-    <a href="https://github.com/rashmirrsdev/factor-risk-attribution" target="_blank" class="btn-github">View on GitHub</a>
+    <a href="https://github.com/rashmirrsdev/factor-risk-attribution" target="_blank" class="btn-github">View code on GitHub</a>
     <span class="project-status status-done" style="margin-top:2px;">Completed · June 2026</span>
   </div>
 </div>
 
 <div class="project-body">
 
-  <h2>Motivation</h2>
+  <h2>The question</h2>
   <p>
-    In trading risk management, understanding <em>why</em> a portfolio moved is as important as
-    knowing <em>how much</em> it moved. Every morning the desk asks: was today's P&amp;L driven
-    by the market, or did something specific to the position cause it? That decomposition —
-    separating beta-driven return from idiosyncratic return — is the foundation of risk attribution.
+    Every fund manager, every analyst, every investor who's picked stocks believes they have some
+    edge. The market went up, their portfolio went up more — so there must be skill involved.
+    But how much of that outperformance is actually stock-selection, and how much is just the
+    market carrying everything higher?
   </p>
   <p>
-    I built this project to replicate that workflow on public Nifty 50 data: download real
-    constituent price history, estimate rolling betas using OLS regression, decompose portfolio
-    returns, measure concentration, and produce the kind of attribution charts a risk manager
-    or portfolio analyst would actually review.
+    This is a surprisingly hard question to answer cleanly. I wanted to build a tool that did it
+    properly: take a real portfolio on real data, separate the market component from the
+    stock-specific component, and measure both. The methodology is called return attribution —
+    it's standard practice in fund management but rarely done rigorously at the individual
+    investor level.
   </p>
 
-  <h2>What It Does</h2>
-  <table class="module-table">
-    <thead>
-      <tr><th>Module</th><th>Capability</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>data_loader.py</td><td>Downloads 20 Nifty 50 tickers via yfinance (3 years); synthetic fallback for offline use</td></tr>
-      <tr><td>factors.py</td><td>Rolling 60-day OLS Beta per stock; portfolio-level hedge ratio (weighted average Beta)</td></tr>
-      <tr><td>attribution.py</td><td>Decomposes daily P&amp;L into market factor + idiosyncratic; Sharpe, drawdown, vol per component</td></tr>
-      <tr><td>concentration.py</td><td>HHI concentration index, effective N, top-N holdings, sector exposure breakdown</td></tr>
-      <tr><td>report.py</td><td>5 charts: cumulative attribution, rolling Beta, attribution bars, Beta heatmap, idio distribution</td></tr>
-    </tbody>
-  </table>
-
-  <h2>Methodology</h2>
-
-  <h3>Rolling Beta Estimation (OLS)</h3>
-  <p>For each stock <em>i</em>, Beta is estimated over a trailing 60-day window using Ordinary Least Squares:</p>
-  <div class="formula-box">
-r_stock(t) = α + β_i × r_market(t) + ε(t)<br><br>
-Estimated via statsmodels.regression.rolling.RollingOLS<br>
-Window: 60 trading days (~3 months), updated daily
-  </div>
-  <p>This captures how each position's sensitivity to the market evolves over time — a stock's Beta in a vol regime can be very different from its Beta in a trending market.</p>
-
-  <h3>Portfolio Beta and Return Decomposition</h3>
-  <p>Portfolio-level Beta is the weighted average of position Betas:</p>
-  <div class="formula-box">
-β_portfolio = Σ  w_i × β_i<br><br>
-r_portfolio(t)  =  β_portfolio × r_market(t)  +  r_idiosyncratic(t)<br><br>
-r_idiosyncratic(t)  =  r_portfolio(t)  −  β_portfolio × r_market(t)
-  </div>
-  <p>This identity holds exactly by construction — the idiosyncratic term is always the residual after removing the market component. No approximation.</p>
-
-  <h3>Concentration Metrics (HHI)</h3>
-  <p>The Herfindahl-Hirschman Index measures how concentrated the portfolio is:</p>
-  <div class="formula-box">
-HHI = Σ w_i²         where w_i are normalised position weights<br>
-Effective N = 1 / HHI<br><br>
-Equal-weight 20-stock portfolio → HHI = 0.05, Effective N = 20.0<br>
-Single-stock portfolio          → HHI = 1.00, Effective N =  1.0
-  </div>
-
-  <h2>Results — Real Nifty 50 Data (Jan 2022 – Dec 2024)</h2>
+  <h2>91 cents out of every rupee came from the index</h2>
+  <p>
+    The portfolio returned 30.97% over three years (Jan 2022 – Dec 2024). When you decompose
+    that into market-driven and stock-specific components, the split is stark:
+  </p>
 
   <div class="result-box">
-    <p><strong>20-stock equal-weight portfolio, 3 years of daily data:</strong><br><br>
-    Portfolio Beta: 0.933 &nbsp;|&nbsp; HHI: 0.050 &nbsp;|&nbsp; Effective N: 20.0<br><br>
-    Total Return: +30.97% &nbsp;·&nbsp; Ann. Vol: 13.20% &nbsp;·&nbsp; Sharpe: 0.76 &nbsp;·&nbsp; Max Drawdown: −17.91%<br>
-    Market Factor: +28.22% &nbsp;·&nbsp; Ann. Vol: 13.15% &nbsp;·&nbsp; Sharpe: 0.71<br>
-    Idiosyncratic: &nbsp;+1.98% &nbsp;·&nbsp; Ann. Vol: 3.45% &nbsp;&nbsp;·&nbsp; Sharpe: 0.21<br><br>
-    <strong>91% of portfolio return was market-driven.</strong> Idiosyncratic (alpha) = +1.98% over 3 years.</p>
+    <p>
+      <strong>Total return: +30.97%</strong><br>
+      Market factor (beta-driven): +28.22%<br>
+      Idiosyncratic (stock selection): +1.98%<br><br>
+      <strong>91% of the return came from just owning the market.</strong>
+    </p>
   </div>
 
   <div class="chart-grid">
     <div class="chart-item">
-      <img src="img/projects/factor-risk-attribution/cumulative_attribution.png" alt="Cumulative return attribution chart" />
-      <div class="chart-caption">Cumulative portfolio return (blue) decomposed into market factor (orange) and idiosyncratic (green) components. The market factor closely tracks the portfolio — confirming the 0.93 Beta.</div>
+      <img src="img/projects/factor-risk-attribution/cumulative_attribution.png" alt="Cumulative return attribution" />
+      <div class="chart-caption">Three years of daily returns decomposed. The orange line (market factor) tracks the portfolio almost exactly. The green line (idiosyncratic return) is the part that stock selection actually contributed — nearly flat by comparison.</div>
     </div>
+    <div class="chart-item">
+      <img src="img/projects/factor-risk-attribution/attribution_summary.png" alt="Attribution summary" />
+      <div class="chart-caption">Return, volatility, and Sharpe ratio by component. The market factor has a Sharpe of 0.71 — and you get that "for free" from any index fund. The idiosyncratic (stock-selection) Sharpe is 0.21.</div>
+    </div>
+  </div>
+
+  <p>
+    The idiosyncratic Sharpe — 0.21 — tells you something uncomfortable: the stock-specific
+    return wasn't very well compensated for the risk taken to get it. A passive index fund
+    would have given you Sharpe 0.71 with no selection required. The 20-stock selection process
+    added 1.98% of return over three years, while introducing stock-specific volatility that
+    dragged the Sharpe down.
+  </p>
+  <p>
+    None of this means stock selection is pointless. But it does set a baseline: before
+    claiming alpha, you need to strip out the market component first. Most "outperformance"
+    claims don't do this carefully — they compare gross returns in a rising market without
+    separating what the market handed to everyone.
+  </p>
+
+  <h2>Beta isn't stable — and that matters in a crisis</h2>
+  <p>
+    The analysis uses rolling 60-day Beta estimates, meaning Beta is recalculated continuously
+    as the market evolves. What the rolling Beta chart shows is that the relationship between
+    individual stocks and the market isn't fixed — it shifts, sometimes substantially, and
+    particularly during stress periods.
+  </p>
+
+  <div class="chart-grid">
     <div class="chart-item">
       <img src="img/projects/factor-risk-attribution/rolling_beta.png" alt="Rolling Beta chart" />
-      <div class="chart-caption">Rolling 60-day Beta for each stock over the 3-year period. Beta varies meaningfully across regimes — some stocks shifted from sub-1 to above-1 Beta during the 2022 drawdown.</div>
-    </div>
-  </div>
-
-  <div class="chart-grid">
-    <div class="chart-item">
-      <img src="img/projects/factor-risk-attribution/attribution_summary.png" alt="Attribution summary bars" />
-      <div class="chart-caption">Return, volatility, and Sharpe by component. Market factor dominates total return; idiosyncratic component shows low Sharpe (0.21) — consistent with equal-weight construction providing little active alpha.</div>
+      <div class="chart-caption">60-day rolling Beta for each of the 20 stocks over 3 years. Notice the convergence and shift during the 2022 drawdown period — the betas you measured in a calm market weren't the betas you got during the fall.</div>
     </div>
     <div class="chart-item">
       <img src="img/projects/factor-risk-attribution/beta_heatmap.png" alt="Beta heatmap" />
-      <div class="chart-caption">Position-level Beta heatmap across time. Darker = higher Beta. Financials and Materials stocks show more volatile Beta estimates; FMCG stocks remain more stable.</div>
+      <div class="chart-caption">Beta by stock, by time period. Darker = higher market sensitivity. Financial stocks show more volatile beta estimates over time; FMCG stocks stay more stable — a real market behaviour pattern.</div>
     </div>
   </div>
+
+  <p>
+    This matters because portfolio hedging decisions are made based on estimated Beta. If you
+    bought a hedge based on June's Beta and the crisis comes in October, the Beta has already
+    shifted. In the 2022 drawdown period, correlations across stocks spiked and Betas moved
+    — the portfolio behaved more like a concentrated market bet than the diversified holdings
+    it appeared to be on paper.
+  </p>
+  <p>
+    This is one of the well-documented but underappreciated dynamics in equities: in a crash,
+    everything becomes correlated. The diversification benefit shrinks precisely when you need
+    it most.
+  </p>
+
+  <h2>The diversification you think you have vs. the diversification you actually have</h2>
+  <p>
+    By any standard measure, the equal-weight 20-stock portfolio is well-diversified. The
+    Herfindahl-Hirschman Index (HHI) — a standard concentration metric — comes out at 0.05,
+    which corresponds to the equivalent of 20 perfectly equal positions. Nothing is outsized.
+  </p>
 
   <div class="chart-grid">
     <div class="chart-item">
       <img src="img/projects/factor-risk-attribution/idio_distribution.png" alt="Idiosyncratic return distribution" />
-      <div class="chart-caption">Distribution of daily idiosyncratic (alpha) returns. Centred near zero with thin tails — confirms most risk is systematic, not position-specific.</div>
+      <div class="chart-caption">Distribution of daily idiosyncratic (alpha) returns — centred near zero, with thin tails. This confirms that the portfolio's risk is overwhelmingly systematic, not position-specific. The diversification is working as measured.</div>
     </div>
   </div>
 
-  <h2>Key Insight</h2>
   <p>
-    The equal-weight portfolio is overwhelmingly a market tracker (Beta 0.93, 91% market-driven return).
-    The idiosyncratic Sharpe of 0.21 is statistically weak — you would need concentrated bets or
-    a genuine stock-selection edge to improve it. This is the correct interpretation for an
-    equal-weight index-like portfolio, and the attribution makes that explicit rather than hiding it
-    in aggregate return numbers.
+    But that diversification is measured by position count. The sector breakdown tells a
+    different story: 30% of the portfolio is in Financials (6 stocks). In a banking sector
+    shock, those 6 stocks won't diversify each other much — they'll move together because
+    they're driven by the same underlying factors (rate decisions, credit cycles, regulatory
+    news). The apparent position-level diversification hides a meaningful sector concentration.
   </p>
   <p>
-    In a real risk management context, this framework identifies which positions are contributing
-    directional risk (high Beta) vs. diversifying (low correlation to market factor) — directly
-    informing hedging decisions and position sizing.
+    This is the difference between diversification by count and diversification by risk factor.
+    A portfolio can look perfectly spread on paper while being highly concentrated in a single
+    economic driver. The only way to see this is to decompose the exposure — which is exactly
+    what attribution frameworks are built to do.
   </p>
 
-  <h2>Sector Exposure</h2>
-  <table class="module-table">
-    <thead>
-      <tr><th>Sector</th><th>Weight</th><th>Stocks</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>Financials</td><td>30.0%</td><td>6</td></tr>
-      <tr><td>FMCG</td><td>15.0%</td><td>3</td></tr>
-      <tr><td>IT</td><td>15.0%</td><td>3</td></tr>
-      <tr><td>Materials</td><td>10.0%</td><td>2</td></tr>
-      <tr><td>Other</td><td>30.0%</td><td>6</td></tr>
-    </tbody>
-  </table>
-
-  <h2>How to Run</h2>
-  <div class="formula-box">
-git clone https://github.com/rashmirrsdev/factor-risk-attribution<br>
-cd factor-risk-attribution<br>
-pip install -r requirements.txt<br>
-python run_demo.py
-  </div>
-  <p>Charts saved to <code>./output/</code>. Edit the <code>weights</code> dict in <code>run_demo.py</code> to run on any subset of the 20 Nifty 50 tickers with custom weights. Works offline — falls back to synthetic correlated returns if yfinance is rate-limited.</p>
-
-  <h2>Run Tests</h2>
-  <div class="formula-box">
-python -m pytest tests/ -v
-  </div>
-  <p>12 tests covering portfolio return computation, attribution identity (portfolio = market + idio exactly), max drawdown, HHI, effective N, and top-N holdings selection.</p>
-
-  <h2>Tech Stack</h2>
-  <div class="project-skills" style="margin-top: 4px;">
-    <span class="skill-tag">Python 3.9+</span>
-    <span class="skill-tag">NumPy</span>
-    <span class="skill-tag">Pandas</span>
-    <span class="skill-tag">Statsmodels</span>
-    <span class="skill-tag">yfinance</span>
-    <span class="skill-tag">Matplotlib</span>
-    <span class="skill-tag">Seaborn</span>
-    <span class="skill-tag">pytest (12 tests)</span>
-  </div>
+  <h2>What this made me think about</h2>
+  <p>
+    The result I expected going in was that most return would be market-driven. The result I
+    didn't fully expect was how clearly the data shows the gap between <em>measured</em>
+    diversification and <em>experienced</em> diversification during stress — and how little
+    the stock selection process actually contributed to Sharpe once you strip out the market
+    component.
+  </p>
+  <p>
+    The honest implication: for anyone managing a portfolio of listed equities, the first
+    question before evaluating performance should be "what did the market contribute?" If you
+    can't answer that, you can't say anything meaningful about whether you've added value.
+  </p>
+  <p style="margin-top: 24px;">
+    <a href="https://github.com/rashmirrsdev/factor-risk-attribution" target="_blank" class="btn-github">Full code and documentation on GitHub →</a>
+  </p>
 
 </div>
 
@@ -200,6 +180,30 @@ python -m pytest tests/ -v
   </div>
   <p>© 2026 Rashmi Rama Sushil &nbsp;·&nbsp; Senior Associate, Trading Risk Management, Morgan Stanley</p>
 </footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <span class="lightbox-close" id="lightbox-close">&times;</span>
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<script>
+(function() {
+  var lb = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lightbox-img');
+  var lbClose = document.getElementById('lightbox-close');
+  document.querySelectorAll('.chart-item img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+      lb.classList.add('active');
+    });
+  });
+  lb.addEventListener('click', function() { lb.classList.remove('active'); });
+  lbClose.addEventListener('click', function(e) { e.stopPropagation(); lb.classList.remove('active'); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') lb.classList.remove('active'); });
+})();
+</script>
 
 </body>
 </html>
