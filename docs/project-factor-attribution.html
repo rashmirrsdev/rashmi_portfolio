@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Factor Risk Attribution Engine — Rashmi Rama Sushil</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav-inner">
+    <a href="index.html" class="site-logo">Rashmi <span>Rama Sushil</span></a>
+    <button class="nav-toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="finance.html">Finance &amp; Markets</a></li>
+      <li><a href="for-students.html">For Students</a></li>
+      <li><a href="projects.html" class="active">Projects</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="project-detail-header">
+  <a href="projects.html" class="back-link">← Back to Projects</a>
+  <h1>Factor Risk Attribution Engine</h1>
+  <p>Decomposes daily portfolio returns into systematic (market beta) and idiosyncratic components using rolling OLS regression — run on three years of live Nifty 50 data.</p>
+  <div class="project-detail-meta">
+    <a href="https://github.com/rashmirrsdev/factor-risk-attribution" target="_blank" class="btn-github">View on GitHub</a>
+    <span class="project-status status-done" style="margin-top:2px;">Completed · June 2026</span>
+  </div>
+</div>
+
+<div class="project-body">
+
+  <h2>Motivation</h2>
+  <p>
+    In trading risk management, understanding <em>why</em> a portfolio moved is as important as
+    knowing <em>how much</em> it moved. Every morning the desk asks: was today's P&amp;L driven
+    by the market, or did something specific to the position cause it? That decomposition —
+    separating beta-driven return from idiosyncratic return — is the foundation of risk attribution.
+  </p>
+  <p>
+    I built this project to replicate that workflow on public Nifty 50 data: download real
+    constituent price history, estimate rolling betas using OLS regression, decompose portfolio
+    returns, measure concentration, and produce the kind of attribution charts a risk manager
+    or portfolio analyst would actually review.
+  </p>
+
+  <h2>What It Does</h2>
+  <table class="module-table">
+    <thead>
+      <tr><th>Module</th><th>Capability</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>data_loader.py</td><td>Downloads 20 Nifty 50 tickers via yfinance (3 years); synthetic fallback for offline use</td></tr>
+      <tr><td>factors.py</td><td>Rolling 60-day OLS Beta per stock; portfolio-level hedge ratio (weighted average Beta)</td></tr>
+      <tr><td>attribution.py</td><td>Decomposes daily P&amp;L into market factor + idiosyncratic; Sharpe, drawdown, vol per component</td></tr>
+      <tr><td>concentration.py</td><td>HHI concentration index, effective N, top-N holdings, sector exposure breakdown</td></tr>
+      <tr><td>report.py</td><td>5 charts: cumulative attribution, rolling Beta, attribution bars, Beta heatmap, idio distribution</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Methodology</h2>
+
+  <h3>Rolling Beta Estimation (OLS)</h3>
+  <p>For each stock <em>i</em>, Beta is estimated over a trailing 60-day window using Ordinary Least Squares:</p>
+  <div class="formula-box">
+r_stock(t) = α + β_i × r_market(t) + ε(t)<br><br>
+Estimated via statsmodels.regression.rolling.RollingOLS<br>
+Window: 60 trading days (~3 months), updated daily
+  </div>
+  <p>This captures how each position's sensitivity to the market evolves over time — a stock's Beta in a vol regime can be very different from its Beta in a trending market.</p>
+
+  <h3>Portfolio Beta and Return Decomposition</h3>
+  <p>Portfolio-level Beta is the weighted average of position Betas:</p>
+  <div class="formula-box">
+β_portfolio = Σ  w_i × β_i<br><br>
+r_portfolio(t)  =  β_portfolio × r_market(t)  +  r_idiosyncratic(t)<br><br>
+r_idiosyncratic(t)  =  r_portfolio(t)  −  β_portfolio × r_market(t)
+  </div>
+  <p>This identity holds exactly by construction — the idiosyncratic term is always the residual after removing the market component. No approximation.</p>
+
+  <h3>Concentration Metrics (HHI)</h3>
+  <p>The Herfindahl-Hirschman Index measures how concentrated the portfolio is:</p>
+  <div class="formula-box">
+HHI = Σ w_i²         where w_i are normalised position weights<br>
+Effective N = 1 / HHI<br><br>
+Equal-weight 20-stock portfolio → HHI = 0.05, Effective N = 20.0<br>
+Single-stock portfolio          → HHI = 1.00, Effective N =  1.0
+  </div>
+
+  <h2>Results — Real Nifty 50 Data (Jan 2022 – Dec 2024)</h2>
+
+  <div class="result-box">
+    <p><strong>20-stock equal-weight portfolio, 3 years of daily data:</strong><br><br>
+    Portfolio Beta: 0.933 &nbsp;|&nbsp; HHI: 0.050 &nbsp;|&nbsp; Effective N: 20.0<br><br>
+    Total Return: +30.97% &nbsp;·&nbsp; Ann. Vol: 13.20% &nbsp;·&nbsp; Sharpe: 0.76 &nbsp;·&nbsp; Max Drawdown: −17.91%<br>
+    Market Factor: +28.22% &nbsp;·&nbsp; Ann. Vol: 13.15% &nbsp;·&nbsp; Sharpe: 0.71<br>
+    Idiosyncratic: &nbsp;+1.98% &nbsp;·&nbsp; Ann. Vol: 3.45% &nbsp;&nbsp;·&nbsp; Sharpe: 0.21<br><br>
+    <strong>91% of portfolio return was market-driven.</strong> Idiosyncratic (alpha) = +1.98% over 3 years.</p>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-item">
+      <img src="img/projects/factor-risk-attribution/cumulative_attribution.png" alt="Cumulative return attribution chart" />
+      <div class="chart-caption">Cumulative portfolio return (blue) decomposed into market factor (orange) and idiosyncratic (green) components. The market factor closely tracks the portfolio — confirming the 0.93 Beta.</div>
+    </div>
+    <div class="chart-item">
+      <img src="img/projects/factor-risk-attribution/rolling_beta.png" alt="Rolling Beta chart" />
+      <div class="chart-caption">Rolling 60-day Beta for each stock over the 3-year period. Beta varies meaningfully across regimes — some stocks shifted from sub-1 to above-1 Beta during the 2022 drawdown.</div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-item">
+      <img src="img/projects/factor-risk-attribution/attribution_summary.png" alt="Attribution summary bars" />
+      <div class="chart-caption">Return, volatility, and Sharpe by component. Market factor dominates total return; idiosyncratic component shows low Sharpe (0.21) — consistent with equal-weight construction providing little active alpha.</div>
+    </div>
+    <div class="chart-item">
+      <img src="img/projects/factor-risk-attribution/beta_heatmap.png" alt="Beta heatmap" />
+      <div class="chart-caption">Position-level Beta heatmap across time. Darker = higher Beta. Financials and Materials stocks show more volatile Beta estimates; FMCG stocks remain more stable.</div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-item">
+      <img src="img/projects/factor-risk-attribution/idio_distribution.png" alt="Idiosyncratic return distribution" />
+      <div class="chart-caption">Distribution of daily idiosyncratic (alpha) returns. Centred near zero with thin tails — confirms most risk is systematic, not position-specific.</div>
+    </div>
+  </div>
+
+  <h2>Key Insight</h2>
+  <p>
+    The equal-weight portfolio is overwhelmingly a market tracker (Beta 0.93, 91% market-driven return).
+    The idiosyncratic Sharpe of 0.21 is statistically weak — you would need concentrated bets or
+    a genuine stock-selection edge to improve it. This is the correct interpretation for an
+    equal-weight index-like portfolio, and the attribution makes that explicit rather than hiding it
+    in aggregate return numbers.
+  </p>
+  <p>
+    In a real risk management context, this framework identifies which positions are contributing
+    directional risk (high Beta) vs. diversifying (low correlation to market factor) — directly
+    informing hedging decisions and position sizing.
+  </p>
+
+  <h2>Sector Exposure</h2>
+  <table class="module-table">
+    <thead>
+      <tr><th>Sector</th><th>Weight</th><th>Stocks</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Financials</td><td>30.0%</td><td>6</td></tr>
+      <tr><td>FMCG</td><td>15.0%</td><td>3</td></tr>
+      <tr><td>IT</td><td>15.0%</td><td>3</td></tr>
+      <tr><td>Materials</td><td>10.0%</td><td>2</td></tr>
+      <tr><td>Other</td><td>30.0%</td><td>6</td></tr>
+    </tbody>
+  </table>
+
+  <h2>How to Run</h2>
+  <div class="formula-box">
+git clone https://github.com/rashmirrsdev/factor-risk-attribution<br>
+cd factor-risk-attribution<br>
+pip install -r requirements.txt<br>
+python run_demo.py
+  </div>
+  <p>Charts saved to <code>./output/</code>. Edit the <code>weights</code> dict in <code>run_demo.py</code> to run on any subset of the 20 Nifty 50 tickers with custom weights. Works offline — falls back to synthetic correlated returns if yfinance is rate-limited.</p>
+
+  <h2>Run Tests</h2>
+  <div class="formula-box">
+python -m pytest tests/ -v
+  </div>
+  <p>12 tests covering portfolio return computation, attribution identity (portfolio = market + idio exactly), max drawdown, HHI, effective N, and top-N holdings selection.</p>
+
+  <h2>Tech Stack</h2>
+  <div class="project-skills" style="margin-top: 4px;">
+    <span class="skill-tag">Python 3.9+</span>
+    <span class="skill-tag">NumPy</span>
+    <span class="skill-tag">Pandas</span>
+    <span class="skill-tag">Statsmodels</span>
+    <span class="skill-tag">yfinance</span>
+    <span class="skill-tag">Matplotlib</span>
+    <span class="skill-tag">Seaborn</span>
+    <span class="skill-tag">pytest (12 tests)</span>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="finance.html">Finance &amp; Markets</a>
+    <a href="for-students.html">For Students</a>
+    <a href="projects.html">Projects</a>
+    <a href="https://www.linkedin.com/in/rrsk/" target="_blank">LinkedIn</a>
+  </div>
+  <p>© 2026 Rashmi Rama Sushil &nbsp;·&nbsp; Senior Associate, Trading Risk Management, Morgan Stanley</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Options Risk Analytics Engine — Rashmi Rama Sushil</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav-inner">
+    <a href="index.html" class="site-logo">Rashmi <span>Rama Sushil</span></a>
+    <button class="nav-toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="finance.html">Finance &amp; Markets</a></li>
+      <li><a href="for-students.html">For Students</a></li>
+      <li><a href="projects.html" class="active">Projects</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="project-detail-header">
+  <a href="projects.html" class="back-link">← Back to Projects</a>
+  <h1>Options Risk Analytics Engine</h1>
+  <p>Black-Scholes pricing, full Greeks computation, VaR, and stress testing for multi-leg NSE/BSE options portfolios — built from first principles in Python.</p>
+  <div class="project-detail-meta">
+    <a href="https://github.com/rashmirrsdev/options-risk-engine" target="_blank" class="btn-github">View on GitHub</a>
+    <span class="project-status status-done" style="margin-top:2px;">Completed · June 2026</span>
+  </div>
+</div>
+
+<div class="project-body">
+
+  <h2>Motivation</h2>
+  <p>
+    At Morgan Stanley's Trading Risk Management desk I monitor options portfolios daily —
+    tracking Delta, Gamma, Vega, Theta across multi-leg positions and understanding how
+    the book behaves under market stress. That workflow lives in proprietary systems.
+    I built this project to replicate it from first principles: starting from the
+    Black-Scholes formula and building up to a complete risk monitoring tool.
+  </p>
+  <p>
+    The goal was to produce something interviewers could look at and immediately recognise
+    as the same analytics they use in production — not textbook exercises but a realistic
+    risk monitoring pipeline for an NSE/BSE options book.
+  </p>
+
+  <h2>What It Does</h2>
+  <table class="module-table">
+    <thead>
+      <tr><th>Module</th><th>Capability</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>bsm.py</td><td>Black-Scholes-Merton pricing + all five Greeks per option</td></tr>
+      <tr><td>portfolio.py</td><td>Loads a portfolio CSV, scales Greeks by quantity × lot size, flags concentration risk</td></tr>
+      <tr><td>risk_metrics.py</td><td>Historical VaR, parametric (delta-normal) VaR, 10 named stress scenarios</td></tr>
+      <tr><td>report.py</td><td>4 charts: Greeks bar, stress waterfall, P&amp;L distribution, position heatmap</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Methodology</h2>
+
+  <h3>Black-Scholes-Merton Pricing</h3>
+  <p>Every option is priced using the closed-form BSM formula. Given spot price <em>S</em>, strike <em>K</em>, time to expiry <em>T</em> (in years), risk-free rate <em>r</em>, and implied volatility <em>σ</em>:</p>
+  <div class="formula-box">
+d₁ = [ ln(S/K) + (r + σ²/2) · T ] / (σ · √T)<br>
+d₂ = d₁ − σ · √T<br><br>
+Call price = S · N(d₁) − K · e^(−rT) · N(d₂)<br>
+Put  price = K · e^(−rT) · N(−d₂) − S · N(−d₁)
+  </div>
+
+  <h3>The Five Greeks</h3>
+  <div class="formula-box">
+Delta (Δ)  = N(d₁)                          — sensitivity to underlying price<br>
+Gamma (Γ)  = N'(d₁) / (S · σ · √T)         — rate of change of Delta<br>
+Vega  (ν)  = S · N'(d₁) · √T  / 100        — per 1% change in implied vol<br>
+Theta (Θ)  = [−S·N'(d₁)·σ / 2√T − r·K·e^(−rT)·N(d₂)] / 365   — per calendar day<br>
+Rho   (ρ)  = K · T · e^(−rT) · N(d₂) / 100 — per 1% change in risk-free rate
+  </div>
+  <p>Each Greek is computed per contract and then scaled by <strong>quantity × lot size</strong> to give actual portfolio-level exposure in rupee terms.</p>
+
+  <h3>Value at Risk</h3>
+  <p>Two approaches are implemented and compared:</p>
+  <ul>
+    <li><strong>Historical VaR:</strong> 252-day simulated daily P&amp;L (delta approximation), 5th percentile = 95% VaR</li>
+    <li><strong>Parametric VaR:</strong> Delta × Spot × Daily Vol × z-score × √horizon. Faster but ignores non-linearity — treated as a lower bound.</li>
+  </ul>
+
+  <h3>Stress Scenarios</h3>
+  <p>Ten named shocks are applied using first-order approximation (Delta × ΔS + Vega × Δσ):</p>
+  <ul>
+    <li>Spot ±5%, Spot ±10%</li>
+    <li>Vol +20% (absolute), Vol −20%</li>
+    <li>Time decay: 1 day, 5 days</li>
+    <li>Combined: Spot −10% + Vol +30% (worst case), Spot +10% + Vol −20% (best case)</li>
+  </ul>
+
+  <h2>Output — Sample Portfolio (12 NSE Positions)</h2>
+
+  <div class="result-box">
+    <p><strong>Portfolio Greeks (net exposure):</strong><br>
+    Delta +1,679 · Gamma +19.6 · Vega +9,026 per 1% vol · Theta −3,131 per day</p>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-item">
+      <img src="img/projects/options-risk-engine/greeks_bar.png" alt="Portfolio Greeks bar chart" />
+      <div class="chart-caption">Net portfolio Greeks scaled to INR exposure. Positive Vega means the portfolio benefits from rising implied volatility.</div>
+    </div>
+    <div class="chart-item">
+      <img src="img/projects/options-risk-engine/stress_scenarios.png" alt="Stress scenario P&L" />
+      <div class="chart-caption">Estimated P&amp;L under 10 stress scenarios. The book is net long Delta — large upside moves benefit, downside hurts.</div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-item">
+      <img src="img/projects/options-risk-engine/var_distribution.png" alt="VaR distribution chart" />
+      <div class="chart-caption">Simulated daily P&amp;L distribution. 95% VaR: −INR 107,200 (historical), −INR 121,469 (parametric delta-normal).</div>
+    </div>
+    <div class="chart-item">
+      <img src="img/projects/options-risk-engine/greeks_heatmap.png" alt="Position-level Greeks heatmap" />
+      <div class="chart-caption">Per-position Greeks heatmap. Red = short exposure, green = long. HDFC 1700 Call flagged for Delta concentration (45% of portfolio Delta).</div>
+    </div>
+  </div>
+
+  <h2>Risk Flags</h2>
+  <p>Two automated checks run on every portfolio load:</p>
+  <ul>
+    <li><strong>Delta concentration:</strong> any position whose absolute Delta exceeds 20% of total portfolio Delta is flagged. In the sample book, HDFC 1700 Call holds 45% of portfolio Delta — a meaningful concentration.</li>
+    <li><strong>Gamma near expiry:</strong> positions with significant Gamma and fewer than 7 days to expiry are flagged for pin risk — spot can rapidly cross the strike, causing large Delta swings.</li>
+  </ul>
+
+  <h2>How to Run</h2>
+  <div class="formula-box">
+git clone https://github.com/rashmirrsdev/options-risk-engine<br>
+cd options-risk-engine<br>
+pip install -r requirements.txt<br>
+python run_demo.py
+  </div>
+  <p>Charts are saved to <code>./output/</code>. The portfolio CSV is fully editable — swap in any NSE/BSE options positions.</p>
+
+  <h2>Tech Stack</h2>
+  <div class="project-skills" style="margin-top: 4px;">
+    <span class="skill-tag">Python 3.9+</span>
+    <span class="skill-tag">NumPy</span>
+    <span class="skill-tag">Pandas</span>
+    <span class="skill-tag">SciPy</span>
+    <span class="skill-tag">Matplotlib</span>
+    <span class="skill-tag">Seaborn</span>
+    <span class="skill-tag">pytest (13 tests)</span>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="finance.html">Finance &amp; Markets</a>
+    <a href="for-students.html">For Students</a>
+    <a href="projects.html">Projects</a>
+    <a href="https://www.linkedin.com/in/rrsk/" target="_blank">LinkedIn</a>
+  </div>
+  <p>© 2026 Rashmi Rama Sushil &nbsp;·&nbsp; Senior Associate, Trading Risk Management, Morgan Stanley</p>
+</footer>
+
+</body>
+</html>
