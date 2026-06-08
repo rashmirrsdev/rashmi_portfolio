@@ -59,8 +59,8 @@
 
   <div class="chart-grid">
     <div class="chart-item">
-      <img src="img/projects/options-risk-engine/greeks_heatmap.png" alt="Position-level Greeks heatmap" />
-      <div class="chart-caption">Per-position Greeks heatmap. The HDFC 1700 Call — not the largest position by notional — carries 45% of the portfolio's total directional exposure (Delta).</div>
+      <img src="img/projects/options-risk-engine/greeks_heatmap.png" alt="Position-level Greeks heatmap with notional column" />
+      <div class="chart-caption">The leftmost column shows each position's notional exposure (INR millions). RELIANCE 2800 PUT and HDFC 1700 Call have similarly large notionals — 7.1M and 7.6M. But look at the Delta column: RELIANCE 2800 PUT is red (negative delta — it's a long put, which loses when spot rises). HDFC 1700 Call is deep green (large positive delta). Same notional, completely opposite directional impact. The dashed line separates notional from the Greek sensitivities.</div>
     </div>
     <div class="chart-item">
       <img src="img/projects/options-risk-engine/greeks_bar.png" alt="Portfolio Greeks bar chart" />
@@ -69,14 +69,17 @@
   </div>
 
   <p>
-    The HDFC 1700 Call held 45% of total portfolio Delta. If the market moved 1%, nearly half
-    the resulting P&amp;L move came from one name. That's a meaningful concentration — and it
-    would be completely invisible if you were looking at position sizes or notionals.
+    RELIANCE 2800 PUT and HDFC 1700 Call have essentially the same notional — about 7 crore
+    each. But the RELIANCE position is a <em>long put</em>: it moves inversely with the underlying,
+    contributing negative Delta to the portfolio. HDFC 1700 Call is a deep in-the-money long call
+    with Delta close to 1 — almost every rupee of spot movement flows directly into the position.
+    The result: HDFC 1700 dominates the portfolio's directional exposure while RELIANCE's large
+    notional largely cancels itself between the offsetting put positions.
   </p>
   <p>
-    This is one of those things that sounds obvious once you hear it but takes some time working
-    with live books to really internalise. Derivatives positions interact with each other in ways
-    that raw notional can't capture.
+    This is why options desks never talk about position size in isolation. The question is always
+    how much Greek exposure a position carries — and that depends on the option type, moneyness,
+    and how the position sits relative to everything else on the book.
   </p>
 
   <h2>The cost of holding options that nobody talks about</h2>
