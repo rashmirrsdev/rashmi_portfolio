@@ -773,6 +773,38 @@ a:hover { text-decoration: underline; }
 /* ─── Home page project cards ────────────────────────────────────────────── */
 .project-badge { background: #e6f4ef; color: #1a6b4a; }
 
+/* ─── Resume download button ─────────────────────────────────────────────── */
+.resume-download-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: var(--navy);
+  color: #fff;
+  font-size: .88rem;
+  font-weight: 600;
+  padding: 11px 16px;
+  border-radius: 7px;
+  letter-spacing: .01em;
+  transition: background .15s, opacity .15s;
+  text-decoration: none;
+  margin-bottom: 20px;
+}
+.resume-download-btn:hover { background: var(--navy-light); text-decoration: none; opacity: 1; }
+.resume-download-btn svg { vertical-align: middle; margin-right: 6px; }
+
+.hero-resume-link {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: .82rem;
+  color: rgba(255,255,255,.75);
+  border: 1px solid rgba(255,255,255,.3);
+  padding: 5px 16px;
+  border-radius: 20px;
+  transition: background .15s, color .15s;
+  text-decoration: none;
+}
+.hero-resume-link:hover { background: rgba(255,255,255,.12); color: #fff; text-decoration: none; }
+
 /* ─── Small phone (≤ 420px) ──────────────────────────────────────────────── */
 @media (max-width: 420px) {
   .hero h1 { font-size: 1.5rem; }
