@@ -51,6 +51,51 @@
     if you only looked at position sizes, what would you miss?
   </p>
 
+  <h2>The input: a CSV with one row per position</h2>
+  <p>
+    The engine reads a single CSV file — <code>sample_portfolio.csv</code> — where each row is one
+    options position. Ten columns describe everything the pricer needs:
+  </p>
+  <div class="data-table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ticker</th><th>strike</th><th>expiry_label</th><th>T</th><th>spot</th>
+          <th>sigma</th><th>r</th><th>option_type</th><th>qty</th><th>lot_size</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>NIFTY</td><td>24000</td><td>14D</td><td>0.0384</td><td>24200</td><td>0.14</td><td>0.065</td><td>call</td><td>5</td><td>50</td></tr>
+        <tr><td>NIFTY</td><td>24500</td><td>14D</td><td>0.0384</td><td>24200</td><td>0.16</td><td>0.065</td><td>call</td><td>−5</td><td>50</td></tr>
+        <tr><td>NIFTY</td><td>23800</td><td>40D</td><td>0.1096</td><td>24200</td><td>0.15</td><td>0.065</td><td>put</td><td>2</td><td>50</td></tr>
+        <tr><td>RELIANCE</td><td>2800</td><td>20D</td><td>0.0548</td><td>2850</td><td>0.22</td><td>0.065</td><td>put</td><td>10</td><td>250</td></tr>
+        <tr><td>RELIANCE</td><td>2700</td><td>20D</td><td>0.0548</td><td>2850</td><td>0.25</td><td>0.065</td><td>put</td><td>−10</td><td>250</td></tr>
+        <tr><td>RELIANCE</td><td>3000</td><td>20D</td><td>0.0548</td><td>2850</td><td>0.20</td><td>0.065</td><td>call</td><td>5</td><td>250</td></tr>
+        <tr><td>TCS</td><td>4000</td><td>26D</td><td>0.0712</td><td>4100</td><td>0.18</td><td>0.065</td><td>call</td><td>3</td><td>150</td></tr>
+        <tr><td>INFY</td><td>1900</td><td>26D</td><td>0.0712</td><td>1950</td><td>0.20</td><td>0.065</td><td>put</td><td>5</td><td>300</td></tr>
+        <tr><td>HDFC</td><td>1700</td><td>20D</td><td>0.0548</td><td>1730</td><td>0.19</td><td>0.065</td><td>call</td><td>8</td><td>550</td></tr>
+        <tr><td>HDFC</td><td>1750</td><td>20D</td><td>0.0548</td><td>1730</td><td>0.21</td><td>0.065</td><td>call</td><td>−4</td><td>550</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    <strong>ticker</strong> identifies the underlying. <strong>strike</strong> and <strong>spot</strong>
+    are in the same currency (INR for NSE single-stock options, index points for NIFTY).
+    <strong>T</strong> is time to expiry in years — 14 calendar days = 14/365 ≈ 0.038.
+    <strong>sigma</strong> is the implied volatility as a decimal (0.14 = 14% IV), taken from
+    the option's market price rather than historical realised vol. <strong>r</strong> is the
+    risk-free rate (6.5% here, broadly in line with the RBI repo rate at the time).
+    <strong>option_type</strong> is <code>call</code> or <code>put</code>.
+    <strong>qty</strong> is number of lots — negative means short. <strong>lot_size</strong> is the
+    NSE contract multiplier for that underlying: NIFTY = 50, Reliance = 250, HDFC = 550.
+  </p>
+  <p>
+    The full position size in units is <code>qty × lot_size</code>. A short 5 lots of NIFTY 24500
+    call (qty = −5, lot_size = 50) means −250 contracts. Every Greek gets scaled by that number,
+    which is why a negative qty flips the sign of Delta, Gamma, and Vega — turning a long-option
+    position into a short one with opposite risk characteristics.
+  </p>
+
   <h2>The position size view hides the real exposure</h2>
   <p>
     The heatmap below shows each position's Greeks scaled to actual portfolio exposure. The colour
