@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Metals Hedging Stress Analysis — Rashmi Rama Sushil</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav-inner">
+    <a href="index.html" class="site-logo">Rashmi <span>Rama Sushil</span></a>
+    <button class="nav-toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="finance.html">Finance &amp; Markets</a></li>
+      <li><a href="for-students.html">For Students</a></li>
+      <li><a href="projects.html" class="active">Projects</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="project-detail-header">
+  <a href="projects.html" class="back-link">← Back to Projects</a>
+  <h1>Stress-testing a metals hedge: what the numbers actually tell you</h1>
+  <p>A quantitative framework for evaluating hedge feasibility and stress-testing spread exposures across a metals derivatives book — built from methodology I learned doing this analysis for real.</p>
+  <div class="project-detail-meta">
+    <a href="https://github.com/rashmirrsdev/metals-hedging-stress" target="_blank" class="btn-github">View code on GitHub</a>
+    <span class="project-status status-done" style="margin-top:2px;">Completed · June 2026</span>
+  </div>
+</div>
+
+<div class="project-body">
+
+  <div style="background:#fff8e1; border-left:4px solid #b8860b; padding:14px 18px; border-radius:4px; margin-bottom:28px; font-size:0.92rem; color:#444; line-height:1.6;">
+    <strong>A note on this project:</strong> This analysis is built on concepts and methodology I encountered while evaluating a real metals hedging scenario at my desk. All data here is fully synthetic — I am sharing what I <em>learned</em> about how to approach this kind of problem, not anything about the actual trade, client, or position.
+  </div>
+
+  <h2>The question before the strategy</h2>
+  <p>
+    When a trading desk evaluates a client's metals exposure and is asked to design a hedge, the temptation is to jump straight to the hedge structure. The better question is: <em>can this actually be hedged?</em>
+  </p>
+  <p>
+    That question has a specific, quantitative answer — it lives in the open interest data. If the contracts you need to hedge into don't have sufficient liquidity, you can't get your hedge on without moving the market against yourself. Checking liquidity is step zero, not step five.
+  </p>
+
+  <div class="chart-grid" style="grid-template-columns: 1fr;">
+    <div class="chart-item">
+      <img src="img/projects/metals-hedging-stress/open_interest_profile.png" alt="Open interest by contract month" />
+      <div class="chart-caption">Open interest falls sharply after the first three contract months. The back months — where longer-dated book risk sits — have a fraction of the front-end liquidity. Trying to hedge a back-end position in a thinly traded contract adds execution risk on top of market risk.</div>
+    </div>
+  </div>
+
+  <h2>Time spreads: the book is not one risk, it's two</h2>
+  <p>
+    A metals book isn't a single directional exposure. It's a combination of near-term positions (front contracts, subject to short-term slippage) and back-end positions (deferred contracts, exposed to longer-term structural moves). These don't move together.
+  </p>
+  <p>
+    The right way to analyse this is to decompose the risk into <strong>time spreads</strong> — the price difference between front and back contracts — and analyse those separately. In a normal market (contango), back contracts trade at a premium to front. In a supply squeeze or financing stress, the curve flips into backwardation: front contracts spike and back months lag. The shape of the curve tells you where the stress is concentrated.
+  </p>
+
+  <div class="chart-grid" style="grid-template-columns: 1fr;">
+    <div class="chart-item">
+      <img src="img/projects/metals-hedging-stress/term_structure.png" alt="Term structure: normal vs stressed" />
+      <div class="chart-caption">The same metal, two market regimes. Left: normal contango — cost of carry means back contracts are priced above spot. Right: a stress event creates backwardation — front month spikes sharply while deferred contracts barely move. If your book is long back / short front, those two scenarios have completely opposite P&amp;L implications.</div>
+    </div>
+  </div>
+
+  <h2>How we stress-tested it: rolling N-day statistics</h2>
+  <p>
+    Once the risk is decomposed into spreads, the stress analysis asks: how much has this spread historically moved over a given holding period? The methodology is straightforward but requires care in execution: compute the rolling N-day change in the spread price, then extract the distribution of those moves.
+  </p>
+  <p>
+    The key statistics are <strong>max, p99, p95, min</strong> — and we calculated these for multiple windows (1-day, 5-day, 10-day, 20-day). The 10-day window is the most relevant for a hedging horizon where you might need several days to put on or take off a position. The p99 tells you what happened 99% of the time; the max tells you what the worst single episode looked like.
+  </p>
+
+  <div class="chart-grid" style="grid-template-columns: 1fr;">
+    <div class="chart-item">
+      <img src="img/projects/metals-hedging-stress/spread_move_distribution.png" alt="Distribution of spread moves at 5-day and 10-day windows" />
+      <div class="chart-caption">Distribution of spread moves over 5 and 10 trading days (synthetic base metal data, 7 years). The vertical lines mark p95, p99, and max — these become the stress inputs for P&amp;L scenarios. Notice how the distribution widens significantly moving from 5 to 10 days: more time means more opportunity for the spread to move against you.</div>
+    </div>
+  </div>
+
+  <h2>Translating stress into P&L: front vs back</h2>
+  <p>
+    The stress statistics only become useful when multiplied through a position size. The insight from decomposing into time spreads is that the front-end and back-end risks have different stress profiles — and combining them into a single number hides that.
+  </p>
+  <p>
+    We modelled the P&L impact at each stress level separately for the front-end slippage exposure (the risk you carry while getting the hedge on) and the back-end holding exposure (the longer-term risk on the book). The combined number is the sum, but the breakdown tells you where to focus hedging effort.
+  </p>
+
+  <div class="chart-grid" style="grid-template-columns: 1fr;">
+    <div class="chart-item">
+      <img src="img/projects/metals-hedging-stress/stress_pnl_scenarios.png" alt="P&L impact by stress level: front vs back exposure" />
+      <div class="chart-caption">Estimated P&amp;L impact at p95, p99, and maximum observed spread moves, broken down by front-end and back-end exposure (synthetic notional: 500t front, 300t back). The front-end slippage risk dominates at near-term stress levels — it's the cost of getting into the hedge. Back-end risk becomes proportionally larger in tail scenarios.</div>
+    </div>
+  </div>
+
+  <h2>Precious metal: when long means short something else</h2>
+  <p>
+    One of the most interesting parts of this analysis was the precious metal component. In base metals, a long position is simply long price — you hedge it by going short futures. In gold, there's an additional dimension: <strong>lease rates</strong>.
+  </p>
+  <p>
+    Gold is unique because it can be lent — central banks and holders lease their gold to market participants who need physical supply. The lease rate is effectively the cost of borrowing gold. A long gold position earns this yield — but it also means you are <strong>short the lease rate</strong>. If lease rates rise (which can happen in periods of physical tightness), the forward curve shifts against your position independently of the spot price move. This is a <strong>DV01 risk</strong>, and it needs a different hedge than the directional price exposure.
+  </p>
+
+  <div class="chart-grid" style="grid-template-columns: 1fr;">
+    <div class="chart-item">
+      <img src="img/projects/metals-hedging-stress/dv01_lease_rate.png" alt="DV01 and lease rate sensitivity for a gold position" />
+      <div class="chart-caption">Left: synthetic gold lease rate history — typically ranging from near-zero to spikes above 2% in stress. Right: the DV01 P&amp;L curve for a 5,000 oz long gold position (6-month maturity). A 10bp rise in lease rates produces a meaningful loss independent of where spot gold goes — this is the "hidden" rate risk in a gold book that needs to be understood and hedged separately.</div>
+    </div>
+  </div>
+
+  <h2>What this process taught me</h2>
+  <p>
+    The most valuable lesson from working through this kind of analysis wasn't a formula — it was understanding how the analysis could keep expanding indefinitely. More windows, more percentile cuts, more decomposition layers. The discipline is knowing when you have enough to make a decision, and having the confidence that your calculations are right before you do.
+  </p>
+  <p>
+    That last point matters more than it sounds. In a spreadsheet-driven risk analysis, the most dangerous error isn't using the wrong model — it's a calculation that looks plausible but is silently wrong. Cross-checking spread P&L attribution, verifying that your N-day window is actually computing what you think, confirming that your position signs are consistent — these checks are where the real care goes in a professional setting.
+  </p>
+  <p>
+    The final recommendation on a trade's viability rests on these numbers being right. Getting to "yes" or "no" with confidence is the output; the rigor of the analysis is what earns that confidence.
+  </p>
+  <p style="margin-top: 24px;">
+    <a href="https://github.com/rashmirrsdev/metals-hedging-stress" target="_blank" class="btn-github">Full code and documentation on GitHub →</a>
+  </p>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="finance.html">Finance &amp; Markets</a>
+    <a href="for-students.html">For Students</a>
+    <a href="projects.html">Projects</a>
+    <a href="https://www.linkedin.com/in/rrsk/" target="_blank">LinkedIn</a>
+  </div>
+  <p>© 2026 Rashmi Rama Sushil &nbsp;·&nbsp; Senior Associate, Trading Risk Management, Morgan Stanley</p>
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <span class="lightbox-close" id="lightbox-close">&times;</span>
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<script>
+(function() {
+  var lb = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lightbox-img');
+  var lbClose = document.getElementById('lightbox-close');
+  document.querySelectorAll('.chart-item img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+      lb.classList.add('active');
+    });
+  });
+  lb.addEventListener('click', function() { lb.classList.remove('active'); });
+  lbClose.addEventListener('click', function(e) { e.stopPropagation(); lb.classList.remove('active'); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') lb.classList.remove('active'); });
+})();
+</script>
+
+</body>
+</html>
