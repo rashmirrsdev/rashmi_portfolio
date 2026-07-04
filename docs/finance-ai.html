@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finance + AI — Rashmi Rama Sushil</title>
+  <meta name="description" content="Building AI-assisted risk analytics tools with GitHub Copilot and agent-based AI — leading the modernisation of commodity risk visualisation at Morgan Stanley." />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav-inner">
+    <a href="index.html" class="site-logo">Rashmi <span>Rama Sushil</span></a>
+    <button class="nav-toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="finance.html">Finance &amp; Markets</a></li>
+      <li><a href="finance-ai.html" class="active">Finance + AI</a></li>
+      <li><a href="for-students.html">For Students</a></li>
+      <li><a href="projects.html">Projects</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="project-detail-header header-ai">
+  <span class="eyebrow">Emerging Field</span>
+  <h1>Finance + AI</h1>
+  <p>Where quantitative risk management meets AI-assisted engineering — how I'm using agent-based AI tooling to rebuild the way risk gets visualised, not just calculated.</p>
+  <div class="tag-row" style="margin-top:20px;">
+    <span class="tag-pill">GitHub Copilot</span>
+    <span class="tag-pill">Agent-Based AI</span>
+    <span class="tag-pill">VS Code</span>
+    <span class="tag-pill">Commodity Derivatives</span>
+    <span class="tag-pill">Risk Visualisation</span>
+  </div>
+</section>
+
+<div class="project-body">
+
+  <h2>Why this section exists</h2>
+  <p>
+    AI tooling has changed how fast a domain expert can turn what's in their head into working
+    software. I spent three years learning exactly how commodity risk desks think — what a
+    forward curve is actually telling you, why a time spread matters more than an outright
+    price, where basis risk hides between related contracts. The gap was never the knowledge.
+    It was the engineering time to turn that knowledge into a tool traders and risk managers
+    would actually use.
+  </p>
+  <p>
+    That gap is closing. Working inside VS Code with GitHub Copilot and agent-based AI assistants,
+    I can move from "here's how a risk manager thinks about this problem" to a working prototype
+    in a fraction of the time it used to take — without outsourcing the judgment calls that
+    actually matter. This section tracks that work: what I'm building, how I'm building it, and
+    what I'm learning about AI as a tool for financial engineering rather than a replacement for
+    financial judgment.
+  </p>
+
+  <h2>What I'm building now</h2>
+  <p>
+    I'm leading the development of an AI-assisted commodity risk dashboard — a ground-up
+    rethink of how our desks visualise risk across a diverse derivatives book spanning oil,
+    EU power and natural gas, LME metals, and agricultural markets. It's early-stage and evolving
+    fast, built using GitHub Copilot and agent-based AI development workflows inside VS Code.
+  </p>
+
+  <div class="status-note">
+    <strong>Status:</strong>&nbsp;Early-stage · actively in development · I'm leading the design and build.
+  </div>
+
+  <h3>What the dashboard covers</h3>
+  <div class="capability-grid">
+    <div class="capability-card">
+      <h3>Forward Curves</h3>
+      <p>Interactive views of the full forward curve for each commodity — shape, shifts over time, and what's driving contango or backwardation on a given day.</p>
+    </div>
+    <div class="capability-card">
+      <h3>Time Spreads</h3>
+      <p>Calendar spread monitoring across contract months, surfacing roll risk and carry dynamics before they show up in P&amp;L.</p>
+    </div>
+    <div class="capability-card">
+      <h3>Cross-Curve Basis Spreads</h3>
+      <p>Relative-value views across related curves — where two markets that usually move together start to diverge, and by how much.</p>
+    </div>
+    <div class="capability-card">
+      <h3>Trade Baskets</h3>
+      <p>Aggregated statistics and exposure views for baskets of related positions, so risk that's invisible trade-by-trade becomes visible at the basket level.</p>
+    </div>
+  </div>
+
+  <h3>Also in progress: a deal structure evaluation framework</h3>
+  <p>
+    Alongside the dashboard, I'm designing a framework for evaluating potential deal structures —
+    a systematic way to compare structuring alternatives against the risk and P&amp;L profile they'd
+    create, rather than assessing each one from scratch. The goal is the same as the dashboard:
+    take something that currently depends on an experienced person doing manual analysis, and
+    make it faster, more consistent, and easier for stakeholders at every level to understand.
+  </p>
+
+  <h2>How I'm building it</h2>
+  <p>
+    The workflow is agent-based AI development inside VS Code: GitHub Copilot and AI agents
+    handle a large share of the implementation — scaffolding, boilerplate, iteration — while I
+    own the parts that require actual domain judgment: what the tool needs to show, what
+    "correct" looks like for a given risk metric, and how a trader or risk manager should be
+    able to interact with it under pressure, not just in a demo.
+  </p>
+  <p>
+    That division of labour is the actual point. AI tooling doesn't remove the need for
+    someone who understands the market — it removes the friction between understanding the
+    market and having something to show for it. Three years of daily Bloomberg monitoring
+    across a live commodity book is what tells me which view actually matters to a risk manager
+    at 8am; the AI tooling is what lets me build that view the same week instead of filing a
+    request with an engineering team.
+  </p>
+
+  <h2>The bigger goal</h2>
+  <p>
+    Risk dashboards at most desks look the way they've looked for a decade — dense tables,
+    static reports, context split across five different tools. I want to change that: intuitive
+    enough that a new analyst can read it in a minute, interactive enough that a trader can
+    stress-test an idea live in a meeting, and robust enough that a Director or MD can rely on
+    it in a risk review. That's the standard I'm building toward, and AI-assisted development is
+    what makes hitting it — as one person, alongside a full-time risk role — realistic.
+  </p>
+
+  <p style="margin-top: 8px;">
+    More detail, screenshots, and write-ups will land here as the dashboard and the deal
+    structure framework mature. In the meantime, see <a href="projects.html">Projects</a> for
+    my published quantitative finance tools, or <a href="about.html">About</a> for the full
+    professional background behind this work.
+  </p>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="finance.html">Finance &amp; Markets</a>
+    <a href="finance-ai.html">Finance + AI</a>
+    <a href="for-students.html">For Students</a>
+    <a href="projects.html">Projects</a>
+    <a href="https://www.linkedin.com/in/rrsk/" target="_blank">LinkedIn</a>
+  </div>
+  <p>© 2026 Rashmi Rama Sushil &nbsp;·&nbsp; Senior Associate, Trading Risk Management, Morgan Stanley</p>
+</footer>
+
+</body>
+</html>
