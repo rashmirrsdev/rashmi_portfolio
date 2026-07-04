@@ -11,6 +11,9 @@
   --bg-soft:    #f7f8fa;
   --border:     #e2e4e8;
   --navy-bg:    #eef1f7;
+  --violet:       #6d3fd6;
+  --violet-light: #f2eefb;
+  --violet-dark:  #2f1a63;
   --font-serif: Georgia, 'Times New Roman', serif;
   --font-sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --max-w:      760px;
@@ -871,4 +874,157 @@ a:hover { text-decoration: underline; }
 
   /* Inputs — prevent iOS zoom (min 16px) */
   input[type=range] { font-size: 16px; }
+}
+
+/* ─── Finance + AI ───────────────────────────────────────────────────────── */
+.badge-ai { background: var(--violet-light); color: var(--violet); }
+.status-leading {
+  background: var(--violet-light);
+  color: var(--violet);
+  border: 1px solid #e0d3f7;
+}
+
+.header-ai {
+  background: linear-gradient(120deg, var(--navy) 0%, var(--violet-dark) 55%, var(--violet) 100%);
+}
+
+.tag-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.tag-pill {
+  background: rgba(255,255,255,.13);
+  border: 1px solid rgba(255,255,255,.28);
+  color: rgba(255,255,255,.92);
+  font-size: .78rem;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.8);
+  margin-bottom: 14px;
+}
+.eyebrow::before {
+  content: '';
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(255,255,255,.25);
+}
+
+.capability-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 22px 0 8px;
+}
+.capability-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  background: var(--bg-soft);
+  border-left: 3px solid var(--violet);
+}
+.capability-card h3 {
+  font-size: .95rem;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+.capability-card p {
+  font-size: .85rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.55;
+}
+
+.status-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--violet-light);
+  border-left: 3px solid var(--violet);
+  border-radius: 6px;
+  padding: 14px 18px;
+  font-size: .88rem;
+  color: var(--violet-dark);
+  margin: 28px 0;
+}
+
+/* Homepage feature banner */
+.ai-banner {
+  display: block;
+  background: linear-gradient(120deg, var(--navy) 0%, var(--violet-dark) 55%, var(--violet) 100%);
+  border-radius: 14px;
+  padding: 32px 36px;
+  color: #fff;
+  margin: 40px 0 8px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .18s, box-shadow .18s;
+}
+.ai-banner:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px rgba(45,20,90,.28);
+  text-decoration: none;
+}
+.ai-banner-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 32px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+.ai-banner h2 {
+  font-family: var(--font-serif);
+  font-size: 1.55rem;
+  margin-bottom: 10px;
+  color: #fff;
+}
+.ai-banner p {
+  font-size: .92rem;
+  color: rgba(255,255,255,.82);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.ai-banner-cta {
+  display: inline-block;
+  font-size: .85rem;
+  font-weight: 700;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.4);
+  padding: 7px 18px;
+  border-radius: 20px;
+}
+.ai-banner-side {
+  border-left: 1px solid rgba(255,255,255,.18);
+  padding-left: 28px;
+}
+.ai-banner-side-label {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.6);
+  margin-bottom: 10px;
+}
+.ai-banner-side ul { list-style: none; }
+.ai-banner-side li {
+  font-size: .84rem;
+  color: rgba(255,255,255,.88);
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+.ai-banner-side li:last-child { border-bottom: none; }
+
+@media (max-width: 768px) {
+  .capability-grid { grid-template-columns: 1fr; }
+  .ai-banner { padding: 26px 22px; }
+  .ai-banner-grid { grid-template-columns: 1fr; gap: 18px; }
+  .ai-banner-side { border-left: none; padding-left: 0; border-top: 1px solid rgba(255,255,255,.18); padding-top: 18px; }
 }
