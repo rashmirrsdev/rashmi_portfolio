@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/</loc><priority>1.0</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/about.html</loc><priority>0.9</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/finance-ai.html</loc><priority>0.9</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/finance.html</loc><priority>0.8</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/projects.html</loc><priority>0.8</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/for-students.html</loc><priority>0.6</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/project-factor-attribution.html</loc><priority>0.6</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/project-hedging-strategies.html</loc><priority>0.6</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/project-metals-hedging.html</loc><priority>0.6</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/project-options-risk.html</loc><priority>0.6</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/posts/rolling-contracts.html</loc><priority>0.6</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/posts/commodity-derivatives.html</loc><priority>0.6</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/posts/greeks-in-practice.html</loc><priority>0.6</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/posts/iit-to-morgan-stanley.html</loc><priority>0.6</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/posts/placement-1-journey.html</loc><priority>0.5</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/posts/placement-2-background.html</loc><priority>0.5</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/posts/placement-3-timeline.html</loc><priority>0.5</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/posts/placement-4-coding.html</loc><priority>0.5</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/posts/placement-5-ups-downs.html</loc><priority>0.5</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/posts/placement-6-prep.html</loc><priority>0.5</priority></url>
+  <url><loc>https://rashmirrsdev.github.io/rashmi_portfolio/posts/placement-7-day0.html</loc><priority>0.5</priority></url>
+</urlset>
