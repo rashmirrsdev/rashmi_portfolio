@@ -52,7 +52,21 @@
 
 <div class="project-body">
 
-  <h2><span class="sec-num">01</span>The Problem</h2>
+  <div class="toc-row">
+    <span class="toc-label">Jump to:</span>
+    <a href="#problem">01 Problem</a>
+    <a href="#thinking">02 Thinking</a>
+    <a href="#architecture">03 Architecture</a>
+    <a href="#stack">04 Stack</a>
+    <a href="#results">05 Results</a>
+    <a href="#beta">06 Beta Shift</a>
+    <a href="#diversification">07 Diversification</a>
+    <a href="#challenges">08 Challenges</a>
+    <a href="#impact">09 Impact</a>
+    <a href="#future">10 Future</a>
+  </div>
+
+  <h2 id="problem"><span class="sec-num">01</span>The Problem</h2>
   <p>
     Every fund manager, every analyst, every investor who's picked stocks believes they have some
     edge. The market went up, their portfolio went up more — so there must be skill involved.
@@ -69,7 +83,7 @@
     manager, or trust the track record going forward.
   </p>
 
-  <h2><span class="sec-num">02</span>My Thinking</h2>
+  <h2 id="thinking"><span class="sec-num">02</span>My Thinking</h2>
   <p>
     The simplest approach — compare portfolio return to index return — tells you almost nothing.
     A portfolio that's just a leveraged version of the index would look like "skill" under naive
@@ -97,7 +111,7 @@
     </div>
   </div>
 
-  <h2><span class="sec-num">03</span>Architecture</h2>
+  <h2 id="architecture"><span class="sec-num">03</span>Architecture</h2>
   <div class="arch-diagram">
     <div class="arch-step">Price Data<span class="arch-step-sub">20 stocks · 3yrs</span></div>
     <div class="arch-arrow">→</div>
@@ -112,7 +126,7 @@
     <div class="arch-step">Attribution Report</div>
   </div>
 
-  <h2><span class="sec-num">04</span>Technical Stack</h2>
+  <h2 id="stack"><span class="sec-num">04</span>Technical Stack</h2>
   <div class="tech-rationale">
     <div class="tech-rationale-item">
       <span class="tech-name">Python · pandas / NumPy</span>
@@ -132,7 +146,7 @@
     </div>
   </div>
 
-  <h2><span class="sec-num">05</span>91 cents out of every rupee came from the index</h2>
+  <h2 id="results"><span class="sec-num">05</span>91 cents out of every rupee came from the index</h2>
   <p>
     The portfolio returned 30.97% over three years (Jan 2022 – Dec 2024). When you decompose
     that into market-driven and stock-specific components, the split is stark:
@@ -172,7 +186,7 @@
     separating what the market handed to everyone.
   </p>
 
-  <h2><span class="sec-num">06</span>Beta isn't stable — and that matters in a crisis</h2>
+  <h2 id="beta"><span class="sec-num">06</span>Beta isn't stable — and that matters in a crisis</h2>
   <p>
     The analysis uses rolling 60-day Beta estimates, meaning Beta is recalculated continuously
     as the market evolves. What the rolling Beta chart shows is that the relationship between
@@ -204,7 +218,7 @@
     it most.
   </p>
 
-  <h2><span class="sec-num">07</span>The diversification you think you have vs. the diversification you actually have</h2>
+  <h2 id="diversification"><span class="sec-num">07</span>The diversification you think you have vs. the diversification you actually have</h2>
   <p>
     By any standard measure, the equal-weight 20-stock portfolio is well-diversified. The
     Herfindahl-Hirschman Index (HHI) — a standard concentration metric — comes out at 0.05,
@@ -232,7 +246,7 @@
     what attribution frameworks are built to do.
   </p>
 
-  <h2><span class="sec-num">08</span>Engineering Challenges</h2>
+  <h2 id="challenges"><span class="sec-num">08</span>Engineering Challenges</h2>
   <div class="challenge-item">
     <h3>Rolling Beta window selection</h3>
     <p>Short windows (20-day) produced noisy, unstable Beta estimates; long windows (120-day) were too slow to capture the actual 2022 drawdown shift. I tested multiple window lengths against that known crisis period and settled on 60 days as the practical middle ground — responsive enough to matter, stable enough to trust.</p>
@@ -242,7 +256,7 @@
     <p>Position-level HHI alone said the portfolio was well-diversified (0.05, equivalent to 20 equal positions). It took a separate sector-level decomposition to catch the 30% Financials concentration that the position-count metric was structurally blind to — one metric wasn't wrong, it just wasn't sufficient on its own.</p>
   </div>
 
-  <h2><span class="sec-num">09</span>Business Impact</h2>
+  <h2 id="impact"><span class="sec-num">09</span>Business Impact</h2>
   <div class="impact-grid">
     <div class="impact-tile"><span class="impact-number">91%</span><span class="impact-label">Of return explained by market factor alone</span></div>
     <div class="impact-tile"><span class="impact-number">0.21</span><span class="impact-label">Idiosyncratic Sharpe vs. 0.71 market Sharpe</span></div>
@@ -258,7 +272,7 @@
     you can't say anything meaningful about whether you've added value.
   </p>
 
-  <h2><span class="sec-num">10</span>Future Improvements</h2>
+  <h2 id="future"><span class="sec-num">10</span>Future Improvements</h2>
   <ul>
     <li><strong>Multi-factor model</strong> — extend from single-factor market Beta to a Fama-French-style model (size, value, momentum), so idiosyncratic return is measured against a richer benchmark than just the index.</li>
     <li><strong>Multi-asset attribution</strong> — extend beyond equities to commodity and derivatives factor exposures, drawing directly on my day-to-day work.</li>

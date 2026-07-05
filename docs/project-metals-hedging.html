@@ -56,7 +56,22 @@
     <strong>A note on this project:</strong> This analysis is built on concepts and methodology I encountered while evaluating a real metals hedging scenario at my desk. All data here is fully synthetic — I am sharing what I <em>learned</em> about how to approach this kind of problem, not anything about the actual trade, client, or position.
   </div>
 
-  <h2><span class="sec-num">01</span>The Problem</h2>
+  <div class="toc-row">
+    <span class="toc-label">Jump to:</span>
+    <a href="#problem">01 Problem</a>
+    <a href="#thinking">02 Thinking</a>
+    <a href="#architecture">03 Architecture</a>
+    <a href="#stack">04 Stack</a>
+    <a href="#spreads">05 Time Spreads</a>
+    <a href="#stress-method">06 Stress Method</a>
+    <a href="#pnl">07 P&amp;L Impact</a>
+    <a href="#precious-metal">08 Lease Rates</a>
+    <a href="#challenges">09 Challenges</a>
+    <a href="#impact">10 Impact</a>
+    <a href="#future">11 Future</a>
+  </div>
+
+  <h2 id="problem"><span class="sec-num">01</span>The Problem</h2>
   <p>
     When a trading desk evaluates a client's metals exposure and is asked to design a hedge, the
     temptation is to jump straight to the hedge structure. The better question is: <em>can this
@@ -71,7 +86,7 @@
     at a reasonable cost.
   </p>
 
-  <h2><span class="sec-num">02</span>My Thinking</h2>
+  <h2 id="thinking"><span class="sec-num">02</span>My Thinking</h2>
   <p>
     The tempting shortcut is to treat the book as one directional exposure and stress-test a
     single number. I rejected that: a metals book combines near-term and deferred positions that
@@ -95,7 +110,7 @@
     </div>
   </div>
 
-  <h2><span class="sec-num">03</span>Architecture</h2>
+  <h2 id="architecture"><span class="sec-num">03</span>Architecture</h2>
   <div class="arch-diagram">
     <div class="arch-step">Open Interest Data</div>
     <div class="arch-arrow">→</div>
@@ -110,7 +125,7 @@
     <div class="arch-step">Hedge Recommendation</div>
   </div>
 
-  <h2><span class="sec-num">04</span>Technical Stack</h2>
+  <h2 id="stack"><span class="sec-num">04</span>Technical Stack</h2>
   <div class="tech-rationale">
     <div class="tech-rationale-item">
       <span class="tech-name">Python · pandas</span>
@@ -137,7 +152,7 @@
     </div>
   </div>
 
-  <h2><span class="sec-num">05</span>Time spreads: the book is not one risk, it's two</h2>
+  <h2 id="spreads"><span class="sec-num">05</span>Time spreads: the book is not one risk, it's two</h2>
   <p>
     A metals book isn't a single directional exposure. It's a combination of near-term positions (front contracts, subject to short-term slippage) and back-end positions (deferred contracts, exposed to longer-term structural moves). These don't move together.
   </p>
@@ -152,7 +167,7 @@
     </div>
   </div>
 
-  <h2><span class="sec-num">06</span>How we stress-tested it: rolling N-day statistics</h2>
+  <h2 id="stress-method"><span class="sec-num">06</span>How we stress-tested it: rolling N-day statistics</h2>
   <p>
     Once the risk is decomposed into spreads, the stress analysis asks: how much has this spread historically moved over a given holding period? The methodology is straightforward but requires care in execution: compute the rolling N-day change in the spread price, then extract the distribution of those moves.
   </p>
@@ -167,7 +182,7 @@
     </div>
   </div>
 
-  <h2><span class="sec-num">07</span>Translating stress into P&amp;L: front vs back</h2>
+  <h2 id="pnl"><span class="sec-num">07</span>Translating stress into P&amp;L: front vs back</h2>
   <p>
     The stress statistics only become useful when multiplied through a position size. The insight from decomposing into time spreads is that the front-end and back-end risks have different stress profiles — and combining them into a single number hides that.
   </p>
@@ -182,7 +197,7 @@
     </div>
   </div>
 
-  <h2><span class="sec-num">08</span>Precious metal: when long means short something else</h2>
+  <h2 id="precious-metal"><span class="sec-num">08</span>Precious metal: when long means short something else</h2>
   <p>
     One of the most interesting parts of this analysis was the precious metal component. In base metals, a long position is simply long price — you hedge it by going short futures. In gold, there's an additional dimension: <strong>lease rates</strong>.
   </p>
@@ -197,7 +212,7 @@
     </div>
   </div>
 
-  <h2><span class="sec-num">09</span>Engineering Challenges</h2>
+  <h2 id="challenges"><span class="sec-num">09</span>Engineering Challenges</h2>
   <div class="challenge-item">
     <h3>Analysis that can expand indefinitely</h3>
     <p>More windows, more percentile cuts, more decomposition layers are always possible. The real discipline was deciding when the analysis had enough rigor to support a yes/no decision, rather than continuing to add windows and cuts without a clear stopping point.</p>
@@ -207,7 +222,7 @@
     <p>In a spreadsheet-driven risk analysis, the most dangerous error isn't the wrong model — it's a calculation that looks plausible but is silently wrong. Cross-checking spread P&amp;L attribution, verifying the N-day window was computing what I thought, and confirming position signs were consistent took as much effort as the analysis itself.</p>
   </div>
 
-  <h2><span class="sec-num">10</span>Business Impact</h2>
+  <h2 id="impact"><span class="sec-num">10</span>Business Impact</h2>
   <div class="impact-grid">
     <div class="impact-tile"><span class="impact-number">2</span><span class="impact-label">Distinct risk types separated: front-end vs. back-end</span></div>
     <div class="impact-tile"><span class="impact-number">4</span><span class="impact-label">Rolling windows tested (1/5/10/20-day)</span></div>
@@ -220,7 +235,7 @@
     decomposition second, stress third, rate risk last — is what earns that confidence.
   </p>
 
-  <h2><span class="sec-num">11</span>Future Improvements</h2>
+  <h2 id="future"><span class="sec-num">11</span>Future Improvements</h2>
   <ul>
     <li><strong>Real market data feed</strong> in place of the synthetic dataset, once outside a proprietary desk context.</li>
     <li><strong>Automated liquidity alerts</strong> — flag a proposed hedge structure automatically if open interest in the required contract months falls below a usable threshold, rather than requiring a manual check.</li>

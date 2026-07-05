@@ -52,7 +52,24 @@
 
 <div class="project-body">
 
-  <h2><span class="sec-num">01</span>The Problem</h2>
+  <div class="toc-row">
+    <span class="toc-label">Jump to:</span>
+    <a href="#problem">01 Problem</a>
+    <a href="#thinking">02 Thinking</a>
+    <a href="#architecture">03 Architecture</a>
+    <a href="#stack">04 Stack</a>
+    <a href="#collar">05 Collar</a>
+    <a href="#put">06 Protective Put</a>
+    <a href="#spreads">07 Spreads</a>
+    <a href="#straddle">08 Straddle</a>
+    <a href="#cost-summary">09 Cost Compare</a>
+    <a href="#table">10 Summary Table</a>
+    <a href="#challenges">11 Challenges</a>
+    <a href="#impact">12 Impact</a>
+    <a href="#future">13 Future</a>
+  </div>
+
+  <h2 id="problem"><span class="sec-num">01</span>The Problem</h2>
   <p>
     When someone says they've "hedged" a position, that statement is almost always incomplete.
     What did they give up to hedge it? How much does the protection cost — not just in premium,
@@ -67,7 +84,7 @@
     mismatch when the market moves.
   </p>
 
-  <h2><span class="sec-num">02</span>My Thinking</h2>
+  <h2 id="thinking"><span class="sec-num">02</span>My Thinking</h2>
   <p>
     I could have written this as a qualitative comparison — a table of pros and cons per
     strategy. I rejected that: qualitative descriptions are exactly what let "zero-cost" framing
@@ -90,7 +107,7 @@
     </div>
   </div>
 
-  <h2><span class="sec-num">03</span>Architecture</h2>
+  <h2 id="architecture"><span class="sec-num">03</span>Architecture</h2>
   <div class="arch-diagram">
     <div class="arch-step">Scenario Inputs<span class="arch-step-sub">Spot, strikes, premiums</span></div>
     <div class="arch-arrow">→</div>
@@ -103,7 +120,7 @@
     <div class="arch-step">Comparison Charts</div>
   </div>
 
-  <h2><span class="sec-num">04</span>Technical Stack</h2>
+  <h2 id="stack"><span class="sec-num">04</span>Technical Stack</h2>
   <div class="tech-rationale">
     <div class="tech-rationale-item">
       <span class="tech-name">Python · NumPy</span>
@@ -130,7 +147,7 @@
     </div>
   </div>
 
-  <h2><span class="sec-num">05</span>The zero-cost collar: not as free as it sounds</h2>
+  <h2 id="collar"><span class="sec-num">05</span>The zero-cost collar: not as free as it sounds</h2>
   <p>
     The zero-cost collar is often presented as the best of both worlds: you buy a put for downside
     protection and sell a call to finance it, paying no net premium. In our scenario, the INR 2,600
@@ -152,7 +169,7 @@
     </div>
   </div>
 
-  <h2><span class="sec-num">06</span>The protective put: insurance has a cost basis</h2>
+  <h2 id="put"><span class="sec-num">06</span>The protective put: insurance has a cost basis</h2>
   <p>
     A protective put (long stock + long put) is the simplest hedge: you pay INR 48/share for the
     right to sell at INR 2,600 regardless of where RELIANCE goes. Your downside is
@@ -177,7 +194,7 @@
     </div>
   </div>
 
-  <h2><span class="sec-num">07</span>Spreads: buying the direction, selling the expensive part</h2>
+  <h2 id="spreads"><span class="sec-num">07</span>Spreads: buying the direction, selling the expensive part</h2>
   <p>
     A bull call spread is a cheaper way to express a bullish view. Instead of buying a single
     call (expensive), you buy the lower strike call and sell the higher strike call to offset
@@ -199,7 +216,7 @@
     </div>
   </div>
 
-  <h2><span class="sec-num">08</span>The straddle: a bet on movement, not direction</h2>
+  <h2 id="straddle"><span class="sec-num">08</span>The straddle: a bet on movement, not direction</h2>
   <p>
     The straddle (long ATM call + long ATM put) is structurally different from all the other
     strategies. It doesn't care which way RELIANCE moves — it profits from a large move in
@@ -218,7 +235,7 @@
     from the moment you enter.
   </p>
 
-  <h2><span class="sec-num">09</span>What each strategy costs you</h2>
+  <h2 id="cost-summary"><span class="sec-num">09</span>What each strategy costs you</h2>
 
   <div class="chart-grid" style="grid-template-columns: 1fr;">
     <div class="chart-item">
@@ -227,7 +244,7 @@
     </div>
   </div>
 
-  <h2><span class="sec-num">10</span>Strategy summary</h2>
+  <h2 id="table"><span class="sec-num">10</span>Strategy summary</h2>
   <table class="module-table">
     <thead>
       <tr><th>Strategy</th><th>Max Loss</th><th>Max Gain</th><th>Best used when</th></tr>
@@ -242,7 +259,7 @@
     </tbody>
   </table>
 
-  <h2><span class="sec-num">11</span>Engineering Challenges</h2>
+  <h2 id="challenges"><span class="sec-num">11</span>Engineering Challenges</h2>
   <div class="challenge-item">
     <h3>Making six different payoff structures directly comparable</h3>
     <p>Each strategy has a different number of legs and a different premium structure. Normalizing all six onto one shared spot-price axis — with consistent sign conventions for premium paid vs. received — took more care than the underlying options math itself.</p>
@@ -252,7 +269,7 @@
     <p>A coarse price grid gives you an approximate breakeven; getting the exact rupee figure (e.g. INR 2,848, not "around 2,850") required interpolating between grid points rather than just reading off the nearest one — small detail, but it's the difference between a real number and a rounded guess.</p>
   </div>
 
-  <h2><span class="sec-num">12</span>Business Impact</h2>
+  <h2 id="impact"><span class="sec-num">12</span>Business Impact</h2>
   <div class="impact-grid">
     <div class="impact-tile"><span class="impact-number">₹20.4K</span><span class="impact-label">Max gain the "zero-cost" collar quietly caps</span></div>
     <div class="impact-tile"><span class="impact-number">₹48</span><span class="impact-label">Breakeven shift caused by protective put premium</span></div>
@@ -267,7 +284,7 @@
     the exact amount you've given up.
   </p>
 
-  <h2><span class="sec-num">13</span>Future Improvements</h2>
+  <h2 id="future"><span class="sec-num">13</span>Future Improvements</h2>
   <ul>
     <li><strong>Implied volatility as an input</strong> rather than assumed premiums, so the breakeven and cost figures update with actual market IV rather than illustrative numbers.</li>
     <li><strong>Multi-leg custom structures</strong> — let a user combine legs freely instead of choosing from six fixed strategies, closer to how a real structuring desk works.</li>

@@ -52,7 +52,23 @@
 
 <div class="project-body">
 
-  <h2><span class="sec-num">01</span>The Problem</h2>
+  <div class="toc-row">
+    <span class="toc-label">Jump to:</span>
+    <a href="#problem">01 Problem</a>
+    <a href="#thinking">02 Thinking</a>
+    <a href="#architecture">03 Architecture</a>
+    <a href="#stack">04 Stack</a>
+    <a href="#data">05 Data</a>
+    <a href="#exposure">06 Exposure</a>
+    <a href="#theta">07 Theta Cost</a>
+    <a href="#stress">08 Stress Test</a>
+    <a href="#var-gap">09 VaR Gap</a>
+    <a href="#challenges">10 Challenges</a>
+    <a href="#impact">11 Impact</a>
+    <a href="#future">12 Future</a>
+  </div>
+
+  <h2 id="problem"><span class="sec-num">01</span>The Problem</h2>
   <p>
     Options desks report risk primarily by notional and position count, because that's what's
     easiest to pull off a trade blotter. But notional doesn't tell you what a book actually loses
@@ -68,7 +84,7 @@
     answer in Greeks, not notional, or they're making decisions on the wrong number.
   </p>
 
-  <h2><span class="sec-num">02</span>My Thinking</h2>
+  <h2 id="thinking"><span class="sec-num">02</span>My Thinking</h2>
   <p>
     The obvious first approach is to rank positions by notional and flag the largest ones for
     review — that's what most simple reporting tools do. I rejected that early: notional ignores
@@ -97,7 +113,7 @@
     </div>
   </div>
 
-  <h2><span class="sec-num">03</span>Architecture</h2>
+  <h2 id="architecture"><span class="sec-num">03</span>Architecture</h2>
   <div class="arch-diagram">
     <div class="arch-step">Position CSV<span class="arch-step-sub">10-field schema</span></div>
     <div class="arch-arrow">→</div>
@@ -112,7 +128,7 @@
     <div class="arch-step">Risk Report<span class="arch-step-sub">Heatmap + charts</span></div>
   </div>
 
-  <h2><span class="sec-num">04</span>Technical Stack</h2>
+  <h2 id="stack"><span class="sec-num">04</span>Technical Stack</h2>
   <div class="tech-rationale">
     <div class="tech-rationale-item">
       <span class="tech-name">Python · pandas / NumPy</span>
@@ -132,7 +148,7 @@
     </div>
   </div>
 
-  <h2><span class="sec-num">05</span>The input: a CSV with one row per position</h2>
+  <h2 id="data"><span class="sec-num">05</span>The input: a CSV with one row per position</h2>
   <p>
     The engine reads a single CSV file — <code>sample_portfolio.csv</code> — where each row is one
     options position. Ten columns describe everything the pricer needs:
@@ -177,7 +193,7 @@
     position into a short one with opposite risk characteristics.
   </p>
 
-  <h2><span class="sec-num">06</span>The position size view hides the real exposure</h2>
+  <h2 id="exposure"><span class="sec-num">06</span>The position size view hides the real exposure</h2>
   <p>
     The heatmap below shows each position's Greeks scaled to actual portfolio exposure. The colour
     tells you where risk is concentrated — and it's not where the largest positions are.
@@ -208,7 +224,7 @@
     and how the position sits relative to everything else on the book.
   </p>
 
-  <h2><span class="sec-num">07</span>The cost of holding options that nobody talks about</h2>
+  <h2 id="theta"><span class="sec-num">07</span>The cost of holding options that nobody talks about</h2>
   <p>
     The portfolio's net Theta is −3,131 per calendar day. That means the book loses that much
     in value just from the clock ticking — no market move required, no news event, nothing.
@@ -222,7 +238,7 @@
     you're deciding which positions to hold through expiry.
   </p>
 
-  <h2><span class="sec-num">08</span>What a market crash looks like before it happens</h2>
+  <h2 id="stress"><span class="sec-num">08</span>What a market crash looks like before it happens</h2>
   <p>
     The stress test below simulates 10 named scenarios — spot moves of ±5% and ±10%, volatility
     spikes, time decay, and combinations. NIFTY has seen −10% moves several times in the past
@@ -248,7 +264,7 @@
     These two exposures are partially offsetting. Knowing that before the crash is the point.
   </p>
 
-  <h2><span class="sec-num">09</span>The gap between two ways of measuring risk</h2>
+  <h2 id="var-gap"><span class="sec-num">09</span>The gap between two ways of measuring risk</h2>
   <p>
     Historical VaR (−107,200) and parametric VaR (−121,469) give different answers for the same
     portfolio. The difference — about INR 14,000 — comes from an assumption: parametric VaR
@@ -262,7 +278,7 @@
     volatile markets.
   </p>
 
-  <h2><span class="sec-num">10</span>Engineering Challenges</h2>
+  <h2 id="challenges"><span class="sec-num">10</span>Engineering Challenges</h2>
   <div class="challenge-item">
     <h3>Sign conventions across a mixed book</h3>
     <p>Getting Delta, Gamma, and Vega to flip sign correctly for short positions (negative qty) while keeping Theta's sign convention consistent required careful, position-by-position testing. A sign error here silently reports a hedged book as directional, or the reverse — the worst kind of bug, because the output still looks entirely plausible.</p>
@@ -272,7 +288,7 @@
     <p>The two methods disagreeing by roughly INR 14,000 initially looked like a bug, until I confirmed it was the fat-tail effect the literature predicts. Validating that meant building a synthetic returns test against a known distribution to confirm the calculation was right before trusting the real result.</p>
   </div>
 
-  <h2><span class="sec-num">11</span>Business Impact</h2>
+  <h2 id="impact"><span class="sec-num">11</span>Business Impact</h2>
   <div class="impact-grid">
     <div class="impact-tile"><span class="impact-number">45%</span><span class="impact-label">Directional exposure in a non-largest position</span></div>
     <div class="impact-tile"><span class="impact-number">₹94K</span><span class="impact-label">Theta bleed per expiry cycle, made visible</span></div>
@@ -288,7 +304,7 @@
     legible, and building the engine that produces those numbers made that language more concrete.
   </p>
 
-  <h2><span class="sec-num">12</span>Future Improvements</h2>
+  <h2 id="future"><span class="sec-num">12</span>Future Improvements</h2>
   <ul>
     <li><strong>Live position feed</strong> instead of a static CSV snapshot, so the risk report refreshes intraday rather than on demand.</li>
     <li><strong>Multi-day P&amp;L attribution</strong> — splitting realized P&amp;L into Delta/Gamma/Vega/Theta contributions day over day, the same methodology used in my day job.</li>
