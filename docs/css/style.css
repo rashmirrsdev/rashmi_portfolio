@@ -247,6 +247,9 @@ a:hover { text-decoration: underline; }
 .post-card:hover::before { transform: scaleX(1); }
 .post-card:has(.badge-placement)::before { background: var(--teal); }
 .post-card:has(.badge-ai)::before { background: var(--violet); }
+.post-card:has(.badge-futures)::before { background: #b8860b; }
+.post-card:has(.badge-risk)::before { background: #9a3412; }
+.post-card:has(.badge-career)::before { background: var(--teal); }
 .post-card:hover {
   box-shadow: 0 10px 28px rgba(13,43,85,.12);
   transform: translateY(-4px);
@@ -266,6 +269,10 @@ a:hover { text-decoration: underline; }
 }
 .badge-finance { background: var(--navy-bg); color: var(--navy); }
 .badge-placement { background: var(--teal-light); color: var(--teal); }
+.badge-futures { background: #fdf1dc; color: #8a5a06; }
+.badge-risk { background: #fbe9e6; color: #9a3412; }
+.badge-derivatives { background: var(--navy-bg); color: var(--navy); }
+.badge-career { background: var(--teal-light); color: var(--teal); }
 
 .post-card h2 {
   font-family: var(--font-serif);
@@ -1052,6 +1059,44 @@ a:hover { text-decoration: underline; }
   margin: 28px 0;
 }
 
+/* ─── Initiative blocks (Finance + AI page: parallel dashboards) ─────────── */
+.initiative-block {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 26px 28px 24px;
+  background: var(--bg-soft);
+  margin: 22px 0 32px;
+}
+.initiative-block.accent-violet { border-left: 4px solid var(--violet); }
+.initiative-block.accent-gold { border-left: 4px solid #b8860b; }
+.initiative-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.initiative-header h3 {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--text);
+  margin: 0;
+}
+.status-pill {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.status-pill-violet { background: var(--violet-light); color: var(--violet); }
+.status-pill-gold { background: #fdf1dc; color: #8a5a06; }
+.initiative-block p { margin-bottom: 1em; }
+.initiative-block .capability-grid { margin: 16px 0 4px; }
+
 /* Homepage feature banner */
 .ai-banner {
   display: block;
@@ -1165,6 +1210,7 @@ a:hover { text-decoration: underline; }
   font-weight: bold;
   color: var(--navy);
   letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums;
 }
 .stat-label {
   display: block;
@@ -1188,4 +1234,42 @@ a:hover { text-decoration: underline; }
   color: var(--navy);
   margin-bottom: 6px;
   display: block;
+}
+
+/* ─── Market ticker strip ─────────────────────────────────────────────────── */
+.ticker-wrap {
+  background: #0a2145;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  overflow: hidden;
+}
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: tickerScroll 34s linear infinite;
+}
+.ticker-set { display: flex; align-items: center; }
+.ticker-set span {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-sans);
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+  padding: 7px 0;
+  white-space: nowrap;
+}
+.ticker-set span::after {
+  content: '·';
+  margin: 0 22px;
+  color: rgba(200,169,107,.55);
+}
+@keyframes tickerScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.ticker-wrap:hover .ticker-track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track { animation: none; }
 }
