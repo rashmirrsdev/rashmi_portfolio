@@ -31,8 +31,8 @@
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
-      <li><a href="finance-ai.html">Finance + AI</a></li>
       <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="finance-ai.html">Finance + AI</a></li>
       <li><a href="finance.html">Finance &amp; Markets</a></li>
       <li><a href="for-students.html">For Students</a></li>
     </ul>
@@ -56,13 +56,79 @@
     <strong>A note on this project:</strong> This analysis is built on concepts and methodology I encountered while evaluating a real metals hedging scenario at my desk. All data here is fully synthetic — I am sharing what I <em>learned</em> about how to approach this kind of problem, not anything about the actual trade, client, or position.
   </div>
 
-  <h2>The question before the strategy</h2>
+  <h2><span class="sec-num">01</span>The Problem</h2>
   <p>
-    When a trading desk evaluates a client's metals exposure and is asked to design a hedge, the temptation is to jump straight to the hedge structure. The better question is: <em>can this actually be hedged?</em>
+    When a trading desk evaluates a client's metals exposure and is asked to design a hedge, the
+    temptation is to jump straight to the hedge structure. The better question is: <em>can this
+    actually be hedged?</em> A structure that looks correct on a term sheet is worthless if it
+    can't actually be executed without moving the market against you.
   </p>
   <p>
-    That question has a specific, quantitative answer — it lives in the open interest data. If the contracts you need to hedge into don't have sufficient liquidity, you can't get your hedge on without moving the market against yourself. Checking liquidity is step zero, not step five.
+    This is a real business pain for anyone structuring metals derivatives: clients and internal
+    stakeholders want a hedge recommendation, but the recommendation is only as good as the
+    liquidity and stress analysis underneath it. Skipping that analysis — or doing it
+    superficially — is exactly how a desk ends up recommending a hedge it can't actually put on
+    at a reasonable cost.
   </p>
+
+  <h2><span class="sec-num">02</span>My Thinking</h2>
+  <p>
+    The tempting shortcut is to treat the book as one directional exposure and stress-test a
+    single number. I rejected that: a metals book combines near-term and deferred positions that
+    respond to completely different drivers, and collapsing them into one number hides exactly
+    where the risk is concentrated.
+  </p>
+  <p>
+    I chose to decompose the book into time spreads first — separating front-end (execution/
+    slippage) risk from back-end (structural holding) risk — and only then apply stress
+    statistics to each piece separately, checking liquidity via open interest before doing
+    anything else.
+  </p>
+  <div class="alt-list">
+    <div class="alt-item">
+      <span class="alt-verdict">Rejected</span>
+      <p><strong>Single blended directional stress number.</strong> Hides whether the risk is concentrated in near-term execution or long-dated holding — two problems that need two different hedges.</p>
+    </div>
+    <div class="alt-item chosen">
+      <span class="alt-verdict">Chosen</span>
+      <p><strong>Liquidity check → time-spread decomposition → separate front/back stress.</strong> Surfaces where the risk actually sits and whether the hedge is even executable before recommending a structure.</p>
+    </div>
+  </div>
+
+  <h2><span class="sec-num">03</span>Architecture</h2>
+  <div class="arch-diagram">
+    <div class="arch-step">Open Interest Data</div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">Liquidity Screen<span class="arch-step-sub">Can it be hedged?</span></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step emphasis">Time Spread Decomposition<span class="arch-step-sub">Front vs. back</span></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">Rolling N-Day Stress<span class="arch-step-sub">max/p99/p95/min</span></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">DV01 / Lease-Rate Overlay</div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">Hedge Recommendation</div>
+  </div>
+
+  <h2><span class="sec-num">04</span>Technical Stack</h2>
+  <div class="tech-rationale">
+    <div class="tech-rationale-item">
+      <span class="tech-name">Python · pandas</span>
+      <p>Rolling N-day statistics (max, p99, p95, min) across multiple window lengths — this is fundamentally a rolling-window problem, and pandas' rolling operations make multi-window comparison straightforward.</p>
+    </div>
+    <div class="tech-rationale-item">
+      <span class="tech-name">Open interest as a liquidity proxy</span>
+      <p>Rather than assuming liquidity, treating it as a first-class, checked input — the cheapest way to catch an unhedgeable structure before any stress modelling effort is spent on it.</p>
+    </div>
+    <div class="tech-rationale-item">
+      <span class="tech-name">DV01 sensitivity (precious metals)</span>
+      <p>Standard price-based hedging doesn't capture lease-rate risk, which is specific to precious metals financing — a separate DV01 calculation was necessary rather than optional.</p>
+    </div>
+    <div class="tech-rationale-item">
+      <span class="tech-name">matplotlib</span>
+      <p>Term-structure and distribution charts that make regime shifts (contango vs. backwardation) visually immediate rather than buried in a table of numbers.</p>
+    </div>
+  </div>
 
   <div class="chart-grid" style="grid-template-columns: 1fr;">
     <div class="chart-item">
@@ -71,7 +137,7 @@
     </div>
   </div>
 
-  <h2>Time spreads: the book is not one risk, it's two</h2>
+  <h2><span class="sec-num">05</span>Time spreads: the book is not one risk, it's two</h2>
   <p>
     A metals book isn't a single directional exposure. It's a combination of near-term positions (front contracts, subject to short-term slippage) and back-end positions (deferred contracts, exposed to longer-term structural moves). These don't move together.
   </p>
@@ -86,7 +152,7 @@
     </div>
   </div>
 
-  <h2>How we stress-tested it: rolling N-day statistics</h2>
+  <h2><span class="sec-num">06</span>How we stress-tested it: rolling N-day statistics</h2>
   <p>
     Once the risk is decomposed into spreads, the stress analysis asks: how much has this spread historically moved over a given holding period? The methodology is straightforward but requires care in execution: compute the rolling N-day change in the spread price, then extract the distribution of those moves.
   </p>
@@ -101,7 +167,7 @@
     </div>
   </div>
 
-  <h2>Translating stress into P&L: front vs back</h2>
+  <h2><span class="sec-num">07</span>Translating stress into P&amp;L: front vs back</h2>
   <p>
     The stress statistics only become useful when multiplied through a position size. The insight from decomposing into time spreads is that the front-end and back-end risks have different stress profiles — and combining them into a single number hides that.
   </p>
@@ -116,7 +182,7 @@
     </div>
   </div>
 
-  <h2>Precious metal: when long means short something else</h2>
+  <h2><span class="sec-num">08</span>Precious metal: when long means short something else</h2>
   <p>
     One of the most interesting parts of this analysis was the precious metal component. In base metals, a long position is simply long price — you hedge it by going short futures. In gold, there's an additional dimension: <strong>lease rates</strong>.
   </p>
@@ -131,16 +197,35 @@
     </div>
   </div>
 
-  <h2>What this process taught me</h2>
+  <h2><span class="sec-num">09</span>Engineering Challenges</h2>
+  <div class="challenge-item">
+    <h3>Analysis that can expand indefinitely</h3>
+    <p>More windows, more percentile cuts, more decomposition layers are always possible. The real discipline was deciding when the analysis had enough rigor to support a yes/no decision, rather than continuing to add windows and cuts without a clear stopping point.</p>
+  </div>
+  <div class="challenge-item">
+    <h3>Silently wrong calculations</h3>
+    <p>In a spreadsheet-driven risk analysis, the most dangerous error isn't the wrong model — it's a calculation that looks plausible but is silently wrong. Cross-checking spread P&amp;L attribution, verifying the N-day window was computing what I thought, and confirming position signs were consistent took as much effort as the analysis itself.</p>
+  </div>
+
+  <h2><span class="sec-num">10</span>Business Impact</h2>
+  <div class="impact-grid">
+    <div class="impact-tile"><span class="impact-number">2</span><span class="impact-label">Distinct risk types separated: front-end vs. back-end</span></div>
+    <div class="impact-tile"><span class="impact-number">4</span><span class="impact-label">Rolling windows tested (1/5/10/20-day)</span></div>
+    <div class="impact-tile"><span class="impact-number">2%+</span><span class="impact-label">Lease-rate stress spike modelled via DV01</span></div>
+    <div class="impact-tile"><span class="impact-number">7yr</span><span class="impact-label">Of synthetic history used for stress distributions</span></div>
+  </div>
   <p>
-    The most valuable lesson from working through this kind of analysis wasn't a formula — it was understanding how the analysis could keep expanding indefinitely. More windows, more percentile cuts, more decomposition layers. The discipline is knowing when you have enough to make a decision, and having the confidence that your calculations are right before you do.
+    The final recommendation on a trade's viability rests on these numbers being right. Getting
+    to "yes" or "no" with confidence is the output; the rigor of the analysis — liquidity first,
+    decomposition second, stress third, rate risk last — is what earns that confidence.
   </p>
-  <p>
-    That last point matters more than it sounds. In a spreadsheet-driven risk analysis, the most dangerous error isn't using the wrong model — it's a calculation that looks plausible but is silently wrong. Cross-checking spread P&L attribution, verifying that your N-day window is actually computing what you think, confirming that your position signs are consistent — these checks are where the real care goes in a professional setting.
-  </p>
-  <p>
-    The final recommendation on a trade's viability rests on these numbers being right. Getting to "yes" or "no" with confidence is the output; the rigor of the analysis is what earns that confidence.
-  </p>
+
+  <h2><span class="sec-num">11</span>Future Improvements</h2>
+  <ul>
+    <li><strong>Real market data feed</strong> in place of the synthetic dataset, once outside a proprietary desk context.</li>
+    <li><strong>Automated liquidity alerts</strong> — flag a proposed hedge structure automatically if open interest in the required contract months falls below a usable threshold, rather than requiring a manual check.</li>
+    <li><strong>Cross-metal correlation</strong> — extend the stress framework to a multi-metal book, where spread risk in one metal can be partially offset or amplified by correlated moves in another.</li>
+  </ul>
   <p style="margin-top: 24px;">
     <a href="https://github.com/rashmirrsdev/metals-hedging-stress" target="_blank" class="btn-github">Full code and documentation on GitHub →</a>
   </p>
@@ -150,8 +235,8 @@
 <footer class="site-footer">
   <div class="footer-links">
     <a href="about.html">About</a>
-    <a href="finance-ai.html">Finance + AI</a>
     <a href="projects.html">Projects</a>
+    <a href="finance-ai.html">Finance + AI</a>
     <a href="finance.html">Finance &amp; Markets</a>
     <a href="for-students.html">For Students</a>
     <a href="https://www.linkedin.com/in/rrsk/" target="_blank">LinkedIn</a>

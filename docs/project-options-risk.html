@@ -31,8 +31,8 @@
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
-      <li><a href="finance-ai.html">Finance + AI</a></li>
       <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="finance-ai.html">Finance + AI</a></li>
       <li><a href="finance.html">Finance &amp; Markets</a></li>
       <li><a href="for-students.html">For Students</a></li>
     </ul>
@@ -52,22 +52,87 @@
 
 <div class="project-body">
 
-  <h2>What I wanted to understand</h2>
+  <h2><span class="sec-num">01</span>The Problem</h2>
   <p>
-    At Morgan Stanley I monitor options portfolios every day. One of the things that becomes clear
-    quickly is that the size of a position — the notional, the number of contracts — tells you
-    almost nothing about how much risk it's actually carrying. A small notional position can
-    dominate your entire directional exposure. A large position can be nearly flat on your book
-    because it's close to neutral Delta.
+    Options desks report risk primarily by notional and position count, because that's what's
+    easiest to pull off a trade blotter. But notional doesn't tell you what a book actually loses
+    money on. Risk managers, traders, and even risk committees routinely underestimate
+    concentration because the position that "looks small" on a blotter can quietly carry half
+    the book's directional risk — while a large position sits nearly flat because it's close to
+    neutral Delta.
   </p>
   <p>
-    I built this project to make that visible. I assembled a 12-position NSE options book across
-    NIFTY, Reliance, TCS, Infosys, and HDFC — a realistic mix of calls and puts at different
-    strikes and expiries — and ran the full risk analytics on it. The question I wanted answered:
-    if you only looked at position sizes, what would you miss?
+    This isn't hypothetical. At Morgan Stanley, monitoring live options portfolios every day is
+    exactly where this gap between notional and actual exposure shows up. Whoever owns the risk
+    report — a risk manager, a desk head, a committee reviewing exposure limits — needs the
+    answer in Greeks, not notional, or they're making decisions on the wrong number.
   </p>
 
-  <h2>The input: a CSV with one row per position</h2>
+  <h2><span class="sec-num">02</span>My Thinking</h2>
+  <p>
+    The obvious first approach is to rank positions by notional and flag the largest ones for
+    review — that's what most simple reporting tools do. I rejected that early: notional ignores
+    option type, moneyness, and how positions net against each other. A second option was Delta
+    alone, which is closer but still incomplete — Vega and Theta exposure can dominate a book's
+    real risk profile even when Delta is small, particularly around events or near expiry.
+  </p>
+  <p>
+    I settled on a full Greeks engine — Delta, Gamma, Vega, Theta, Rho — computed per position
+    from first principles via Black-Scholes, aggregated at book level, paired with both
+    historical and parametric VaR so the tail-risk answer didn't depend on a single distributional
+    assumption.
+  </p>
+  <div class="alt-list">
+    <div class="alt-item">
+      <span class="alt-verdict">Rejected</span>
+      <p><strong>Rank by notional.</strong> Misses direction and option-type effects entirely — two positions with identical notional can have opposite portfolio impact.</p>
+    </div>
+    <div class="alt-item">
+      <span class="alt-verdict">Rejected</span>
+      <p><strong>Delta only.</strong> Better than notional, but blind to Vega/Theta risk that can dominate an options book, especially around events or near expiry.</p>
+    </div>
+    <div class="alt-item chosen">
+      <span class="alt-verdict">Chosen</span>
+      <p><strong>Full Greeks engine + dual VaR.</strong> Black-Scholes Greeks per position, book-level aggregation, historical and parametric VaR side by side to expose tail-risk assumption error rather than hide it behind one number.</p>
+    </div>
+  </div>
+
+  <h2><span class="sec-num">03</span>Architecture</h2>
+  <div class="arch-diagram">
+    <div class="arch-step">Position CSV<span class="arch-step-sub">10-field schema</span></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">Black-Scholes Pricer</div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step emphasis">Greeks Engine<span class="arch-step-sub">Δ Γ ν Θ ρ</span></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">Portfolio Aggregation</div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">Stress &amp; VaR Engine</div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">Risk Report<span class="arch-step-sub">Heatmap + charts</span></div>
+  </div>
+
+  <h2><span class="sec-num">04</span>Technical Stack</h2>
+  <div class="tech-rationale">
+    <div class="tech-rationale-item">
+      <span class="tech-name">Python · pandas / NumPy</span>
+      <p>Vectorized Black-Scholes pricing across all 12 positions without per-row loops — the same approach scales cleanly to a book of hundreds of positions.</p>
+    </div>
+    <div class="tech-rationale-item">
+      <span class="tech-name">Black-Scholes-Merton</span>
+      <p>Closed-form pricing over Monte Carlo: faster, and NSE index/equity options are European-style with no early exercise to model. Closed-form Greeks are also directly differentiable, which matters for sensitivity accuracy.</p>
+    </div>
+    <div class="tech-rationale-item">
+      <span class="tech-name">matplotlib</span>
+      <p>A position-level heatmap is the fastest way to visually separate notional from Greek exposure. Static, archivable charts suit a risk report that gets shared and filed, not just viewed live.</p>
+    </div>
+    <div class="tech-rationale-item">
+      <span class="tech-name">Historical + Parametric VaR</span>
+      <p>Running both methods — rather than picking one — is itself the finding: the gap between them is exactly the kind of model risk a risk committee needs to see, not have hidden behind a single number.</p>
+    </div>
+  </div>
+
+  <h2><span class="sec-num">05</span>The input: a CSV with one row per position</h2>
   <p>
     The engine reads a single CSV file — <code>sample_portfolio.csv</code> — where each row is one
     options position. Ten columns describe everything the pricer needs:
@@ -112,7 +177,7 @@
     position into a short one with opposite risk characteristics.
   </p>
 
-  <h2>The position size view hides the real exposure</h2>
+  <h2><span class="sec-num">06</span>The position size view hides the real exposure</h2>
   <p>
     The heatmap below shows each position's Greeks scaled to actual portfolio exposure. The colour
     tells you where risk is concentrated — and it's not where the largest positions are.
@@ -143,7 +208,7 @@
     and how the position sits relative to everything else on the book.
   </p>
 
-  <h2>The cost of holding options that nobody talks about</h2>
+  <h2><span class="sec-num">07</span>The cost of holding options that nobody talks about</h2>
   <p>
     The portfolio's net Theta is −3,131 per calendar day. That means the book loses that much
     in value just from the clock ticking — no market move required, no news event, nothing.
@@ -157,7 +222,7 @@
     you're deciding which positions to hold through expiry.
   </p>
 
-  <h2>What a market crash looks like before it happens</h2>
+  <h2><span class="sec-num">08</span>What a market crash looks like before it happens</h2>
   <p>
     The stress test below simulates 10 named scenarios — spot moves of ±5% and ±10%, volatility
     spikes, time decay, and combinations. NIFTY has seen −10% moves several times in the past
@@ -183,7 +248,7 @@
     These two exposures are partially offsetting. Knowing that before the crash is the point.
   </p>
 
-  <h2>The gap between two ways of measuring risk</h2>
+  <h2><span class="sec-num">09</span>The gap between two ways of measuring risk</h2>
   <p>
     Historical VaR (−107,200) and parametric VaR (−121,469) give different answers for the same
     portfolio. The difference — about INR 14,000 — comes from an assumption: parametric VaR
@@ -197,19 +262,38 @@
     volatile markets.
   </p>
 
-  <h2>What building this taught me</h2>
+  <h2><span class="sec-num">10</span>Engineering Challenges</h2>
+  <div class="challenge-item">
+    <h3>Sign conventions across a mixed book</h3>
+    <p>Getting Delta, Gamma, and Vega to flip sign correctly for short positions (negative qty) while keeping Theta's sign convention consistent required careful, position-by-position testing. A sign error here silently reports a hedged book as directional, or the reverse — the worst kind of bug, because the output still looks entirely plausible.</p>
+  </div>
+  <div class="challenge-item">
+    <h3>Reconciling historical vs. parametric VaR</h3>
+    <p>The two methods disagreeing by roughly INR 14,000 initially looked like a bug, until I confirmed it was the fat-tail effect the literature predicts. Validating that meant building a synthetic returns test against a known distribution to confirm the calculation was right before trusting the real result.</p>
+  </div>
+
+  <h2><span class="sec-num">11</span>Business Impact</h2>
+  <div class="impact-grid">
+    <div class="impact-tile"><span class="impact-number">45%</span><span class="impact-label">Directional exposure in a non-largest position</span></div>
+    <div class="impact-tile"><span class="impact-number">₹94K</span><span class="impact-label">Theta bleed per expiry cycle, made visible</span></div>
+    <div class="impact-tile"><span class="impact-number">₹14K</span><span class="impact-label">VaR methodology gap exposed</span></div>
+    <div class="impact-tile"><span class="impact-number">12</span><span class="impact-label">Positions, 5 underlyings, one consolidated view</span></div>
+  </div>
   <p>
     The most valuable part wasn't the code — it was constructing a multi-leg book and watching
     the Greeks interact. When you add a short put to a long call position, the Delta exposure
-    shifts in ways that aren't always intuitive. The Gamma profile changes near expiry.
-    The Vega exposure can flip sign depending on how you've structured strikes.
+    shifts in ways that aren't always intuitive. Working with these numbers in a system built
+    from first principles gave me a far more concrete mental model of how derivatives books
+    actually behave — the Greek framework is the language that makes complex multi-position risk
+    legible, and building the engine that produces those numbers made that language more concrete.
   </p>
-  <p>
-    Working with these numbers in a system I built from first principles gave me a much more
-    concrete mental model of how derivatives books behave. The Greek framework is the language
-    that makes complex multi-position risk legible — and building the engine that produces those
-    numbers made that language more concrete for me.
-  </p>
+
+  <h2><span class="sec-num">12</span>Future Improvements</h2>
+  <ul>
+    <li><strong>Live position feed</strong> instead of a static CSV snapshot, so the risk report refreshes intraday rather than on demand.</li>
+    <li><strong>Multi-day P&amp;L attribution</strong> — splitting realized P&amp;L into Delta/Gamma/Vega/Theta contributions day over day, the same methodology used in my day job.</li>
+    <li><strong>Correlation-aware stress scenarios</strong> instead of single-underlying parallel shocks, since independent shocks understate risk in a correlated market-wide crash.</li>
+  </ul>
   <p style="margin-top: 24px;">
     <a href="https://github.com/rashmirrsdev/options-risk-engine" target="_blank" class="btn-github">Full code and documentation on GitHub →</a>
   </p>
@@ -219,8 +303,8 @@
 <footer class="site-footer">
   <div class="footer-links">
     <a href="about.html">About</a>
-    <a href="finance-ai.html">Finance + AI</a>
     <a href="projects.html">Projects</a>
+    <a href="finance-ai.html">Finance + AI</a>
     <a href="finance.html">Finance &amp; Markets</a>
     <a href="for-students.html">For Students</a>
     <a href="https://www.linkedin.com/in/rrsk/" target="_blank">LinkedIn</a>

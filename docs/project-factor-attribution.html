@@ -31,8 +31,8 @@
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
-      <li><a href="finance-ai.html">Finance + AI</a></li>
       <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="finance-ai.html">Finance + AI</a></li>
       <li><a href="finance.html">Finance &amp; Markets</a></li>
       <li><a href="for-students.html">For Students</a></li>
     </ul>
@@ -52,22 +52,87 @@
 
 <div class="project-body">
 
-  <h2>The question</h2>
+  <h2><span class="sec-num">01</span>The Problem</h2>
   <p>
     Every fund manager, every analyst, every investor who's picked stocks believes they have some
     edge. The market went up, their portfolio went up more — so there must be skill involved.
-    But how much of that outperformance is actually stock-selection, and how much is just the
-    market carrying everything higher?
+    This isn't just an academic question — it's the exact question a CIO asks a portfolio manager
+    at every performance review, and the exact question retail investors almost never ask
+    themselves.
   </p>
   <p>
-    This is a surprisingly hard question to answer cleanly. I wanted to build a tool that did it
-    properly: take a real portfolio on real data, separate the market component from the
-    stock-specific component, and measure both. The methodology is called return attribution —
-    it's standard practice in fund management but rarely done rigorously at the individual
-    investor level.
+    Return attribution — separating market-driven return from genuine stock-selection skill —
+    is standard practice for institutional books; I do a version of it professionally. It's
+    rarely done rigorously at the individual investor level or even by smaller funds that report
+    gross returns with no decomposition. Without it, you cannot tell if a strategy is skill or
+    luck — which means you can't decide whether to allocate more capital to it, replace the
+    manager, or trust the track record going forward.
   </p>
 
-  <h2>91 cents out of every rupee came from the index</h2>
+  <h2><span class="sec-num">02</span>My Thinking</h2>
+  <p>
+    The simplest approach — compare portfolio return to index return — tells you almost nothing.
+    A portfolio that's just a leveraged version of the index would look like "skill" under naive
+    relative performance. A single static CAPM regression over the full period is better, but it
+    hides time variation in Beta, which turns out to be exactly where the real risk lives.
+  </p>
+  <p>
+    I chose a rolling-window OLS regression (60-day) decomposing returns into a market factor and
+    an idiosyncratic residual, computed per stock and aggregated to the portfolio, paired with a
+    concentration analysis (HHI, sector breakdown) as a second, independent lens on
+    diversification.
+  </p>
+  <div class="alt-list">
+    <div class="alt-item">
+      <span class="alt-verdict">Rejected</span>
+      <p><strong>Naive relative performance</strong> (portfolio return vs. index return). Doesn't separate beta-driven co-movement from genuine stock-specific alpha.</p>
+    </div>
+    <div class="alt-item">
+      <span class="alt-verdict">Rejected</span>
+      <p><strong>Static full-period CAPM Beta.</strong> Misses time variation entirely — hides exactly the regime-dependent risk that turned out to matter most during the 2022 drawdown.</p>
+    </div>
+    <div class="alt-item chosen">
+      <span class="alt-verdict">Chosen</span>
+      <p><strong>Rolling 60-day OLS + HHI/sector overlay.</strong> Captures how Beta shifts through time, and separates "diversified by position count" from "diversified by risk factor."</p>
+    </div>
+  </div>
+
+  <h2><span class="sec-num">03</span>Architecture</h2>
+  <div class="arch-diagram">
+    <div class="arch-step">Price Data<span class="arch-step-sub">20 stocks · 3yrs</span></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">Return Calculation</div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step emphasis">Rolling OLS<span class="arch-step-sub">60-day Beta</span></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">Factor Decomposition<span class="arch-step-sub">Market vs. idiosyncratic</span></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">Concentration Analysis<span class="arch-step-sub">HHI + sector</span></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">Attribution Report</div>
+  </div>
+
+  <h2><span class="sec-num">04</span>Technical Stack</h2>
+  <div class="tech-rationale">
+    <div class="tech-rationale-item">
+      <span class="tech-name">Python · pandas / NumPy</span>
+      <p>Vectorized rolling-window regression across 20 stocks and 3 years of daily data without row-by-row loops — the calculation has to re-run cleanly every time the window shifts.</p>
+    </div>
+    <div class="tech-rationale-item">
+      <span class="tech-name">statsmodels OLS</span>
+      <p>Transparent, auditable regression math over a black-box ML model. Attribution needs to be explainable to a portfolio committee, not just accurate — you have to be able to point at exactly why a number came out the way it did.</p>
+    </div>
+    <div class="tech-rationale-item">
+      <span class="tech-name">matplotlib</span>
+      <p>Static, report-ready charts, since the deliverable here is a research note, not a live-refreshing dashboard.</p>
+    </div>
+    <div class="tech-rationale-item">
+      <span class="tech-name">yfinance</span>
+      <p>Free historical price data suitable for a portfolio project without a Bloomberg terminal license — the same methodology carries over directly once real market data access is available.</p>
+    </div>
+  </div>
+
+  <h2><span class="sec-num">05</span>91 cents out of every rupee came from the index</h2>
   <p>
     The portfolio returned 30.97% over three years (Jan 2022 – Dec 2024). When you decompose
     that into market-driven and stock-specific components, the split is stark:
@@ -107,7 +172,7 @@
     separating what the market handed to everyone.
   </p>
 
-  <h2>Beta isn't stable — and that matters in a crisis</h2>
+  <h2><span class="sec-num">06</span>Beta isn't stable — and that matters in a crisis</h2>
   <p>
     The analysis uses rolling 60-day Beta estimates, meaning Beta is recalculated continuously
     as the market evolves. What the rolling Beta chart shows is that the relationship between
@@ -139,7 +204,7 @@
     it most.
   </p>
 
-  <h2>The diversification you think you have vs. the diversification you actually have</h2>
+  <h2><span class="sec-num">07</span>The diversification you think you have vs. the diversification you actually have</h2>
   <p>
     By any standard measure, the equal-weight 20-stock portfolio is well-diversified. The
     Herfindahl-Hirschman Index (HHI) — a standard concentration metric — comes out at 0.05,
@@ -167,19 +232,38 @@
     what attribution frameworks are built to do.
   </p>
 
-  <h2>What this made me think about</h2>
+  <h2><span class="sec-num">08</span>Engineering Challenges</h2>
+  <div class="challenge-item">
+    <h3>Rolling Beta window selection</h3>
+    <p>Short windows (20-day) produced noisy, unstable Beta estimates; long windows (120-day) were too slow to capture the actual 2022 drawdown shift. I tested multiple window lengths against that known crisis period and settled on 60 days as the practical middle ground — responsive enough to matter, stable enough to trust.</p>
+  </div>
+  <div class="challenge-item">
+    <h3>Diversification metrics that disagree</h3>
+    <p>Position-level HHI alone said the portfolio was well-diversified (0.05, equivalent to 20 equal positions). It took a separate sector-level decomposition to catch the 30% Financials concentration that the position-count metric was structurally blind to — one metric wasn't wrong, it just wasn't sufficient on its own.</p>
+  </div>
+
+  <h2><span class="sec-num">09</span>Business Impact</h2>
+  <div class="impact-grid">
+    <div class="impact-tile"><span class="impact-number">91%</span><span class="impact-label">Of return explained by market factor alone</span></div>
+    <div class="impact-tile"><span class="impact-number">0.21</span><span class="impact-label">Idiosyncratic Sharpe vs. 0.71 market Sharpe</span></div>
+    <div class="impact-tile"><span class="impact-number">30%</span><span class="impact-label">Hidden sector concentration surfaced</span></div>
+    <div class="impact-tile"><span class="impact-number">3yr</span><span class="impact-label">Daily data, 20 stocks, fully decomposed</span></div>
+  </div>
   <p>
     The result I expected going in was that most return would be market-driven. The result I
     didn't fully expect was how clearly the data shows the gap between <em>measured</em>
-    diversification and <em>experienced</em> diversification during stress — and how little
-    the stock selection process actually contributed to Sharpe once you strip out the market
-    component.
+    diversification and <em>experienced</em> diversification during stress. The honest
+    implication: for anyone managing a portfolio of listed equities, the first question before
+    evaluating performance should be "what did the market contribute?" If you can't answer that,
+    you can't say anything meaningful about whether you've added value.
   </p>
-  <p>
-    The honest implication: for anyone managing a portfolio of listed equities, the first
-    question before evaluating performance should be "what did the market contribute?" If you
-    can't answer that, you can't say anything meaningful about whether you've added value.
-  </p>
+
+  <h2><span class="sec-num">10</span>Future Improvements</h2>
+  <ul>
+    <li><strong>Multi-factor model</strong> — extend from single-factor market Beta to a Fama-French-style model (size, value, momentum), so idiosyncratic return is measured against a richer benchmark than just the index.</li>
+    <li><strong>Multi-asset attribution</strong> — extend beyond equities to commodity and derivatives factor exposures, drawing directly on my day-to-day work.</li>
+    <li><strong>Real-time recalculation</strong> instead of a static historical report, so the rolling Beta and attribution update as new data arrives.</li>
+  </ul>
   <p style="margin-top: 24px;">
     <a href="https://github.com/rashmirrsdev/factor-risk-attribution" target="_blank" class="btn-github">Full code and documentation on GitHub →</a>
   </p>
@@ -189,8 +273,8 @@
 <footer class="site-footer">
   <div class="footer-links">
     <a href="about.html">About</a>
-    <a href="finance-ai.html">Finance + AI</a>
     <a href="projects.html">Projects</a>
+    <a href="finance-ai.html">Finance + AI</a>
     <a href="finance.html">Finance &amp; Markets</a>
     <a href="for-students.html">For Students</a>
     <a href="https://www.linkedin.com/in/rrsk/" target="_blank">LinkedIn</a>

@@ -47,8 +47,8 @@
     <ul class="nav-links">
       <li><a href="index.html" class="active">Home</a></li>
       <li><a href="about.html">About</a></li>
-      <li><a href="finance-ai.html">Finance + AI</a></li>
       <li><a href="projects.html">Projects</a></li>
+      <li><a href="finance-ai.html">Finance + AI</a></li>
       <li><a href="finance.html">Finance &amp; Markets</a></li>
       <li><a href="for-students.html">For Students</a></li>
     </ul>
@@ -162,6 +162,10 @@
       <div class="posts-grid">
 
         <a href="posts/rolling-contracts.html" class="post-card">
+          <svg class="card-sparkline" viewBox="0 0 300 46" preserveAspectRatio="none" aria-hidden="true">
+            <polyline points="0,40 40,36 80,29 120,25 160,19 200,15 240,9 300,5" fill="none" stroke="#b8860b" stroke-width="2.5"/>
+            <polyline points="0,18 40,22 80,20 120,28 160,32 200,26 240,30 300,24" fill="none" stroke="#0D2B55" stroke-width="2" stroke-opacity=".3"/>
+          </svg>
           <span class="category-badge badge-futures">Commodity Futures</span>
           <h2>Why commodity futures roll — and what happens to your Greeks near expiry</h2>
           <p class="excerpt">Maintaining long exposure to oil or copper means rolling from one futures contract to the next every month. Whether the curve is in contango or backwardation determines if that costs you or pays you. And in the final week before expiry, the Greeks change completely.</p>
@@ -170,14 +174,20 @@
         </a>
 
         <a href="posts/commodity-derivatives.html" class="post-card">
-          <span class="category-badge badge-risk">Risk Management</span>
-          <h2>Three years monitoring a live commodity derivatives book: what I actually learned</h2>
-          <p class="excerpt">The market doesn't care about your model. What three years of daily Bloomberg monitoring across oil, EU power, LME metals, and agricultural products actually taught me about risk.</p>
-          <div class="post-meta"><span>April 2026</span><span class="sep">·</span><span>7 min read</span></div>
-          <div class="read-more">Read post →</div>
+          <div class="post-card-stat-row">
+            <div class="post-card-stat-badge">3<span class="unit">YRS</span></div>
+            <div class="post-card-stat-content">
+              <span class="category-badge badge-risk">Risk Management</span>
+              <h2>Three years monitoring a live commodity derivatives book: what I actually learned</h2>
+              <p class="excerpt">The market doesn't care about your model. What three years of daily Bloomberg monitoring across oil, EU power, LME metals, and agricultural products actually taught me about risk.</p>
+              <div class="post-meta"><span>April 2026</span><span class="sep">·</span><span>7 min read</span></div>
+              <div class="read-more">Read post →</div>
+            </div>
+          </div>
         </a>
 
         <a href="posts/greeks-in-practice.html" class="post-card">
+          <span class="card-greek-motif" aria-hidden="true">Δ Γ ν Θ</span>
           <span class="category-badge badge-derivatives">Derivatives &amp; Greeks</span>
           <h2>What Delta, Vega, Gamma, and Theta actually mean when you're managing a live portfolio</h2>
           <p class="excerpt">The Greeks appear in every quant finance course. Here's how I actually think about them when monitoring a live derivatives book — not as formulas, but as a language for risk.</p>
@@ -186,6 +196,10 @@
         </a>
 
         <a href="posts/iit-to-morgan-stanley.html" class="post-card">
+          <div class="card-timeline" aria-hidden="true">
+            <div class="tl-track"><span class="tl-dot"></span><span class="tl-line"></span><span class="tl-dot"></span><span class="tl-line"></span><span class="tl-dot active"></span></div>
+            <div class="tl-labels"><span>IIT Madras</span><span>Offers</span><span>Morgan Stanley</span></div>
+          </div>
           <span class="category-badge badge-career">Career Journey</span>
           <h2>From IIT Madras research to Morgan Stanley front office: what the transition actually looked like</h2>
           <p class="excerpt">I had a strong quantitative background from IIT Madras but no finance experience. Here's what the transition involved, what transferred directly, and what I had to build from scratch.</p>
@@ -238,8 +252,8 @@
 <footer class="site-footer">
   <div class="footer-links">
     <a href="about.html">About</a>
-    <a href="finance-ai.html">Finance + AI</a>
     <a href="projects.html">Projects</a>
+    <a href="finance-ai.html">Finance + AI</a>
     <a href="finance.html">Finance &amp; Markets</a>
     <a href="for-students.html">For Students</a>
     <a href="https://www.linkedin.com/in/rrsk/" target="_blank">LinkedIn</a>

@@ -31,8 +31,8 @@
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
-      <li><a href="finance-ai.html">Finance + AI</a></li>
       <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="finance-ai.html">Finance + AI</a></li>
       <li><a href="finance.html">Finance &amp; Markets</a></li>
       <li><a href="for-students.html">For Students</a></li>
     </ul>
@@ -42,7 +42,7 @@
 
 <section class="page-header">
   <h1>Projects</h1>
-  <p>Open-source quantitative finance tools built in Python — grounded in methodology I use professionally.</p>
+  <p>Full case studies, not just write-ups — the problem, the reasoning, the architecture, the trade-offs, and the measured impact behind each build.</p>
 </section>
 
 <div class="content-narrow">
@@ -55,6 +55,7 @@
         <h2><a href="project-metals-hedging.html" class="project-title-link">Stress-testing a metals hedge: what the numbers actually tell you</a></h2>
         <span class="project-status status-done">Completed · June 2026</span>
       </div>
+      <div class="case-study-tags"><span>Problem</span><span class="sep">→</span><span>Thinking</span><span class="sep">→</span><span>Architecture</span><span class="sep">→</span><span>Impact</span></div>
       <p>Built from methodology I encountered on a real desk evaluation: how do you stress-test a metals derivatives book when the risk isn't one exposure but two — front-end slippage risk and back-end holding risk? The project covers liquidity screening via open interest, time spread decomposition, rolling N-day stress statistics (max, p99, p95, min), and the DV01 angle specific to precious metals — where long gold means being short lease rates and short interest rate sensitivity.</p>
       <div class="project-links">
         <a href="project-metals-hedging.html" class="project-link-primary">See the analysis →</a>
@@ -74,6 +75,7 @@
         <h2><a href="project-factor-attribution.html" class="project-title-link">How much of a portfolio's return is actually skill?</a></h2>
         <span class="project-status status-done">Completed · April 2026</span>
       </div>
+      <div class="case-study-tags"><span>Problem</span><span class="sep">→</span><span>Thinking</span><span class="sep">→</span><span>Architecture</span><span class="sep">→</span><span>Impact</span></div>
       <p>I decomposed three years of Nifty 50 returns into market-driven and stock-specific components. The result: 91% of the portfolio's 30.97% return came from just owning the index. The remaining 9% — the part that stock selection actually contributed — had a Sharpe of 0.21, against the market's 0.71. The analysis also shows why Beta shifts during a crisis, and why diversification by position count isn't the same as diversification by risk factor.</p>
       <div class="project-links">
         <a href="project-factor-attribution.html" class="project-link-primary">See the analysis →</a>
@@ -93,6 +95,7 @@
         <h2><a href="project-options-risk.html" class="project-title-link">What Greeks tell you that position size doesn't</a></h2>
         <span class="project-status status-done">Completed · May 2026</span>
       </div>
+      <div class="case-study-tags"><span>Problem</span><span class="sep">→</span><span>Thinking</span><span class="sep">→</span><span>Architecture</span><span class="sep">→</span><span>Impact</span></div>
       <p>A derivatives risk monitor for a 12-position NSE options book. One position — not the largest by notional — held 45% of the portfolio's total directional exposure. Position-size view missed it entirely. The project also shows what a -10% market crash looks like before it happens (the Vega exposure partially offsets the Delta loss), and why historical VaR and parametric VaR give different answers for the same portfolio.</p>
       <div class="project-links">
         <a href="project-options-risk.html" class="project-link-primary">See the analysis →</a>
@@ -112,6 +115,7 @@
         <h2><a href="project-hedging-strategies.html" class="project-title-link">Hedging a stock position: what six strategies actually cost you</a></h2>
         <span class="project-status status-done">Completed · May 2026</span>
       </div>
+      <div class="case-study-tags"><span>Problem</span><span class="sep">→</span><span>Thinking</span><span class="sep">→</span><span>Architecture</span><span class="sep">→</span><span>Impact</span></div>
       <p>A payoff visualiser for collars, protective puts, call spreads, bear put spreads, and straddles — applied to a 100-share RELIANCE position at INR 2,800. The zero-cost collar costs no premium but caps your upside at INR 20,400. The protective put floors your loss but shifts your breakeven to INR 2,848. The straddle needs a 6.75% move in either direction before you see a rupee of profit. Each trade-off is made visible in exact INR terms at every spot price.</p>
       <div class="project-links">
         <a href="project-hedging-strategies.html" class="project-link-primary">See the analysis →</a>
@@ -218,8 +222,8 @@
 <footer class="site-footer">
   <div class="footer-links">
     <a href="about.html">About</a>
-    <a href="finance-ai.html">Finance + AI</a>
     <a href="projects.html">Projects</a>
+    <a href="finance-ai.html">Finance + AI</a>
     <a href="finance.html">Finance &amp; Markets</a>
     <a href="for-students.html">For Students</a>
     <a href="https://www.linkedin.com/in/rrsk/" target="_blank">LinkedIn</a>

@@ -16,6 +16,7 @@
   --violet-dark:  #2f1a63;
   --font-serif: Georgia, 'Times New Roman', serif;
   --font-sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:  'SF Mono', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
   --max-w:      760px;
   --max-w-wide: 1100px;
 }
@@ -479,6 +480,25 @@ a:hover { text-decoration: underline; }
 .project-card p { color: var(--text-muted); font-size: .93rem; margin-bottom: 14px; }
 .project-title-link { color: var(--text); }
 .project-title-link:hover { color: var(--navy); text-decoration: none; }
+.case-study-tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .03em;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+.case-study-tags span:not(.sep) {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 3px 8px;
+}
+.case-study-tags .sep { opacity: .4; }
 .project-links { display: flex; align-items: center; gap: 14px; margin-bottom: 4px; }
 .project-link-primary {
   font-size: .85rem;
@@ -500,11 +520,13 @@ a:hover { text-decoration: underline; }
 
 .project-skills { display: flex; flex-wrap: wrap; gap: 7px; }
 .skill-tag {
-  font-size: .75rem;
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  font-weight: 600;
   background: var(--navy-bg);
   color: var(--navy);
-  padding: 3px 10px;
-  border-radius: 20px;
+  padding: 4px 10px;
+  border-radius: 5px;
 }
 
 /* ─── Project detail pages ───────────────────────────────────────────────── */
@@ -1034,6 +1056,7 @@ a:hover { text-decoration: underline; }
   background: var(--bg-soft);
   border-left: 3px solid var(--violet);
 }
+.accent-gold .capability-card { border-left-color: #b8860b; }
 .capability-card h3 {
   font-size: .95rem;
   color: var(--navy);
@@ -1273,3 +1296,241 @@ a:hover { text-decoration: underline; }
 @media (prefers-reduced-motion: reduce) {
   .ticker-track { animation: none; }
 }
+
+/* ─── Research-note section numbering (project deep-dives) ──────────────── */
+.project-body h2 .sec-num {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  font-weight: 700;
+  color: #b8860b;
+  letter-spacing: .06em;
+  margin-right: 10px;
+}
+.project-body h2 .sec-kicker {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+/* ─── Architecture / workflow diagram ────────────────────────────────────── */
+.arch-diagram {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin: 20px 0 30px;
+  padding: 28px 22px;
+  background: var(--navy-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.arch-step {
+  background: var(--bg);
+  border: 1px solid var(--navy);
+  border-radius: 8px;
+  padding: 11px 16px;
+  font-family: var(--font-mono);
+  font-size: .76rem;
+  font-weight: 700;
+  color: var(--navy);
+  text-align: center;
+  line-height: 1.3;
+  box-shadow: 0 2px 6px rgba(13,43,85,.06);
+}
+.arch-step.emphasis { background: var(--navy); color: #fff; }
+.arch-step .arch-step-sub {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: .68rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.arch-step.emphasis .arch-step-sub { color: rgba(255,255,255,.7); }
+.arch-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--navy);
+  opacity: .38;
+  font-size: 1.05rem;
+  padding: 0 10px;
+  flex-shrink: 0;
+}
+@media (max-width: 680px) {
+  .arch-diagram { flex-direction: column; padding: 22px 16px; }
+  .arch-step { width: 100%; max-width: 280px; }
+  .arch-arrow { transform: rotate(90deg); padding: 2px 0; }
+}
+
+/* ─── Tech stack with rationale ──────────────────────────────────────────── */
+.tech-rationale { display: flex; flex-direction: column; gap: 10px; margin: 16px 0 28px; }
+.tech-rationale-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 13px 16px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.tech-rationale-item .tech-name {
+  font-family: var(--font-mono);
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--navy);
+  background: var(--navy-bg);
+  padding: 5px 11px;
+  border-radius: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.tech-rationale-item p { margin: 0; font-size: .87rem; line-height: 1.6; }
+
+/* ─── Challenges (engineering + business) ────────────────────────────────── */
+.challenge-item {
+  border-left: 3px solid #b8860b;
+  padding: 2px 0 2px 18px;
+  margin-bottom: 20px;
+}
+.challenge-item:last-child { margin-bottom: 0; }
+.challenge-item h3 {
+  font-size: .92rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 5px;
+}
+.challenge-item p { margin: 0; }
+
+/* ─── Quantified business impact ─────────────────────────────────────────── */
+.impact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+  margin: 16px 0 28px;
+}
+.impact-tile {
+  background: var(--navy-bg);
+  border-radius: 8px;
+  padding: 18px 14px;
+  text-align: center;
+}
+.impact-number {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--navy);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+.impact-label {
+  display: block;
+  font-size: .7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-top: 5px;
+}
+
+/* ─── Decision-support callout ───────────────────────────────────────────── */
+.decision-callout {
+  background: linear-gradient(135deg, var(--navy) 0%, #17396b 100%);
+  color: #fff;
+  border-radius: 10px;
+  padding: 22px 26px;
+  margin: 26px 0;
+}
+.decision-callout p { color: rgba(255,255,255,.88); margin: 0; }
+.decision-callout strong { color: #c8a96b; }
+
+/* ─── Alternatives-considered comparison ─────────────────────────────────── */
+.alt-list { display: flex; flex-direction: column; gap: 10px; margin: 16px 0 28px; }
+.alt-item {
+  display: flex;
+  gap: 14px;
+  padding: 13px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  align-items: flex-start;
+}
+.alt-item.chosen { border-color: var(--teal); background: var(--teal-light); }
+.alt-verdict {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 1px;
+  background: var(--bg-soft);
+  color: var(--text-muted);
+}
+.alt-item.chosen .alt-verdict { background: var(--teal); color: #fff; }
+.alt-item p { margin: 0; font-size: .87rem; line-height: 1.6; }
+.alt-item strong { color: var(--text); }
+
+/* ─── Blog card visual motifs (Finance & Markets variety) ────────────────── */
+.card-sparkline { width: 100%; height: 42px; display: block; margin-bottom: 14px; }
+
+.post-card-stat-row { display: flex; gap: 16px; align-items: flex-start; flex: 1; }
+.post-card-stat-badge {
+  flex-shrink: 0;
+  width: 60px; height: 60px;
+  border-radius: 10px;
+  background: var(--navy);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-weight: bold;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+.post-card-stat-badge .unit {
+  font-family: var(--font-mono);
+  font-size: .52rem;
+  letter-spacing: .05em;
+  margin-top: 3px;
+  color: rgba(255,255,255,.7);
+}
+.post-card-stat-content { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+
+.card-greek-motif {
+  position: absolute;
+  top: 14px; right: 18px;
+  font-family: var(--font-serif);
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: var(--navy);
+  opacity: .09;
+  letter-spacing: .04em;
+  pointer-events: none;
+}
+
+.card-timeline { margin-bottom: 14px; }
+.tl-track { display: flex; align-items: center; }
+.tl-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--bg); border: 2px solid var(--teal); flex-shrink: 0; }
+.tl-dot.active { border-color: #b8860b; background: #b8860b; }
+.tl-line { flex: 1; height: 1px; background: var(--border); margin: 0 3px; }
+.tl-labels { display: flex; justify-content: space-between; margin-top: 5px; }
+.tl-labels span {
+  font-family: var(--font-mono);
+  font-size: .6rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .02em;
+}
+.tl-labels span:last-child { color: #8a5a06; font-weight: 700; }

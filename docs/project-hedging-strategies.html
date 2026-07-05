@@ -31,8 +31,8 @@
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
-      <li><a href="finance-ai.html">Finance + AI</a></li>
       <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="finance-ai.html">Finance + AI</a></li>
       <li><a href="finance.html">Finance &amp; Markets</a></li>
       <li><a href="for-students.html">For Students</a></li>
     </ul>
@@ -52,17 +52,74 @@
 
 <div class="project-body">
 
-  <h2>The question hedging is really asking</h2>
+  <h2><span class="sec-num">01</span>The Problem</h2>
   <p>
     When someone says they've "hedged" a position, that statement is almost always incomplete.
     What did they give up to hedge it? How much does the protection cost — not just in premium,
-    but in capped upside, in shifted breakevens, in complexity? Every hedge is a trade-off,
-    and the payoff diagram is the clearest way to see exactly what that trade-off is.
+    but in capped upside, in shifted breakevens, in complexity? Every hedge is a trade-off, and
+    most conversations about hedging skip straight past the trade-off to the conclusion.
   </p>
   <p>
-    I built this project around a concrete scenario: you hold 100 shares of RELIANCE at
-    INR 2,800. The market is uncertain. You want to reduce downside risk — but the question is
-    which approach you take, because each one gives you a different P&amp;L profile.
+    This gap shows up constantly with retail investors and even junior desk analysts: "zero-cost
+    collar" gets described as free protection, full stop. Nobody asks what was given up to get
+    that zero. The business pain is real — a client or a trader who doesn't see the actual payoff
+    shape can end up in a structure that doesn't match their actual view, and only discovers the
+    mismatch when the market moves.
+  </p>
+
+  <h2><span class="sec-num">02</span>My Thinking</h2>
+  <p>
+    I could have written this as a qualitative comparison — a table of pros and cons per
+    strategy. I rejected that: qualitative descriptions are exactly what let "zero-cost" framing
+    slide past people unchallenged. The only way to make the trade-off undeniable is to compute
+    the exact payoff at every spot price and plot it.
+  </p>
+  <p>
+    I built this around one concrete scenario — 100 shares of RELIANCE at INR 2,800 — and priced
+    all six strategies against the same underlying, the same expiry, the same starting point, so
+    they're directly comparable rather than abstract examples with different assumptions baked in.
+  </p>
+  <div class="alt-list">
+    <div class="alt-item">
+      <span class="alt-verdict">Rejected</span>
+      <p><strong>Qualitative pros/cons table.</strong> This is exactly the format that lets "zero-cost" framing go unchallenged — it describes strategies without quantifying what each one actually costs.</p>
+    </div>
+    <div class="alt-item chosen">
+      <span class="alt-verdict">Chosen</span>
+      <p><strong>Exact payoff computation across one shared scenario.</strong> Same underlying, same expiry, same starting price for all six strategies — trade-offs become a direct, visual comparison instead of six separate stories.</p>
+    </div>
+  </div>
+
+  <h2><span class="sec-num">03</span>Architecture</h2>
+  <div class="arch-diagram">
+    <div class="arch-step">Scenario Inputs<span class="arch-step-sub">Spot, strikes, premiums</span></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step emphasis">Payoff Engine<span class="arch-step-sub">6 strategies</span></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">Breakeven Solver<span class="arch-step-sub">Linear interpolation</span></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">Risk/Cost Summary</div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">Comparison Charts</div>
+  </div>
+
+  <h2><span class="sec-num">04</span>Technical Stack</h2>
+  <div class="tech-rationale">
+    <div class="tech-rationale-item">
+      <span class="tech-name">Python · NumPy</span>
+      <p>Payoff functions computed as vectorized arrays across a spot-price range, not point-by-point — makes the smooth payoff curves and exact breakevens possible.</p>
+    </div>
+    <div class="tech-rationale-item">
+      <span class="tech-name">Linear interpolation</span>
+      <p>Breakeven prices rarely land exactly on a computed grid point; interpolating between the nearest two points gives an exact rupee-level breakeven instead of an approximate one.</p>
+    </div>
+    <div class="tech-rationale-item">
+      <span class="tech-name">matplotlib</span>
+      <p>Overlaying all six payoff curves on shared axes is what makes the trade-offs visible at a glance — this is a case where the chart <em>is</em> the finding, not just an illustration of it.</p>
+    </div>
+  </div>
+
+  <p>
     The chart below shows all six strategies at once, measured at expiry.
   </p>
 
@@ -73,7 +130,7 @@
     </div>
   </div>
 
-  <h2>The zero-cost collar: not as free as it sounds</h2>
+  <h2><span class="sec-num">05</span>The zero-cost collar: not as free as it sounds</h2>
   <p>
     The zero-cost collar is often presented as the best of both worlds: you buy a put for downside
     protection and sell a call to finance it, paying no net premium. In our scenario, the INR 2,600
@@ -95,7 +152,7 @@
     </div>
   </div>
 
-  <h2>The protective put: insurance has a cost basis</h2>
+  <h2><span class="sec-num">06</span>The protective put: insurance has a cost basis</h2>
   <p>
     A protective put (long stock + long put) is the simplest hedge: you pay INR 48/share for the
     right to sell at INR 2,600 regardless of where RELIANCE goes. Your downside is
@@ -120,7 +177,7 @@
     </div>
   </div>
 
-  <h2>Spreads: buying the direction, selling the expensive part</h2>
+  <h2><span class="sec-num">07</span>Spreads: buying the direction, selling the expensive part</h2>
   <p>
     A bull call spread is a cheaper way to express a bullish view. Instead of buying a single
     call (expensive), you buy the lower strike call and sell the higher strike call to offset
@@ -142,7 +199,7 @@
     </div>
   </div>
 
-  <h2>The straddle: a bet on movement, not direction</h2>
+  <h2><span class="sec-num">08</span>The straddle: a bet on movement, not direction</h2>
   <p>
     The straddle (long ATM call + long ATM put) is structurally different from all the other
     strategies. It doesn't care which way RELIANCE moves — it profits from a large move in
@@ -161,7 +218,7 @@
     from the moment you enter.
   </p>
 
-  <h2>What each strategy costs you</h2>
+  <h2><span class="sec-num">09</span>What each strategy costs you</h2>
 
   <div class="chart-grid" style="grid-template-columns: 1fr;">
     <div class="chart-item">
@@ -170,7 +227,7 @@
     </div>
   </div>
 
-  <h2>Strategy summary</h2>
+  <h2><span class="sec-num">10</span>Strategy summary</h2>
   <table class="module-table">
     <thead>
       <tr><th>Strategy</th><th>Max Loss</th><th>Max Gain</th><th>Best used when</th></tr>
@@ -185,21 +242,37 @@
     </tbody>
   </table>
 
-  <h2>What building this showed me</h2>
+  <h2><span class="sec-num">11</span>Engineering Challenges</h2>
+  <div class="challenge-item">
+    <h3>Making six different payoff structures directly comparable</h3>
+    <p>Each strategy has a different number of legs and a different premium structure. Normalizing all six onto one shared spot-price axis — with consistent sign conventions for premium paid vs. received — took more care than the underlying options math itself.</p>
+  </div>
+  <div class="challenge-item">
+    <h3>Exact breakeven, not approximate</h3>
+    <p>A coarse price grid gives you an approximate breakeven; getting the exact rupee figure (e.g. INR 2,848, not "around 2,850") required interpolating between grid points rather than just reading off the nearest one — small detail, but it's the difference between a real number and a rounded guess.</p>
+  </div>
+
+  <h2><span class="sec-num">12</span>Business Impact</h2>
+  <div class="impact-grid">
+    <div class="impact-tile"><span class="impact-number">₹20.4K</span><span class="impact-label">Max gain the "zero-cost" collar quietly caps</span></div>
+    <div class="impact-tile"><span class="impact-number">₹48</span><span class="impact-label">Breakeven shift caused by protective put premium</span></div>
+    <div class="impact-tile"><span class="impact-number">6.75%</span><span class="impact-label">Move required for the straddle to profit</span></div>
+    <div class="impact-tile"><span class="impact-number">6</span><span class="impact-label">Strategies compared on one shared scenario</span></div>
+  </div>
   <p>
     Working through the exact numbers — not qualitative descriptions but actual INR payoffs at
-    every spot price — made the trade-offs much more concrete. The collar's "zero cost" framing
-    always bothered me slightly because it obscures the real cost, which is the forfeited upside.
-    The payoff diagram makes that visible immediately: the two flat regions on either side are
+    every spot price — made the trade-offs concrete. The collar's "zero cost" framing always
+    bothered me slightly because it obscures the real cost, which is the forfeited upside; the
+    payoff diagram makes that visible immediately, since the two flat regions on either side are
     the exact amount you've given up.
   </p>
-  <p>
-    The straddle breakeven calculation (INR 189, or 6.75% in either direction) is another one
-    that's obvious in a diagram but easy to underestimate when you think about it abstractly.
-    Before a results announcement, you're essentially betting that the stock moves more than
-    implied vol suggests it will. If the market has already priced a 6% move and the actual
-    move is 5%, you lose — even if your directional call was right.
-  </p>
+
+  <h2><span class="sec-num">13</span>Future Improvements</h2>
+  <ul>
+    <li><strong>Implied volatility as an input</strong> rather than assumed premiums, so the breakeven and cost figures update with actual market IV rather than illustrative numbers.</li>
+    <li><strong>Multi-leg custom structures</strong> — let a user combine legs freely instead of choosing from six fixed strategies, closer to how a real structuring desk works.</li>
+    <li><strong>P&amp;L path over time</strong>, not just at expiry — showing how each strategy's value evolves day by day as time decay and IV change, not only the terminal payoff.</li>
+  </ul>
   <p style="margin-top: 24px;">
     <a href="https://github.com/rashmirrsdev/options-hedging-strategies" target="_blank" class="btn-github">Full code and documentation on GitHub →</a>
   </p>
@@ -209,8 +282,8 @@
 <footer class="site-footer">
   <div class="footer-links">
     <a href="about.html">About</a>
-    <a href="finance-ai.html">Finance + AI</a>
     <a href="projects.html">Projects</a>
+    <a href="finance-ai.html">Finance + AI</a>
     <a href="finance.html">Finance &amp; Markets</a>
     <a href="for-students.html">For Students</a>
     <a href="https://www.linkedin.com/in/rrsk/" target="_blank">LinkedIn</a>

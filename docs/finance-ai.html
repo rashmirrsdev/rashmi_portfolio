@@ -31,8 +31,8 @@
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
-      <li><a href="finance-ai.html" class="active">Finance + AI</a></li>
       <li><a href="projects.html">Projects</a></li>
+      <li><a href="finance-ai.html" class="active">Finance + AI</a></li>
       <li><a href="finance.html">Finance &amp; Markets</a></li>
       <li><a href="for-students.html">For Students</a></li>
     </ul>
@@ -55,7 +55,7 @@
 
 <div class="project-body">
 
-  <h2>Why this section exists</h2>
+  <h2><span class="sec-num">01</span>Why This Section Exists</h2>
   <p>
     AI tooling has changed how fast a domain expert can turn what's in their head into working
     software. I spent three years learning exactly how commodity risk desks think — what a
@@ -68,28 +68,58 @@
     That gap is closing. Working inside VS Code with GitHub Copilot and agent-based AI assistants,
     I can move from "here's how a risk manager thinks about this problem" to a working prototype
     in a fraction of the time it used to take — without outsourcing the judgment calls that
-    actually matter. This section tracks that work: what I'm building, how I'm building it, and
-    what I'm learning about AI as a tool for financial engineering rather than a replacement for
-    financial judgment.
+    actually matter. This section tracks two initiatives: what each one solves, how it's built,
+    and what I'm learning about AI as a tool for financial engineering rather than a replacement
+    for financial judgment.
   </p>
 
-  <h2>What I'm building now</h2>
-  <p>
-    Two parallel initiatives, both early-stage and both built the same way: GitHub Copilot and
-    agent-based AI tooling inside VS Code doing the implementation, while I own the domain
-    judgment — what the tool needs to show, and what "correct" looks like for a given risk or
-    deal metric.
-  </p>
+  <h2><span class="sec-num">02</span>The AI-Assisted Commodity Risk Dashboard</h2>
 
   <div class="initiative-block accent-violet reveal">
     <div class="initiative-header">
       <h3>AI-Assisted Commodity Risk Dashboard</h3>
       <span class="status-pill status-pill-violet">Leading · Early-stage</span>
     </div>
+
     <p>
-      A ground-up rethink of how our desks visualise risk across a diverse derivatives book
-      spanning oil, EU power and natural gas, LME metals, and agricultural markets.
+      <strong>Business value.</strong> Today, getting a full picture of commodity risk across
+      forward curves, time spreads, and cross-curve relationships means checking several
+      spreadsheets and tools and manually piecing the view together — slow, inconsistent between
+      people, and easy to get subtly wrong under time pressure. This dashboard is a ground-up
+      rethink of how our desks visualise that risk across a diverse derivatives book spanning
+      oil, EU power and natural gas, LME metals, and agricultural markets, so the full picture
+      is one screen, not five.
     </p>
+
+    <div class="arch-diagram">
+      <div class="arch-step">Market Data Feed</div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step">Cleaning &amp; Normalization</div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step emphasis">Curve &amp; Spread Engine</div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step">Risk Aggregation</div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step">Visualization Layer</div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step">Decision Support</div>
+    </div>
+
+    <p>
+      <strong>AI workflow.</strong> GitHub Copilot and agent-based AI tooling in VS Code handle
+      the data plumbing and scaffolding — ingestion, normalization, the repetitive parts of the
+      visualization layer — while I own the judgment calls: which view a risk manager actually
+      needs at 8am, what "correct" looks like for a given curve or spread calculation, and how
+      the interface should behave when someone is checking it under time pressure, not browsing
+      it at leisure.
+    </p>
+    <p>
+      <strong>UX principle.</strong> Built for a trader or risk manager glancing at it between
+      meetings, not for someone with twenty minutes to explore a dense spreadsheet. Every view
+      is designed to answer one question fast, with the option to drill in — not the reverse.
+    </p>
+
+    <h3 style="margin-top:1.6em;">What it surfaces</h3>
     <div class="capability-grid">
       <div class="capability-card reveal">
         <h3>Forward Curves</h3>
@@ -108,6 +138,31 @@
         <p>Aggregated statistics and exposure views for baskets of related positions, so risk that's invisible trade-by-trade becomes visible at the basket level.</p>
       </div>
     </div>
+
+    <div class="decision-callout">
+      <p><strong>Decision support, not just reporting.</strong> The point isn't a prettier chart of the same numbers — it's a screen a risk manager can look at once and act on, instead of a report they have to interpret and then go verify against three other sources.</p>
+    </div>
+  </div>
+
+  <h2><span class="sec-num">03</span>Flagship: Deal Structure Analytics Dashboard</h2>
+  <p>
+    This is the initiative I'm most invested in right now. When a desk evaluates a new deal
+    structure, the analysis today is fragmented by construction: risk analytics come from one
+    tool, scenario P&amp;L gets built in a spreadsheet, sensitivities come from a separate model,
+    and someone — usually the most senior person in the room — has to reconcile all of it into a
+    recommendation. Every handoff between tools is a place for a stale number or an inconsistent
+    assumption to creep in, and the person approving the deal rarely sees the full picture in one
+    place.
+  </p>
+  <p>
+    The Deal Structure Analytics Dashboard is a one-stop analytics platform built to let a risk
+    manager evaluate a new deal structure — exposure, scenario P&amp;L, risk metrics, and
+    sensitivities — from a single interface, instead of stitching that picture together by hand
+    every time a new structure comes up for approval.
+  </p>
+
+  <div class="decision-callout">
+    <p><strong>This is not just analytics — it's decision support.</strong> The output isn't a set of numbers to interpret; it's an approval-ready comparison built to answer the question a Director or MD is actually asking: is this deal structure worth approving, and how does it compare to the alternative?</p>
   </div>
 
   <div class="initiative-block accent-gold reveal">
@@ -115,34 +170,68 @@
       <h3>Deal Structure Analytics Dashboard</h3>
       <span class="status-pill status-pill-gold">Leading · Early-stage</span>
     </div>
-    <p>
-      A single dashboard for evaluating potential deal structures — replacing what currently
-      depends on an experienced person manually assessing each structuring alternative from
-      scratch with a systematic, repeatable comparison.
-    </p>
+
+    <h3>Conceptual workflow</h3>
+    <div class="arch-diagram">
+      <div class="arch-step">Deal Terms Input</div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step">Exposure Calculation</div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step emphasis">Scenario P&amp;L Engine</div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step">Risk Metrics<span class="arch-step-sub">Sensitivities</span></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step">Multi-Scenario Comparison</div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step">Approval Decision Support</div>
+    </div>
+
+    <h3 style="margin-top:1.6em;">What it does</h3>
     <div class="capability-grid">
       <div class="capability-card reveal">
-        <h3>Risk Analytics</h3>
-        <p>The risk profile a given deal structure would create — sensitivities and exposures, evaluated consistently across alternatives rather than assessed one-off.</p>
+        <h3>Deal Exposure</h3>
+        <p>Understand the exposure a proposed deal structure creates before it's ever booked, not after.</p>
       </div>
       <div class="capability-card reveal">
-        <h3>Scenario Impact</h3>
-        <p>How each structure responds under different market scenarios, so the trade-offs between structuring choices are visible before a deal is agreed, not after.</p>
+        <h3>Scenario P&amp;L</h3>
+        <p>Calculate P&amp;L outcomes across multiple market scenarios in one pass, instead of rebuilding the spreadsheet for each new scenario.</p>
       </div>
       <div class="capability-card reveal">
-        <h3>P&amp;L Outcomes</h3>
-        <p>Projected P&amp;L across structures side by side, turning "which structure is better" into a direct, evidence-based comparison instead of a judgment call.</p>
+        <h3>Risk Metrics</h3>
+        <p>The sensitivities and risk metrics a structure would carry, evaluated consistently rather than assessed one-off by whoever picks up the request.</p>
+      </div>
+      <div class="capability-card reveal">
+        <h3>Scenario Comparison</h3>
+        <p>Compare multiple market scenarios side by side rather than one at a time — the comparison itself is often the insight.</p>
+      </div>
+      <div class="capability-card reveal">
+        <h3>Sensitivity Visualization</h3>
+        <p>Visualize how a deal's value moves against each key input, so "what if rates move" has a direct visual answer, not a follow-up analysis request.</p>
+      </div>
+      <div class="capability-card reveal">
+        <h3>Approval Decision Support</h3>
+        <p>A single, approval-ready view instead of five reconciled spreadsheets — built for the moment someone has to actually decide.</p>
       </div>
     </div>
+
+    <h3 style="margin-top:1.6em;">Why one interface matters</h3>
+    <p>
+      Bringing exposure, scenario P&amp;L, risk metrics, and sensitivities into a single interface
+      isn't a convenience feature — it removes an entire class of error. When four different
+      tools each pull market data on their own schedule, it's possible for a scenario P&amp;L
+      figure and a sensitivities figure to be quietly built on different snapshots of the market.
+      One interface means one source of truth for the numbers behind a single decision, and a
+      faster path from "a new deal structure lands on the desk" to "we have an answer."
+    </p>
   </div>
 
-  <h2>How I'm building it</h2>
+  <h2><span class="sec-num">04</span>How I'm Building Both</h2>
   <p>
     The workflow is agent-based AI development inside VS Code: GitHub Copilot and AI agents
     handle a large share of the implementation — scaffolding, boilerplate, iteration — while I
     own the parts that require actual domain judgment: what the tool needs to show, what
-    "correct" looks like for a given risk metric, and how a trader or risk manager should be
-    able to interact with it under pressure, not just in a demo.
+    "correct" looks like for a given risk or deal metric, and how a trader or risk manager should
+    be able to interact with it under pressure, not just in a demo.
   </p>
   <p>
     That division of labour is the actual point. AI tooling doesn't remove the need for
@@ -153,7 +242,7 @@
     request with an engineering team.
   </p>
 
-  <h2>The bigger goal</h2>
+  <h2><span class="sec-num">05</span>The Bigger Goal</h2>
   <p>
     Risk and deal-evaluation tools at most desks look the way they've looked for a decade —
     dense tables, static reports, context split across five different tools. I want to change
@@ -176,8 +265,8 @@
 <footer class="site-footer">
   <div class="footer-links">
     <a href="about.html">About</a>
-    <a href="finance-ai.html">Finance + AI</a>
     <a href="projects.html">Projects</a>
+    <a href="finance-ai.html">Finance + AI</a>
     <a href="finance.html">Finance &amp; Markets</a>
     <a href="for-students.html">For Students</a>
     <a href="https://www.linkedin.com/in/rrsk/" target="_blank">LinkedIn</a>
