@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rolling Beta Benchmarking — Rashmi Rama Sushil</title>
+  <meta name="description" content="How an energy book with crude, heating oil, and gasoline exposure gets collapsed into one Brent-equivalent number — using rolling-window beta, not a static regression." />
+  <link rel="canonical" href="https://rashmirrsdev.github.io/rashmi_portfolio/project-beta-benchmarking.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rashmi Rama Sushil" />
+  <meta property="og:title" content="Rolling Beta Benchmarking — Rashmi Rama Sushil" />
+  <meta property="og:description" content="How an energy book with crude, heating oil, and gasoline exposure gets collapsed into one Brent-equivalent number — using rolling-window beta, not a static regression." />
+  <meta property="og:url" content="https://rashmirrsdev.github.io/rashmi_portfolio/project-beta-benchmarking.html" />
+  <meta property="og:image" content="https://rashmirrsdev.github.io/rashmi_portfolio/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Rolling Beta Benchmarking — Rashmi Rama Sushil" />
+  <meta name="twitter:description" content="How an energy book with crude, heating oil, and gasoline exposure gets collapsed into one Brent-equivalent number — using rolling-window beta, not a static regression." />
+  <meta name="twitter:image" content="https://rashmirrsdev.github.io/rashmi_portfolio/img/social-card.png" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <noscript><style>.reveal{opacity:1!important;transform:none!important;}</style></noscript>
+  <style>
+    .tool-card { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin: 20px 0; }
+    .tool-controls { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end; margin-bottom: 16px; }
+    .tool-field { display: flex; flex-direction: column; gap: 6px; min-width: 180px; }
+    .tool-field label { font-size: .78rem; font-weight: 600; color: var(--text-muted); letter-spacing: .02em; }
+    .tool-field select, .tool-field input[type=range] { width: 100%; }
+    .tool-field .value-readout { font-family: 'Courier New', monospace; font-size: .82rem; color: var(--navy); }
+    .tool-canvas-wrap { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 8px; }
+    .tool-canvas-wrap canvas { width: 100%; height: 280px; display: block; }
+    .tool-readout-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 14px; }
+    .tool-readout-tile { background: #fff; border: 1px solid var(--border); border-radius: 7px; padding: 10px 14px; }
+    .tool-readout-tile .rt-label { display: block; font-size: .72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+    .tool-readout-tile .rt-value { display: block; font-size: 1.15rem; font-weight: 700; color: var(--navy); font-family: 'Courier New', monospace; }
+    .tool-note { font-size: .78rem; color: var(--text-muted); margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav-inner">
+    <a href="index.html" class="site-logo">Rashmi <span>Rama Sushil</span></a>
+    <button class="nav-toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="finance-ai.html">Finance + AI</a></li>
+      <li><a href="finance.html">Finance &amp; Markets</a></li>
+      <li><a href="for-students.html">For Students</a></li>
+    </ul>
+  </nav>
+</header>
+<div class="ticker-wrap"><div class="ticker-track"><div class="ticker-set"><span>Crude Oil</span><span>EU Power &amp; Natural Gas</span><span>LME Metals</span><span>Agricultural Markets</span><span>Asian Futures · DCE/SGX</span><span>Derivatives &amp; Greeks</span><span>Risk Analytics</span><span>Finance + AI</span></div><div class="ticker-set" aria-hidden="true"><span>Crude Oil</span><span>EU Power &amp; Natural Gas</span><span>LME Metals</span><span>Agricultural Markets</span><span>Asian Futures · DCE/SGX</span><span>Derivatives &amp; Greeks</span><span>Risk Analytics</span><span>Finance + AI</span></div></div></div>
+
+<div class="project-detail-header">
+  <a href="projects.html" class="back-link">← Back to Projects</a>
+  <h1>One exposure number for many instruments: rolling beta benchmarking</h1>
+  <p>Crude, heating oil, and gasoline don't move as one thing — but a risk desk still needs to answer "what's my net exposure?" in a single number. This is the technique that gets you there, and why it has to be recalculated constantly rather than fixed once.</p>
+  <div class="project-detail-meta">
+    <a href="https://github.com/rashmirrsdev/beta-benchmarking" target="_blank" class="btn-github">View code on GitHub</a>
+    <span class="project-status status-done" style="margin-top:2px;">Completed · August 2026</span>
+  </div>
+</div>
+
+<div class="project-body">
+
+  <div class="toc-row">
+    <span class="toc-label">Jump to:</span>
+    <a href="#problem">01 Problem</a>
+    <a href="#thinking">02 Thinking</a>
+    <a href="#architecture">03 Architecture</a>
+    <a href="#stack">04 Stack</a>
+    <a href="#oil-beta">05 Oil Complex</a>
+    <a href="#gas-beta">06 Gas Complex</a>
+    <a href="#aggregation">07 One Number</a>
+    <a href="#tool">08 Try It</a>
+    <a href="#challenges">09 Challenges</a>
+    <a href="#impact">10 Impact</a>
+    <a href="#future">11 Future</a>
+  </div>
+
+  <h2 id="problem"><span class="sec-num">01</span>The Problem</h2>
+  <p>
+    A book that holds crude oil alongside refined products — heating oil, gasoline — isn't
+    holding one risk, it's holding several correlated but distinct ones. Reporting "40 lots of
+    WTI, -25 of heating oil, 15 of RBOB" tells a risk committee almost nothing about net
+    directional exposure, because the three don't move one-for-one with each other or with the
+    benchmark everyone actually prices the complex off of.
+  </p>
+  <p>
+    This is a real problem on any desk that runs a multi-instrument commodity book: dozens of
+    line items, no single number that says "if the complex moves 1%, I make or lose X." Monitoring
+    a diverse commodity portfolio day to day means constantly translating disparate instruments
+    into one comparable unit — this project rebuilds that translation from first principles using
+    public market data.
+  </p>
+
+  <h2 id="thinking"><span class="sec-num">02</span>My Thinking</h2>
+  <p>
+    The obvious first move is a single regression beta per instrument, computed once over the
+    full history, then used to convert every position into benchmark-equivalent units. I rejected
+    that as the sole answer: a static beta hides exactly how much the relationship moves around,
+    and in commodities that relationship moves a lot — refining margins widen and narrow,
+    product-specific supply shocks hit gasoline without touching crude, and correlations that
+    hold in calm markets can break during a dislocation.
+  </p>
+  <p>
+    I used a rolling-window OLS beta instead — recomputed continuously as new data arrives —
+    and benchmarked two separate complexes the way a desk actually would: the oil/products
+    complex against Brent (the reference contract the complex is priced off), and a gas-linked
+    instrument against Henry Hub, the standard NYMEX natural gas benchmark used for the North
+    American gas complex.
+  </p>
+  <div class="alt-list">
+    <div class="alt-item">
+      <span class="alt-verdict">Rejected</span>
+      <p><strong>Static full-period beta only.</strong> Produces one clean number, but hides the width of the range the true relationship actually travels through — which is the part that matters when you're sizing risk, not describing history.</p>
+    </div>
+    <div class="alt-item chosen">
+      <span class="alt-verdict">Chosen</span>
+      <p><strong>Rolling 60-day OLS beta per instrument, benchmarked by complex.</strong> Oil/products vs. Brent, gas-linked exposure vs. Henry Hub — mirrors how these two complexes are actually benchmarked, and shows the drift a static number can't.</p>
+    </div>
+  </div>
+  <p class="tool-note">
+    A note on the benchmark: a desk typically benchmarks the oil complex to the <em>3rd-month</em>
+    Brent contract specifically to avoid front-month expiry and roll noise. That exact contract
+    series isn't available in free public data, so this demo uses front-month continuous Brent
+    as a public stand-in — the regression methodology is identical either way.
+  </p>
+
+  <h2 id="architecture"><span class="sec-num">03</span>Architecture</h2>
+  <div class="arch-diagram">
+    <div class="arch-step">Public Futures Data<span class="arch-step-sub">Brent, WTI, ULSD, RBOB, Henry Hub, UNG</span></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">Daily Returns</div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step emphasis">Rolling OLS Beta<span class="arch-step-sub">60-day window, per instrument</span></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">Beta-Weighted Exposure<span class="arch-step-sub">position × beta</span></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">One Benchmark-Equivalent Number</div>
+  </div>
+
+  <h2 id="stack"><span class="sec-num">04</span>Technical Stack</h2>
+  <div class="tech-rationale">
+    <div class="tech-rationale-item">
+      <span class="tech-name">Python · pandas / NumPy</span>
+      <p>Rolling covariance and variance computed vectorized across the full return series — <code>beta = Cov(instrument, benchmark) / Var(benchmark)</code> — rather than looping window by window.</p>
+    </div>
+    <div class="tech-rationale-item">
+      <span class="tech-name">yfinance</span>
+      <p>Free public futures and ETF price history (Brent, WTI, heating oil, RBOB, Henry Hub, UNG) — the same technique carries over directly to Bloomberg-sourced desk data.</p>
+    </div>
+    <div class="tech-rationale-item">
+      <span class="tech-name">matplotlib</span>
+      <p>Static, report-ready charts for the written analysis below.</p>
+    </div>
+    <div class="tech-rationale-item">
+      <span class="tech-name">Vanilla JS + Canvas</span>
+      <p>The interactive tool further down this page recomputes rolling beta client-side from the same return data — no backend, no dependency on a charting library staying online.</p>
+    </div>
+  </div>
+
+  <h2 id="oil-beta"><span class="sec-num">05</span>The oil complex doesn't move together — and the gap isn't fixed</h2>
+  <p>
+    Using three years of daily data, WTI, heating oil (ULSD), and RBOB gasoline were each
+    regressed against Brent on a rolling 60-day window. The static full-period beta looks
+    tidy — WTI at 0.98, heating oil at 0.82, RBOB at 0.73 — but that single number erases how
+    much the relationship actually moves.
+  </p>
+
+  <div class="chart-grid single">
+    <div class="chart-item">
+      <img src="img/projects/beta-benchmarking/rolling_beta_oil.png" alt="Rolling beta of WTI, heating oil, and RBOB vs Brent" />
+      <div class="chart-caption">60-day rolling beta of WTI, heating oil, and RBOB against Brent, three years of daily data. WTI's beta ranges from 0.80 to 1.21 — at times trading defensively relative to Brent, at other times overshooting it entirely.</div>
+    </div>
+  </div>
+
+  <div class="chart-grid single">
+    <div class="chart-item">
+      <img src="img/projects/beta-benchmarking/static_vs_rolling.png" alt="Static beta vs rolling beta range" />
+      <div class="chart-caption">The grey bar is the single static beta each instrument would be assigned under a full-period regression. The red range is where the rolling beta actually travelled. RBOB's static beta of 0.73 sits almost exactly in the middle of a range that spans 0.52 to 1.03 — the static number is a reasonable average and a poor description of any single day.</div>
+    </div>
+  </div>
+
+  <p>
+    The sharpest single move in the dataset is WTI's beta vs. Brent dropping from roughly 0.99
+    to 0.80 within a few trading days in early April 2026 — a reminder that a beta measured a
+    week earlier can already be stale exactly when a book needs it most.
+  </p>
+
+  <h2 id="gas-beta"><span class="sec-num">06</span>The same technique, applied to gas</h2>
+  <p>
+    North American gas exposure gets benchmarked the same way, against Henry Hub — the NYMEX
+    reference contract for the gas complex. Here the demo uses UNG, a Henry-Hub-linked ETF, as
+    the instrument being expressed in Henry Hub terms.
+  </p>
+
+  <div class="chart-grid single">
+    <div class="chart-item">
+      <img src="img/projects/beta-benchmarking/rolling_beta_gas.png" alt="Rolling beta of UNG vs Henry Hub" />
+      <div class="chart-caption">UNG's rolling beta vs. Henry Hub ranges from 0.27 to 0.95 over the period — a wider range than any of the oil-complex instruments, and a reminder that ETF-linked gas exposure tracks the NYMEX benchmark loosely, not one-for-one.</div>
+    </div>
+  </div>
+
+  <h2 id="aggregation"><span class="sec-num">07</span>Three instruments, one number</h2>
+  <p>
+    The point of computing beta isn't the beta itself — it's what it lets you do next: multiply
+    each instrument's position by its current beta and sum the result into one benchmark-equivalent
+    exposure. Holding an illustrative position constant (40 lots WTI, -25 heating oil, 15 RBOB —
+    chosen only to demonstrate the mechanics, not a real book), the net Brent-equivalent number
+    still moves substantially over time, purely because the betas underneath it are drifting.
+  </p>
+
+  <div class="chart-grid single">
+    <div class="chart-item">
+      <img src="img/projects/beta-benchmarking/benchmark_equivalent.png" alt="Benchmark-equivalent exposure aggregation" />
+      <div class="chart-caption">Top: each leg's contribution to Brent-equivalent exposure. Bottom: the net total. Position sizes are held fixed throughout — every wiggle in the bottom line comes entirely from the underlying betas moving, which is exactly the risk a static-beta approach would miss.</div>
+    </div>
+  </div>
+  <p>
+    With these fixed illustrative positions, the net Brent-equivalent exposure ranged from
+    roughly 23 to 40 units over the three-year window — a range wide enough that a risk report
+    relying on a stale beta could misstate net exposure by nearly half.
+  </p>
+
+  <h2 id="tool"><span class="sec-num">08</span>Try it: rolling beta, recomputed live</h2>
+  <p>
+    This isn't a static chart — it recomputes rolling beta in your browser from the same three
+    years of daily return data used above. Pick an instrument pair and a window length and watch
+    the beta series update.
+  </p>
+
+  <div class="tool-card">
+    <div class="tool-controls">
+      <div class="tool-field">
+        <label for="beta-pair">Instrument vs. benchmark</label>
+        <select id="beta-pair">
+          <option value="wti">WTI vs. Brent</option>
+          <option value="heating_oil">Heating Oil (ULSD) vs. Brent</option>
+          <option value="rbob">RBOB Gasoline vs. Brent</option>
+          <option value="ung_etf">UNG vs. Henry Hub</option>
+        </select>
+      </div>
+      <div class="tool-field">
+        <label for="beta-window">Rolling window: <span id="beta-window-val" class="value-readout">60 days</span></label>
+        <input type="range" id="beta-window" min="10" max="120" value="60" step="5" />
+      </div>
+    </div>
+    <div class="tool-canvas-wrap">
+      <canvas id="beta-chart"></canvas>
+    </div>
+    <div class="tool-readout-grid">
+      <div class="tool-readout-tile"><span class="rt-label">Current beta</span><span class="rt-value" id="beta-current">–</span></div>
+      <div class="tool-readout-tile"><span class="rt-label">Min over period</span><span class="rt-value" id="beta-min">–</span></div>
+      <div class="tool-readout-tile"><span class="rt-label">Max over period</span><span class="rt-value" id="beta-max">–</span></div>
+      <div class="tool-readout-tile"><span class="rt-label">Static full-period beta</span><span class="rt-value" id="beta-static">–</span></div>
+    </div>
+    <p class="tool-note">Shorter windows react faster but get noisier; longer windows smooth the noise but lag a real shift. Try dragging the window down to 20 days around the sharpest kink in the WTI line.</p>
+  </div>
+
+  <h2 id="challenges"><span class="sec-num">09</span>Engineering Challenges</h2>
+  <div class="challenge-item">
+    <h3>Choosing a public proxy for the 3rd-month benchmark</h3>
+    <p>The real desk convention benchmarks to the 3rd-month contract to sidestep front-month roll noise. Free data for that specific contract isn't available, so I used front-month continuous Brent and documented the substitution rather than presenting it as identical — the beta-weighting math doesn't change, only which exact series stands in for "the benchmark."</p>
+  </div>
+  <div class="challenge-item">
+    <h3>Rolling covariance without a backend</h3>
+    <p>The interactive tool needed to recompute rolling beta client-side from raw daily returns, fast enough to feel live as someone drags the window slider. A vectorized JS loop over a ~750-point series turned out to be fast enough without needing a library — 60 lines of plain JavaScript, no dependency to keep updated.</p>
+  </div>
+
+  <h2 id="impact"><span class="sec-num">10</span>Why this matters</h2>
+  <div class="impact-grid">
+    <div class="impact-tile"><span class="impact-number">0.80–1.21</span><span class="impact-label">WTI's rolling beta range vs Brent (vs. a static 0.98)</span></div>
+    <div class="impact-tile"><span class="impact-number">23–40</span><span class="impact-label">Range of net Brent-equivalent exposure with fixed positions</span></div>
+    <div class="impact-tile"><span class="impact-number">0.27–0.95</span><span class="impact-label">UNG's rolling beta range vs Henry Hub</span></div>
+    <div class="impact-tile"><span class="impact-number">2</span><span class="impact-label">Complexes benchmarked — oil/products vs Brent, gas vs Henry Hub</span></div>
+  </div>
+  <p>
+    The honest takeaway is the same one that shows up on a real desk: a beta is a snapshot, not
+    a constant. Treating it as fixed is what makes a hedge look adequate on the day it was sized
+    and inadequate by the time it's tested. Recomputing it continuously — and being able to see,
+    not just assume, how wide its range actually is — is the difference between a risk number you
+    can trust and one that's quietly stale.
+  </p>
+
+  <h2 id="future"><span class="sec-num">11</span>Future Improvements</h2>
+  <ul>
+    <li><strong>True 3rd-month contract series</strong>, once a licensed data source is available, to replace the front-month public proxy with the exact convention desks use.</li>
+    <li><strong>EU power benchmarking</strong> — extend the same rolling-beta framework to a European power/gas basis, drawing on the cross-curve basis work I do professionally.</li>
+    <li><strong>Multi-window ensemble</strong> — blend several window lengths into one beta estimate instead of picking a single one, to reduce the lag-vs-noise trade-off the tool above makes visible.</li>
+  </ul>
+  <p style="margin-top: 24px;">
+    <a href="https://github.com/rashmirrsdev/beta-benchmarking" target="_blank" class="btn-github">Full code and documentation on GitHub →</a>
+  </p>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="projects.html">Projects</a>
+    <a href="finance-ai.html">Finance + AI</a>
+    <a href="finance.html">Finance &amp; Markets</a>
+    <a href="for-students.html">For Students</a>
+    <a href="https://www.linkedin.com/in/rrsk/" target="_blank">LinkedIn</a>
+  </div>
+  <p>© 2026 Rashmi Rama Sushil &nbsp;·&nbsp; Senior Associate, Trading Risk Management, Morgan Stanley</p>
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <span class="lightbox-close" id="lightbox-close">&times;</span>
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<script>
+(function() {
+  var lb = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lightbox-img');
+  var lbClose = document.getElementById('lightbox-close');
+  document.querySelectorAll('.chart-item img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+      lb.classList.add('active');
+    });
+  });
+  lb.addEventListener('click', function() { lb.classList.remove('active'); });
+  lbClose.addEventListener('click', function(e) { e.stopPropagation(); lb.classList.remove('active'); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') lb.classList.remove('active'); });
+})();
+</script>
+
+<script src="js/tools.js"></script>
+<script>
+(function() {
+  var DATA_URL = 'img/projects/beta-benchmarking/beta_returns.json';
+  var data = null;
+  var pairSelect = document.getElementById('beta-pair');
+  var windowSlider = document.getElementById('beta-window');
+  var windowVal = document.getElementById('beta-window-val');
+  var canvas = document.getElementById('beta-chart');
+
+  var benchmarkFor = { wti: 'brent', heating_oil: 'brent', rbob: 'brent', ung_etf: 'henry_hub' };
+
+  function rollingBeta(instrument, benchmark, window) {
+    var n = instrument.length;
+    var out = new Array(n).fill(null);
+    for (var i = window - 1; i < n; i++) {
+      var xs = benchmark.slice(i - window + 1, i + 1);
+      var ys = instrument.slice(i - window + 1, i + 1);
+      var mx = xs.reduce(function(a, b) { return a + b; }, 0) / window;
+      var my = ys.reduce(function(a, b) { return a + b; }, 0) / window;
+      var cov = 0, varx = 0;
+      for (var k = 0; k < window; k++) {
+        cov += (xs[k] - mx) * (ys[k] - my);
+        varx += (xs[k] - mx) * (xs[k] - mx);
+      }
+      out[i] = cov / varx;
+    }
+    return out;
+  }
+
+  function staticBeta(instrument, benchmark) {
+    var n = instrument.length;
+    var mx = benchmark.reduce(function(a, b) { return a + b; }, 0) / n;
+    var my = instrument.reduce(function(a, b) { return a + b; }, 0) / n;
+    var cov = 0, varx = 0;
+    for (var i = 0; i < n; i++) {
+      cov += (benchmark[i] - mx) * (instrument[i] - my);
+      varx += (benchmark[i] - mx) * (benchmark[i] - mx);
+    }
+    return cov / varx;
+  }
+
+  function render() {
+    if (!data) return;
+    var instName = pairSelect.value;
+    var benchName = benchmarkFor[instName];
+    var window = parseInt(windowSlider.value, 10);
+    windowVal.textContent = window + ' days';
+
+    var betas = rollingBeta(data[instName], data[benchName], window);
+    var points = [];
+    var dateLabels = [];
+    betas.forEach(function(b, i) {
+      if (b !== null) { points.push({ x: i, y: b }); dateLabels.push(data.dates[i]); }
+    });
+
+    drawLineChart(canvas, {
+      series: [{ label: instName, color: '#3498db', points: points }],
+      refLines: [{ y: 1.0, color: '#c0392b' }],
+      xLabels: [dateLabels[0], dateLabels[dateLabels.length - 1]]
+    });
+
+    var vals = points.map(function(p) { return p.y; });
+    document.getElementById('beta-current').textContent = vals[vals.length - 1].toFixed(3);
+    document.getElementById('beta-min').textContent = Math.min.apply(null, vals).toFixed(3);
+    document.getElementById('beta-max').textContent = Math.max.apply(null, vals).toFixed(3);
+    document.getElementById('beta-static').textContent = staticBeta(data[instName], data[benchName]).toFixed(3);
+  }
+
+  fetch(DATA_URL).then(function(r) { return r.json(); }).then(function(json) {
+    data = json;
+    render();
+  }).catch(function() {
+    canvas.parentElement.innerHTML = '<p class="tool-note">Interactive data failed to load. See the static charts above for the same analysis.</p>';
+  });
+
+  pairSelect.addEventListener('change', render);
+  windowSlider.addEventListener('input', render);
+  window.addEventListener('resize', render);
+})();
+</script>
+
+<script src="js/main.js" defer></script>
+</body>
+</html>

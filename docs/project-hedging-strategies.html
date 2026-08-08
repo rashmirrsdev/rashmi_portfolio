@@ -19,6 +19,23 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <noscript><style>.reveal{opacity:1!important;transform:none!important;}</style></noscript>
+  <style>
+    .tool-card { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin: 20px 0; }
+    .tool-controls { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end; margin-bottom: 16px; }
+    .tool-field { display: flex; flex-direction: column; gap: 6px; min-width: 180px; }
+    .tool-field label { font-size: .78rem; font-weight: 600; color: var(--text-muted); letter-spacing: .02em; }
+    .tool-field select, .tool-field input[type=range] { width: 100%; }
+    .tool-field .value-readout { font-family: 'Courier New', monospace; font-size: .82rem; color: var(--navy); }
+    .tool-canvas-wrap { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 8px; }
+    .tool-canvas-wrap canvas { width: 100%; height: 300px; display: block; }
+    .tool-readout-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 14px; }
+    .tool-readout-tile { background: #fff; border: 1px solid var(--border); border-radius: 7px; padding: 10px 14px; }
+    .tool-readout-tile .rt-label { display: block; font-size: .72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+    .tool-readout-tile .rt-value { display: block; font-size: 1.1rem; font-weight: 700; font-family: 'Courier New', monospace; }
+    .tool-readout-tile .rt-value.pos { color: #1a4a37; }
+    .tool-readout-tile .rt-value.neg { color: #a13c3c; }
+    .tool-note { font-size: .78rem; color: var(--text-muted); margin-top: 10px; }
+  </style>
 </head>
 <body>
 
@@ -42,7 +59,7 @@
 
 <div class="project-detail-header">
   <a href="projects.html" class="back-link">← Back to Projects</a>
-  <h1>Hedging a stock position: six strategies and what each one actually costs you</h1>
+  <h1>Hedging a position: six strategies and what each one actually costs you</h1>
   <p>A payoff visualiser for collars, protective puts, spreads, and straddles — built to make the trade-offs between protection and participation visible in rupee terms.</p>
   <div class="project-detail-meta">
     <a href="https://github.com/rashmirrsdev/options-hedging-strategies" target="_blank" class="btn-github">View code on GitHub</a>
@@ -63,10 +80,11 @@
     <a href="#spreads">07 Spreads</a>
     <a href="#straddle">08 Straddle</a>
     <a href="#cost-summary">09 Cost Compare</a>
-    <a href="#table">10 Summary Table</a>
-    <a href="#challenges">11 Challenges</a>
-    <a href="#impact">12 Impact</a>
-    <a href="#future">13 Future</a>
+    <a href="#tool">10 Try It</a>
+    <a href="#table">11 Summary Table</a>
+    <a href="#challenges">12 Challenges</a>
+    <a href="#impact">13 Impact</a>
+    <a href="#future">14 Future</a>
   </div>
 
   <h2 id="problem"><span class="sec-num">01</span>The Problem</h2>
@@ -92,7 +110,7 @@
     the exact payoff at every spot price and plot it.
   </p>
   <p>
-    I built this around one concrete scenario — 100 shares of RELIANCE at INR 2,800 — and priced
+    I built this around one concrete scenario — 100 units of an underlying position at INR 2,800 — and priced
     all six strategies against the same underlying, the same expiry, the same starting point, so
     they're directly comparable rather than abstract examples with different assumptions baked in.
   </p>
@@ -151,13 +169,13 @@
   <p>
     The zero-cost collar is often presented as the best of both worlds: you buy a put for downside
     protection and sell a call to finance it, paying no net premium. In our scenario, the INR 2,600
-    put costs INR 48/share; the INR 3,000 call is sold for INR 52/share — a small net credit.
+    put costs INR 48/unit; the INR 3,000 call is sold for INR 52/unit — a small net credit.
     No cash out of pocket.
   </p>
   <p>
     But look at what you've traded away. The left side of the collar: your loss is floored at
-    approximately INR 19,600 — you can't lose more than that no matter how far RELIANCE falls.
-    The right side: your gain is capped at INR 20,400 — if RELIANCE goes to 3,500, you miss
+    approximately INR 19,600 — you can't lose more than that no matter how far the underlying falls.
+    The right side: your gain is capped at INR 20,400 — if the underlying goes to 3,500, you miss
     that entire move. The collar cost nothing in premium but it cost you your participation in
     a large rally.
   </p>
@@ -165,20 +183,20 @@
   <div class="chart-grid">
     <div class="chart-item">
       <img src="img/projects/options-hedging-strategies/collar_breakdown.png" alt="Collar breakdown chart" />
-      <div class="chart-caption">Left: the three collar components combining — long stock (grey), long put protection (blue dashed), short call cap (red dashed), and the resulting collar (green). Right: the collar profile alone, with the put and call strikes marked. The flat regions above and below show exactly where the cap and floor kick in.</div>
+      <div class="chart-caption">Left: the three collar components combining — long underlying (grey), long put protection (blue dashed), short call cap (red dashed), and the resulting collar (green). Right: the collar profile alone, with the put and call strikes marked. The flat regions above and below show exactly where the cap and floor kick in.</div>
     </div>
   </div>
 
   <h2 id="put"><span class="sec-num">06</span>The protective put: insurance has a cost basis</h2>
   <p>
-    A protective put (long stock + long put) is the simplest hedge: you pay INR 48/share for the
-    right to sell at INR 2,600 regardless of where RELIANCE goes. Your downside is
+    A protective put (long underlying + long put) is the simplest hedge: you pay INR 48/unit for the
+    right to sell at INR 2,600 regardless of where the underlying goes. Your downside is
     floored. Your upside is unlimited.
   </p>
   <p>
     What's not immediately obvious: the premium you paid shifts your breakeven. Without the hedge
-    you break even at INR 2,800. With the put, you break even at INR 2,848 — RELIANCE needs to
-    rise INR 48 just to cover the insurance cost. If RELIANCE stays flat, you lose the premium.
+    you break even at INR 2,800. With the put, you break even at INR 2,848 — the underlying needs to
+    rise INR 48 just to cover the insurance cost. If the underlying stays flat, you lose the premium.
     If it rises modestly, you've paid for protection you didn't need.
   </p>
   <p>
@@ -199,10 +217,10 @@
     A bull call spread is a cheaper way to express a bullish view. Instead of buying a single
     call (expensive), you buy the lower strike call and sell the higher strike call to offset
     some of the cost. In our example: long the INR 2,800 call, short the INR 3,000 call.
-    Net debit: INR 52/share (vs. perhaps INR 98/share for just the outright call).
+    Net debit: INR 52/unit (vs. perhaps INR 98/unit for just the outright call).
   </p>
   <p>
-    What you've sold away: the profitable part of the move above INR 3,000. If RELIANCE goes
+    What you've sold away: the profitable part of the move above INR 3,000. If the underlying goes
     to 3,400, the spread still only pays you the difference between the two strikes minus the
     premium — INR 14,800 total. The pure call would have paid much more. But the spread cost
     less than half as much to enter, and the maximum loss is just INR 5,200 vs. INR 9,800
@@ -212,20 +230,20 @@
   <div class="chart-grid">
     <div class="chart-item">
       <img src="img/projects/options-hedging-strategies/spreads_straddle.png" alt="Spreads and straddle chart" />
-      <div class="chart-caption">Left: bull call spread (purple) vs bear put spread (red) — mirrored payoff profiles, one bullish, one bearish, both with defined risk and capped reward. Right: long straddle (orange) — profits when RELIANCE moves more than INR 189 in either direction. The flat bottom of the straddle is the maximum premium cost (INR 18,900), incurred when the stock goes nowhere.</div>
+      <div class="chart-caption">Left: bull call spread (purple) vs bear put spread (red) — mirrored payoff profiles, one bullish, one bearish, both with defined risk and capped reward. Right: long straddle (orange) — profits when the underlying moves more than INR 189 in either direction. The flat bottom of the straddle is the maximum premium cost (INR 18,900), incurred when the underlying goes nowhere.</div>
     </div>
   </div>
 
   <h2 id="straddle"><span class="sec-num">08</span>The straddle: a bet on movement, not direction</h2>
   <p>
     The straddle (long ATM call + long ATM put) is structurally different from all the other
-    strategies. It doesn't care which way RELIANCE moves — it profits from a large move in
+    strategies. It doesn't care which way the underlying moves — it profits from a large move in
     either direction. What it needs is movement.
   </p>
   <p>
-    The breakeven points sit at INR 2,611 and INR 2,989 — RELIANCE needs to move at least
+    The breakeven points sit at INR 2,611 and INR 2,989 — the underlying needs to move at least
     INR 189 (6.75%) in either direction by expiry for the straddle to be profitable. Inside
-    that range, the position loses money every day from time decay. At expiry with RELIANCE
+    that range, the position loses money every day from time decay. At expiry with the underlying
     exactly at INR 2,800, you lose the full INR 18,900 in premium.
   </p>
   <p>
@@ -244,7 +262,29 @@
     </div>
   </div>
 
-  <h2 id="table"><span class="sec-num">10</span>Strategy summary</h2>
+  <h2 id="tool"><span class="sec-num">10</span>Try it: move the price, watch every strategy react</h2>
+  <p>
+    Drag the underlying's expiry price and watch what each strategy actually pays out — the same
+    six curves from the chart above, but now with an exact P&amp;L readout at whatever price you
+    pick. This is the point of the whole exercise: "zero-cost" and "capped upside" stop being
+    descriptions and become numbers you can check yourself.
+  </p>
+
+  <div class="tool-card">
+    <div class="tool-controls">
+      <div class="tool-field" style="flex: 1 1 100%;">
+        <label for="payoff-spot">Underlying price at expiry: <span id="payoff-spot-val" class="value-readout">INR 2,800</span></label>
+        <input type="range" id="payoff-spot" min="2000" max="3600" value="2800" step="10" style="width:100%;" />
+      </div>
+    </div>
+    <div class="tool-canvas-wrap">
+      <canvas id="payoff-chart"></canvas>
+    </div>
+    <div class="tool-readout-grid" id="payoff-readout"></div>
+    <p class="tool-note">Starting price INR 2,800, 100 units, same strikes and premiums used throughout this page. Move the slider past INR 3,000 to see exactly where the collar and bull spread stop participating.</p>
+  </div>
+
+  <h2 id="table"><span class="sec-num">11</span>Strategy summary</h2>
   <table class="module-table">
     <thead>
       <tr><th>Strategy</th><th>Max Loss</th><th>Max Gain</th><th>Best used when</th></tr>
@@ -259,7 +299,7 @@
     </tbody>
   </table>
 
-  <h2 id="challenges"><span class="sec-num">11</span>Engineering Challenges</h2>
+  <h2 id="challenges"><span class="sec-num">12</span>Engineering Challenges</h2>
   <div class="challenge-item">
     <h3>Making six different payoff structures directly comparable</h3>
     <p>Each strategy has a different number of legs and a different premium structure. Normalizing all six onto one shared spot-price axis — with consistent sign conventions for premium paid vs. received — took more care than the underlying options math itself.</p>
@@ -269,7 +309,7 @@
     <p>A coarse price grid gives you an approximate breakeven; getting the exact rupee figure (e.g. INR 2,848, not "around 2,850") required interpolating between grid points rather than just reading off the nearest one — small detail, but it's the difference between a real number and a rounded guess.</p>
   </div>
 
-  <h2 id="impact"><span class="sec-num">12</span>Business Impact</h2>
+  <h2 id="impact"><span class="sec-num">13</span>Business Impact</h2>
   <div class="impact-grid">
     <div class="impact-tile"><span class="impact-number">₹20.4K</span><span class="impact-label">Max gain the "zero-cost" collar quietly caps</span></div>
     <div class="impact-tile"><span class="impact-number">₹48</span><span class="impact-label">Breakeven shift caused by protective put premium</span></div>
@@ -284,7 +324,7 @@
     the exact amount you've given up.
   </p>
 
-  <h2 id="future"><span class="sec-num">13</span>Future Improvements</h2>
+  <h2 id="future"><span class="sec-num">14</span>Future Improvements</h2>
   <ul>
     <li><strong>Implied volatility as an input</strong> rather than assumed premiums, so the breakeven and cost figures update with actual market IV rather than illustrative numbers.</li>
     <li><strong>Multi-leg custom structures</strong> — let a user combine legs freely instead of choosing from six fixed strategies, closer to how a real structuring desk works.</li>
@@ -329,6 +369,88 @@
   lb.addEventListener('click', function() { lb.classList.remove('active'); });
   lbClose.addEventListener('click', function(e) { e.stopPropagation(); lb.classList.remove('active'); });
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape') lb.classList.remove('active'); });
+})();
+</script>
+
+<script src="js/tools.js"></script>
+<script>
+(function() {
+  var S0 = 2800, QTY = 100;
+  var PUT_K = 2600, PUT_PREMIUM = 48;
+  var CALL_K = 3000, CALL_PREMIUM_RECEIVED = 52;
+  var BULL_K1 = 2800, BULL_K2 = 3000, BULL_DEBIT = 52;
+  var BEAR_K1 = 2800, BEAR_K2 = 2600, BEAR_DEBIT = 61;
+  var STRADDLE_K = 2800, STRADDLE_PREMIUM = 189;
+
+  var STRATEGIES = [
+    { key: 'unhedged', label: 'Unhedged', color: '#7f8c8d',
+      pnl: function(S) { return (S - S0) * QTY; } },
+    { key: 'put', label: 'Protective Put', color: '#3498db',
+      pnl: function(S) { return (S - S0) * QTY + (Math.max(PUT_K - S, 0) - PUT_PREMIUM) * QTY; } },
+    { key: 'collar', label: 'Zero-Cost Collar', color: '#2ecc71',
+      pnl: function(S) {
+        return (S - S0) * QTY + Math.max(PUT_K - S, 0) * QTY - Math.max(S - CALL_K, 0) * QTY
+          + (CALL_PREMIUM_RECEIVED - PUT_PREMIUM) * QTY;
+      } },
+    { key: 'bull', label: 'Bull Call Spread', color: '#9b59b6',
+      pnl: function(S) {
+        return (Math.max(S - BULL_K1, 0) - Math.max(S - BULL_K2, 0)) * QTY - BULL_DEBIT * QTY;
+      } },
+    { key: 'bear', label: 'Bear Put Spread', color: '#e74c3c',
+      pnl: function(S) {
+        return (Math.max(BEAR_K1 - S, 0) - Math.max(BEAR_K2 - S, 0)) * QTY - BEAR_DEBIT * QTY;
+      } },
+    { key: 'straddle', label: 'Long Straddle', color: '#e67e22',
+      pnl: function(S) {
+        return (Math.max(S - STRADDLE_K, 0) + Math.max(STRADDLE_K - S, 0)) * QTY - STRADDLE_PREMIUM * QTY;
+      } },
+  ];
+
+  var slider = document.getElementById('payoff-spot');
+  var spotVal = document.getElementById('payoff-spot-val');
+  var canvas = document.getElementById('payoff-chart');
+  var readout = document.getElementById('payoff-readout');
+
+  var MIN_S = parseInt(slider.min, 10), MAX_S = parseInt(slider.max, 10), STEP = 20;
+
+  function fmtINR(n) {
+    var sign = n < 0 ? '-' : '';
+    return sign + 'INR ' + Math.abs(Math.round(n)).toLocaleString('en-IN');
+  }
+
+  function render() {
+    var S = parseInt(slider.value, 10);
+    spotVal.textContent = fmtINR(S).replace('INR ', 'INR ');
+
+    var xs = [];
+    for (var p = MIN_S; p <= MAX_S; p += STEP) xs.push(p);
+    var markerIndex = Math.round((S - MIN_S) / STEP);
+
+    var series = STRATEGIES.map(function(s) {
+      return { label: s.label, color: s.color, points: xs.map(function(p) { return { x: p, y: s.pnl(p) }; }) };
+    });
+
+    drawLineChart(canvas, {
+      series: series,
+      refLines: [{ y: 0, color: '#2c3e50' }],
+      xLabels: ['INR ' + MIN_S, 'INR ' + MAX_S],
+      markerIndex: markerIndex
+    });
+
+    readout.innerHTML = '';
+    STRATEGIES.forEach(function(s) {
+      var val = s.pnl(S);
+      var tile = document.createElement('div');
+      tile.className = 'tool-readout-tile';
+      tile.innerHTML = '<span class="rt-label">' + s.label + '</span>' +
+        '<span class="rt-value ' + (val >= 0 ? 'pos' : 'neg') + '">' + fmtINR(val) + '</span>';
+      readout.appendChild(tile);
+    });
+  }
+
+  slider.addEventListener('input', render);
+  window.addEventListener('resize', render);
+  render();
 })();
 </script>
 
