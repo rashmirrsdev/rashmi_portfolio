@@ -4,17 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Projects — Rashmi Rama Sushil</title>
-  <meta name="description" content="Open-source quantitative finance tools built in Python by Rashmi Rama Sushil — options risk, rolling beta benchmarking, hedging strategies, and metals stress testing." />
+  <meta name="description" content="Open-source quantitative finance tools built in Python by Rashmi Rama Sushil — options risk, beta across finance, hedging strategies, and metals stress testing." />
   <link rel="canonical" href="https://rashmirrsdev.github.io/rashmi_portfolio/projects.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Rashmi Rama Sushil" />
   <meta property="og:title" content="Projects — Rashmi Rama Sushil" />
-  <meta property="og:description" content="Open-source quantitative finance tools built in Python by Rashmi Rama Sushil — options risk, rolling beta benchmarking, hedging strategies, and metals stress testing." />
+  <meta property="og:description" content="Open-source quantitative finance tools built in Python by Rashmi Rama Sushil — options risk, beta across finance, hedging strategies, and metals stress testing." />
   <meta property="og:url" content="https://rashmirrsdev.github.io/rashmi_portfolio/projects.html" />
   <meta property="og:image" content="https://rashmirrsdev.github.io/rashmi_portfolio/img/social-card.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Projects — Rashmi Rama Sushil" />
-  <meta name="twitter:description" content="Open-source quantitative finance tools built in Python by Rashmi Rama Sushil — options risk, rolling beta benchmarking, hedging strategies, and metals stress testing." />
+  <meta name="twitter:description" content="Open-source quantitative finance tools built in Python by Rashmi Rama Sushil — options risk, beta across finance, hedging strategies, and metals stress testing." />
   <meta name="twitter:image" content="https://rashmirrsdev.github.io/rashmi_portfolio/img/social-card.png" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -72,20 +72,20 @@
 
     <div class="project-card reveal">
       <div class="project-card-header">
-        <h2><a href="project-beta-benchmarking.html" class="project-title-link">One exposure number for many instruments: rolling beta benchmarking</a></h2>
+        <h2><a href="project-beta-benchmarking.html" class="project-title-link">Beta isn't one number: the different jobs it does across finance</a></h2>
         <span class="project-status status-done">Completed · August 2026</span>
       </div>
       <div class="case-study-tags"><span>Problem</span><span class="sep">→</span><span>Thinking</span><span class="sep">→</span><span>Architecture</span><span class="sep">→</span><span>Impact</span></div>
-      <p>How does a book holding crude, heating oil, and gasoline get reported as one number? By beta-weighting every instrument to a common benchmark — Brent for the oil/products complex, Henry Hub for the gas complex — on a rolling window, not a static regression. Using public futures data, WTI's beta vs Brent ranged from 0.80 to 1.21 over three years; a static full-period beta of 0.98 hides all of that movement. Includes a live in-browser tool that recomputes rolling beta from the same data.</p>
+      <p>A stock's CAPM beta, a portfolio's hedge ratio, and a commodity book's benchmark-equivalent exposure are the same regression doing different jobs. Real data throughout: five large-caps against the S&P 500 (portfolio beta 1.12), AAPL's rolling beta swinging from 0.24 to 1.63 over three years, and a short cross-asset example from commodities. Includes a live in-browser tool to compute rolling beta yourself.</p>
       <div class="project-links">
         <a href="project-beta-benchmarking.html" class="project-link-primary">See the analysis →</a>
         <a href="https://github.com/rashmirrsdev/beta-benchmarking" target="_blank" class="project-link-secondary">GitHub</a>
       </div>
       <div class="project-skills" style="margin-top:14px;">
         <span class="skill-tag">Python</span>
+        <span class="skill-tag">CAPM Beta</span>
+        <span class="skill-tag">Portfolio Beta</span>
         <span class="skill-tag">Rolling Beta</span>
-        <span class="skill-tag">Energy Complex</span>
-        <span class="skill-tag">Brent / Henry Hub</span>
         <span class="skill-tag">Interactive Tool</span>
       </div>
     </div>
