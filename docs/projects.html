@@ -4,17 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Projects — Rashmi Rama Sushil</title>
-  <meta name="description" content="Open-source quantitative finance tools built in Python by Rashmi Rama Sushil — options risk, factor attribution, hedging strategies, and metals stress testing." />
+  <meta name="description" content="Open-source quantitative finance tools built in Python by Rashmi Rama Sushil — options risk, beta across finance, hedging strategies, and metals stress testing." />
   <link rel="canonical" href="https://rashmirrsdev.github.io/rashmi_portfolio/projects.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Rashmi Rama Sushil" />
   <meta property="og:title" content="Projects — Rashmi Rama Sushil" />
-  <meta property="og:description" content="Open-source quantitative finance tools built in Python by Rashmi Rama Sushil — options risk, factor attribution, hedging strategies, and metals stress testing." />
+  <meta property="og:description" content="Open-source quantitative finance tools built in Python by Rashmi Rama Sushil — options risk, beta across finance, hedging strategies, and metals stress testing." />
   <meta property="og:url" content="https://rashmirrsdev.github.io/rashmi_portfolio/projects.html" />
   <meta property="og:image" content="https://rashmirrsdev.github.io/rashmi_portfolio/img/social-card.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Projects — Rashmi Rama Sushil" />
-  <meta name="twitter:description" content="Open-source quantitative finance tools built in Python by Rashmi Rama Sushil — options risk, factor attribution, hedging strategies, and metals stress testing." />
+  <meta name="twitter:description" content="Open-source quantitative finance tools built in Python by Rashmi Rama Sushil — options risk, beta across finance, hedging strategies, and metals stress testing." />
   <meta name="twitter:image" content="https://rashmirrsdev.github.io/rashmi_portfolio/img/social-card.png" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -72,21 +72,21 @@
 
     <div class="project-card reveal">
       <div class="project-card-header">
-        <h2><a href="project-factor-attribution.html" class="project-title-link">How much of a portfolio's return is actually skill?</a></h2>
-        <span class="project-status status-done">Completed · April 2026</span>
+        <h2><a href="project-beta-benchmarking.html" class="project-title-link">Beta isn't one number: the different jobs it does across finance</a></h2>
+        <span class="project-status status-done">Completed · August 2026</span>
       </div>
       <div class="case-study-tags"><span>Problem</span><span class="sep">→</span><span>Thinking</span><span class="sep">→</span><span>Architecture</span><span class="sep">→</span><span>Impact</span></div>
-      <p>I decomposed three years of Nifty 50 returns into market-driven and stock-specific components. The result: 91% of the portfolio's 30.97% return came from just owning the index. The remaining 9% — the part that stock selection actually contributed — had a Sharpe of 0.21, against the market's 0.71. The analysis also shows why Beta shifts during a crisis, and why diversification by position count isn't the same as diversification by risk factor.</p>
+      <p>A stock's CAPM beta, a portfolio's hedge ratio, and a commodity book's benchmark-equivalent exposure are the same regression doing different jobs. Real data throughout: five large-caps against the S&P 500 (portfolio beta 1.12), AAPL's rolling beta swinging from 0.24 to 1.63 over three years, and a short cross-asset example from commodities. Includes a live in-browser tool to compute rolling beta yourself.</p>
       <div class="project-links">
-        <a href="project-factor-attribution.html" class="project-link-primary">See the analysis →</a>
-        <a href="https://github.com/rashmirrsdev/factor-risk-attribution" target="_blank" class="project-link-secondary">GitHub</a>
+        <a href="project-beta-benchmarking.html" class="project-link-primary">See the analysis →</a>
+        <a href="https://github.com/rashmirrsdev/beta-benchmarking" target="_blank" class="project-link-secondary">GitHub</a>
       </div>
       <div class="project-skills" style="margin-top:14px;">
         <span class="skill-tag">Python</span>
-        <span class="skill-tag">Return Attribution</span>
-        <span class="skill-tag">Factor Models</span>
-        <span class="skill-tag">Nifty 50</span>
+        <span class="skill-tag">CAPM Beta</span>
+        <span class="skill-tag">Portfolio Beta</span>
         <span class="skill-tag">Rolling Beta</span>
+        <span class="skill-tag">Interactive Tool</span>
       </div>
     </div>
 
@@ -112,11 +112,11 @@
 
     <div class="project-card reveal">
       <div class="project-card-header">
-        <h2><a href="project-hedging-strategies.html" class="project-title-link">Hedging a stock position: what six strategies actually cost you</a></h2>
+        <h2><a href="project-hedging-strategies.html" class="project-title-link">Hedging a position: what six strategies actually cost you</a></h2>
         <span class="project-status status-done">Completed · May 2026</span>
       </div>
       <div class="case-study-tags"><span>Problem</span><span class="sep">→</span><span>Thinking</span><span class="sep">→</span><span>Architecture</span><span class="sep">→</span><span>Impact</span></div>
-      <p>A payoff visualiser for collars, protective puts, call spreads, bear put spreads, and straddles — applied to a 100-share RELIANCE position at INR 2,800. The zero-cost collar costs no premium but caps your upside at INR 20,400. The protective put floors your loss but shifts your breakeven to INR 2,848. The straddle needs a 6.75% move in either direction before you see a rupee of profit. Each trade-off is made visible in exact INR terms at every spot price.</p>
+      <p>A payoff visualiser for collars, protective puts, call spreads, bear put spreads, and straddles — applied to a 100-unit position at INR 2,800. The zero-cost collar costs no premium but caps your upside at INR 20,400. The protective put floors your loss but shifts your breakeven to INR 2,848. The straddle needs a 6.75% move in either direction before you see a rupee of profit. A live tool lets you drag the price yourself and watch every strategy's payoff update.</p>
       <div class="project-links">
         <a href="project-hedging-strategies.html" class="project-link-primary">See the analysis →</a>
         <a href="https://github.com/rashmirrsdev/options-hedging-strategies" target="_blank" class="project-link-secondary">GitHub</a>

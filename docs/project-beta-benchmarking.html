@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beta, and the Many Jobs It Does in Finance — Rashmi Rama Sushil</title>
+  <meta name="description" content="A stock's CAPM beta, a portfolio's hedge ratio, and a commodity book's benchmark-equivalent exposure all use the same regression — but they're doing different jobs. A walk through beta's many uses in finance, with real public market data and a live in-browser tool." />
+  <link rel="canonical" href="https://rashmirrsdev.github.io/rashmi_portfolio/project-beta-benchmarking.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rashmi Rama Sushil" />
+  <meta property="og:title" content="Beta, and the Many Jobs It Does in Finance — Rashmi Rama Sushil" />
+  <meta property="og:description" content="A stock's CAPM beta, a portfolio's hedge ratio, and a commodity book's benchmark-equivalent exposure all use the same regression — but they're doing different jobs. A walk through beta's many uses in finance." />
+  <meta property="og:url" content="https://rashmirrsdev.github.io/rashmi_portfolio/project-beta-benchmarking.html" />
+  <meta property="og:image" content="https://rashmirrsdev.github.io/rashmi_portfolio/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Beta, and the Many Jobs It Does in Finance — Rashmi Rama Sushil" />
+  <meta name="twitter:description" content="A stock's CAPM beta, a portfolio's hedge ratio, and a commodity book's benchmark-equivalent exposure all use the same regression — but they're doing different jobs." />
+  <meta name="twitter:image" content="https://rashmirrsdev.github.io/rashmi_portfolio/img/social-card.png" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <noscript><style>.reveal{opacity:1!important;transform:none!important;}</style></noscript>
+  <style>
+    .tool-card { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin: 20px 0; }
+    .tool-controls { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end; margin-bottom: 16px; }
+    .tool-field { display: flex; flex-direction: column; gap: 6px; min-width: 180px; }
+    .tool-field label { font-size: .78rem; font-weight: 600; color: var(--text-muted); letter-spacing: .02em; }
+    .tool-field select, .tool-field input[type=range] { width: 100%; }
+    .tool-field .value-readout { font-family: 'Courier New', monospace; font-size: .82rem; color: var(--navy); }
+    .tool-canvas-wrap { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 8px; }
+    .tool-canvas-wrap canvas { width: 100%; height: 280px; display: block; }
+    .tool-readout-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 14px; }
+    .tool-readout-tile { background: #fff; border: 1px solid var(--border); border-radius: 7px; padding: 10px 14px; }
+    .tool-readout-tile .rt-label { display: block; font-size: .72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+    .tool-readout-tile .rt-value { display: block; font-size: 1.15rem; font-weight: 700; color: var(--navy); font-family: 'Courier New', monospace; }
+    .tool-note { font-size: .78rem; color: var(--text-muted); margin-top: 10px; }
+    .beta-uses-list { margin: 1.2em 0 1.4em; padding: 0; list-style: none; }
+    .beta-uses-list li { padding: 12px 16px; border-left: 3px solid var(--border); margin-bottom: 10px; background: var(--bg-soft); border-radius: 0 6px 6px 0; }
+    .beta-uses-list strong { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav-inner">
+    <a href="index.html" class="site-logo">Rashmi <span>Rama Sushil</span></a>
+    <button class="nav-toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="finance-ai.html">Finance + AI</a></li>
+      <li><a href="finance.html">Finance &amp; Markets</a></li>
+      <li><a href="for-students.html">For Students</a></li>
+    </ul>
+  </nav>
+</header>
+<div class="ticker-wrap"><div class="ticker-track"><div class="ticker-set"><span>Crude Oil</span><span>EU Power &amp; Natural Gas</span><span>LME Metals</span><span>Agricultural Markets</span><span>Asian Futures · DCE/SGX</span><span>Derivatives &amp; Greeks</span><span>Risk Analytics</span><span>Finance + AI</span></div><div class="ticker-set" aria-hidden="true"><span>Crude Oil</span><span>EU Power &amp; Natural Gas</span><span>LME Metals</span><span>Agricultural Markets</span><span>Asian Futures · DCE/SGX</span><span>Derivatives &amp; Greeks</span><span>Risk Analytics</span><span>Finance + AI</span></div></div></div>
+
+<div class="project-detail-header">
+  <a href="projects.html" class="back-link">← Back to Projects</a>
+  <h1>Beta isn't one number: the different jobs it does across finance</h1>
+  <p>A stock's CAPM beta, a portfolio manager's hedge ratio, and a commodity desk's benchmark-equivalent exposure are all the same regression underneath — but they answer different questions. A walk through where beta actually shows up, backed by real public market data and a tool you can try yourself.</p>
+  <div class="project-detail-meta">
+    <a href="https://github.com/rashmirrsdev/beta-benchmarking" target="_blank" class="btn-github">View code on GitHub</a>
+    <span class="project-status status-done" style="margin-top:2px;">Completed · August 2026</span>
+  </div>
+</div>
+
+<div class="project-body">
+
+  <div class="toc-row">
+    <span class="toc-label">Jump to:</span>
+    <a href="#same-word">01 Same Word</a>
+    <a href="#capm">02 CAPM Beta</a>
+    <a href="#portfolio">03 Portfolio Beta</a>
+    <a href="#time">04 Beta Over Time</a>
+    <a href="#beyond-stocks">05 Beyond Stocks</a>
+    <a href="#elsewhere">06 Elsewhere</a>
+    <a href="#tool">07 Try It</a>
+    <a href="#takeaway">08 Takeaway</a>
+  </div>
+
+  <h2 id="same-word"><span class="sec-num">01</span>Same word, different math</h2>
+  <p>
+    "Beta" gets used constantly in finance, and it rarely means quite the same thing twice.
+    An analyst calls a stock "high-beta." A portfolio manager reports "we're running at 0.8
+    beta to the index." A risk desk says "beta-weight the book before you report net exposure."
+    All three are doing genuinely different jobs — but the arithmetic underneath every one of
+    them is the same regression: how much does this thing move for every 1% the benchmark moves?
+  </p>
+  <p>
+    <code>beta = Cov(instrument, benchmark) / Var(benchmark)</code> — that's it. What changes is
+    what counts as the "instrument," what counts as the "benchmark," and what you do with the
+    number once you have it. This piece walks through the main places that formula shows up,
+    with real data behind each one, plus a live tool at the bottom to compute it yourself.
+  </p>
+
+  <h2 id="capm"><span class="sec-num">02</span>The starting point: a stock's beta to the market</h2>
+  <p>
+    This is the version everyone meets first — CAPM beta, a stock regressed against a broad
+    market index. It's meant to isolate <em>systematic</em> risk (the part of a stock's movement
+    explained by the market) from <em>idiosyncratic</em> risk (the part that's specific to the
+    company). A beta of 1.0 means the stock has historically moved roughly in line with the
+    market; above 1.0, it amplifies market moves; below 1.0, it dampens them.
+  </p>
+  <p>
+    Using three years of daily data against the S&amp;P 500, five familiar large-caps come out
+    at noticeably different betas — and the spread is wider than the "big tech moves together"
+    intuition suggests:
+  </p>
+
+  <div class="chart-grid single">
+    <div class="chart-item">
+      <img src="img/projects/beta-benchmarking/static_beta_portfolio.png" alt="Static beta of five large-cap stocks vs S&P 500, and the equal-weight portfolio beta" />
+      <div class="chart-caption">Static full-period beta vs the S&amp;P 500: AMZN (1.44) and GOOGL (1.18) amplify market moves noticeably more than JPM (0.89), which has historically dampened them. The dashed red line is what happens next: average these into one portfolio number.</div>
+    </div>
+  </div>
+
+  <h2 id="portfolio"><span class="sec-num">03</span>Scaling up: portfolio beta and sizing a hedge</h2>
+  <p>
+    A single stock's beta is rarely the number that matters day to day — a portfolio's is. The
+    simplest version is a position-weighted average of every holding's beta, which collapses an
+    entire book into one figure: "this portfolio moves at 1.12x the market." That number is what
+    a portfolio manager actually uses to size an index hedge — if you're running 1.12 beta and
+    want to bring that to zero, you sell index futures (or a similar instrument) equal to
+    <code>portfolio value × 1.12</code>, not the portfolio's raw notional.
+  </p>
+  <p>
+    The five-stock, equal-weighted basket above comes out to a portfolio beta of
+    <strong>1.12</strong> — meaningfully more market-sensitive than any single "average" stock
+    might suggest, because two high-beta names (AMZN, GOOGL) pull the average up more than JPM's
+    lower beta pulls it down.
+  </p>
+  <div class="result-box">
+    <p>
+      <strong>Illustrative hedge sizing:</strong> a INR 1 crore portfolio at 1.12 beta needs
+      roughly INR 1.12 crore of offsetting index exposure to be market-neutral — not INR 1 crore.
+      Sizing the hedge off notional instead of beta-weighted notional is a common, quiet source
+      of under-hedging.
+    </p>
+  </div>
+
+  <h2 id="time"><span class="sec-num">04</span>Why beta has to be recomputed, not memorized</h2>
+  <p>
+    Every use of beta above assumed a fixed number. In practice, beta drifts — sometimes by a lot
+    — because the relationship between an instrument and its benchmark isn't structurally
+    constant. Computing it once and reusing it for months is one of the more common ways a "beta
+    of 1.1" quietly becomes wrong.
+  </p>
+
+  <div class="chart-grid single">
+    <div class="chart-item">
+      <img src="img/projects/beta-benchmarking/rolling_beta_equity.png" alt="60-day rolling beta of AAPL and MSFT vs S&P 500 over three years" />
+      <div class="chart-caption">60-day rolling beta, three years of daily data. AAPL's beta vs the S&amp;P 500 ranged from 0.24 to 1.63 over the period — a single static number would describe almost none of that. MSFT's range was nearly as wide: 0.30 to 1.64.</div>
+    </div>
+  </div>
+  <p>
+    This is true of every flavor of beta in this piece — CAPM, portfolio, or otherwise. A number
+    computed in a calm quarter and carried forward into a volatile one is describing a
+    relationship that's already moved on.
+  </p>
+
+  <h2 id="beyond-stocks"><span class="sec-num">05</span>Beyond stocks: the same math, a different benchmark</h2>
+  <p>
+    Beta isn't limited to equities regressed against a stock index — the identical technique
+    applies anywhere you need to express one instrument's exposure in terms of another. One
+    place I've come across this is in commodities: a book holding crude oil alongside refined
+    products (heating oil, gasoline) doesn't move as one thing, so each instrument gets
+    beta-weighted against a reference contract — Brent for the oil/products complex, Henry Hub
+    for the North American gas complex — to collapse several correlated-but-different exposures
+    into one comparable number.
+  </p>
+  <p>
+    Using public futures data as a stand-in for that same technique: WTI's beta vs. Brent had a
+    static full-period value of 0.98, but ranged 0.80–1.21 on a rolling basis; refined products
+    ranged even wider (heating oil 0.71–1.23, RBOB 0.52–1.03). The lesson from the equity section
+    above holds here too — the static number is a reasonable average and a poor description of
+    any single day.
+  </p>
+
+  <div class="chart-grid single">
+    <div class="chart-item">
+      <img src="img/projects/beta-benchmarking/rolling_beta_oil.png" alt="Rolling beta of WTI, heating oil, and RBOB vs Brent" />
+      <div class="chart-caption">The same rolling-beta technique from the equity example, applied to the oil/products complex against Brent instead of the S&amp;P 500. This is a public-data illustration of the concept, not a live desk figure.</div>
+    </div>
+  </div>
+
+  <h2 id="elsewhere"><span class="sec-num">06</span>A few other places beta shows up</h2>
+  <p>
+    None of these get a full worked example here — just enough to show how far the same idea
+    travels once you know what to look for:
+  </p>
+  <ul class="beta-uses-list">
+    <li><strong>Levered vs. unlevered (asset) beta</strong> — corporate finance strips a company's
+      capital structure out of its equity beta to get an "asset beta" comparable across companies
+      with different debt loads, then re-levers it for a specific valuation.</li>
+    <li><strong>Factor betas / "smart beta"</strong> — instead of one market benchmark, a
+      Fama-French-style model regresses a stock against several factors at once (size, value,
+      momentum), each with its own beta, to explain returns a single-factor CAPM beta misses.</li>
+    <li><strong>Sector and style beta</strong> — comparing a stock's beta within its own sector
+      index rather than the broad market, to separate "moves with tech" from "moves with the
+      market generally."</li>
+    <li><strong>Cross-currency and rates beta</strong> — a similar regression shows up in how a
+      local bond yield or currency moves relative to a reference rate, though the mechanics
+      differ enough that it's usually not called "beta" out loud.</li>
+  </ul>
+
+  <h2 id="tool"><span class="sec-num">07</span>Try it: compute rolling beta yourself</h2>
+  <p>
+    Same tool, both datasets — pick any pair below and watch the beta series recompute live in
+    your browser from the underlying daily returns.
+  </p>
+
+  <div class="tool-card">
+    <div class="tool-controls">
+      <div class="tool-field">
+        <label for="beta-pair">Instrument vs. benchmark</label>
+        <select id="beta-pair">
+          <option value="aapl">AAPL vs. S&amp;P 500</option>
+          <option value="msft">MSFT vs. S&amp;P 500</option>
+          <option value="wti">WTI vs. Brent</option>
+          <option value="heating_oil">Heating Oil (ULSD) vs. Brent</option>
+          <option value="rbob">RBOB Gasoline vs. Brent</option>
+          <option value="ung_etf">UNG vs. Henry Hub</option>
+        </select>
+      </div>
+      <div class="tool-field">
+        <label for="beta-window">Rolling window: <span id="beta-window-val" class="value-readout">60 days</span></label>
+        <input type="range" id="beta-window" min="10" max="120" value="60" step="5" />
+      </div>
+    </div>
+    <div class="tool-canvas-wrap">
+      <canvas id="beta-chart"></canvas>
+    </div>
+    <div class="tool-readout-grid">
+      <div class="tool-readout-tile"><span class="rt-label">Current beta</span><span class="rt-value" id="beta-current">–</span></div>
+      <div class="tool-readout-tile"><span class="rt-label">Min over period</span><span class="rt-value" id="beta-min">–</span></div>
+      <div class="tool-readout-tile"><span class="rt-label">Max over period</span><span class="rt-value" id="beta-max">–</span></div>
+      <div class="tool-readout-tile"><span class="rt-label">Static full-period beta</span><span class="rt-value" id="beta-static">–</span></div>
+    </div>
+    <p class="tool-note">Shorter windows react faster but get noisier; longer windows smooth the noise but lag a real shift. Switch between AAPL and WTI and notice the range is wide in both worlds — this isn't an equities-only or commodities-only phenomenon.</p>
+  </div>
+
+  <h2 id="takeaway"><span class="sec-num">08</span>Takeaway</h2>
+  <p>
+    The useful mental model isn't "beta = a stock's sensitivity to the market" — that's just the
+    first place most people meet it. It's closer to: beta is a general-purpose tool for asking
+    "how much does X move for every 1% Y moves," and finance reaches for that question constantly
+    — sizing a hedge, comparing companies across capital structures, collapsing a multi-instrument
+    book into one number, or just deciding whether a stock's recent calm is really calm or just a
+    beta that's temporarily drifted low. The regression is simple. Knowing which version you're
+    computing, and how stale it might already be, is the actual skill.
+  </p>
+  <p style="margin-top: 24px;">
+    <a href="https://github.com/rashmirrsdev/beta-benchmarking" target="_blank" class="btn-github">Full code and documentation on GitHub →</a>
+  </p>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="projects.html">Projects</a>
+    <a href="finance-ai.html">Finance + AI</a>
+    <a href="finance.html">Finance &amp; Markets</a>
+    <a href="for-students.html">For Students</a>
+    <a href="https://www.linkedin.com/in/rrsk/" target="_blank">LinkedIn</a>
+  </div>
+  <p>© 2026 Rashmi Rama Sushil &nbsp;·&nbsp; Senior Associate, Trading Risk Management, Morgan Stanley</p>
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <span class="lightbox-close" id="lightbox-close">&times;</span>
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<script>
+(function() {
+  var lb = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lightbox-img');
+  var lbClose = document.getElementById('lightbox-close');
+  document.querySelectorAll('.chart-item img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+      lb.classList.add('active');
+    });
+  });
+  lb.addEventListener('click', function() { lb.classList.remove('active'); });
+  lbClose.addEventListener('click', function(e) { e.stopPropagation(); lb.classList.remove('active'); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') lb.classList.remove('active'); });
+})();
+</script>
+
+<script src="js/tools.js"></script>
+<script>
+(function() {
+  var DATA_URL = 'img/projects/beta-benchmarking/beta_returns.json';
+  var data = null;
+  var pairSelect = document.getElementById('beta-pair');
+  var windowSlider = document.getElementById('beta-window');
+  var windowVal = document.getElementById('beta-window-val');
+  var canvas = document.getElementById('beta-chart');
+
+  var benchmarkFor = { wti: 'brent', heating_oil: 'brent', rbob: 'brent', ung_etf: 'henry_hub',
+                        aapl: 'sp500', msft: 'sp500' };
+
+  function rollingBeta(instrument, benchmark, window) {
+    var n = instrument.length;
+    var out = new Array(n).fill(null);
+    for (var i = window - 1; i < n; i++) {
+      var xs = benchmark.slice(i - window + 1, i + 1);
+      var ys = instrument.slice(i - window + 1, i + 1);
+      var mx = xs.reduce(function(a, b) { return a + b; }, 0) / window;
+      var my = ys.reduce(function(a, b) { return a + b; }, 0) / window;
+      var cov = 0, varx = 0;
+      for (var k = 0; k < window; k++) {
+        cov += (xs[k] - mx) * (ys[k] - my);
+        varx += (xs[k] - mx) * (xs[k] - mx);
+      }
+      out[i] = cov / varx;
+    }
+    return out;
+  }
+
+  function staticBeta(instrument, benchmark) {
+    var n = instrument.length;
+    var mx = benchmark.reduce(function(a, b) { return a + b; }, 0) / n;
+    var my = instrument.reduce(function(a, b) { return a + b; }, 0) / n;
+    var cov = 0, varx = 0;
+    for (var i = 0; i < n; i++) {
+      cov += (benchmark[i] - mx) * (instrument[i] - my);
+      varx += (benchmark[i] - mx) * (benchmark[i] - mx);
+    }
+    return cov / varx;
+  }
+
+  function render() {
+    if (!data) return;
+    var instName = pairSelect.value;
+    var benchName = benchmarkFor[instName];
+    var window = parseInt(windowSlider.value, 10);
+    windowVal.textContent = window + ' days';
+
+    var betas = rollingBeta(data[instName], data[benchName], window);
+    var points = [];
+    var dateLabels = [];
+    betas.forEach(function(b, i) {
+      if (b !== null) { points.push({ x: i, y: b }); dateLabels.push(data.dates[i]); }
+    });
+
+    drawLineChart(canvas, {
+      series: [{ label: instName, color: '#3498db', points: points }],
+      refLines: [{ y: 1.0, color: '#c0392b' }],
+      xLabels: [dateLabels[0], dateLabels[dateLabels.length - 1]]
+    });
+
+    var vals = points.map(function(p) { return p.y; });
+    document.getElementById('beta-current').textContent = vals[vals.length - 1].toFixed(3);
+    document.getElementById('beta-min').textContent = Math.min.apply(null, vals).toFixed(3);
+    document.getElementById('beta-max').textContent = Math.max.apply(null, vals).toFixed(3);
+    document.getElementById('beta-static').textContent = staticBeta(data[instName], data[benchName]).toFixed(3);
+  }
+
+  fetch(DATA_URL).then(function(r) { return r.json(); }).then(function(json) {
+    data = json;
+    render();
+  }).catch(function() {
+    canvas.parentElement.innerHTML = '<p class="tool-note">Interactive data failed to load. See the static charts above for the same analysis.</p>';
+  });
+
+  pairSelect.addEventListener('change', render);
+  windowSlider.addEventListener('input', render);
+  window.addEventListener('resize', render);
+})();
+</script>
+
+<script src="js/main.js" defer></script>
+</body>
+</html>
